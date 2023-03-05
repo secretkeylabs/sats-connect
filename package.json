@@ -1,12 +1,11 @@
 {
   "name": "sats-connect",
   "version": "0.0.1",
-  "main": "dist/bundle.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "build-debug": "webpack --mode development",
-    "build": "npm run clean && webpack --mode production",
-    "types": "tsc --project tsconfig.json --emitDeclarationOnly",
+    "build": "npm run clean && tsc --module ES6 --outDir ./dist",
     "clean": "rimraf dist",
     "lint": "prettier --write ."
   },

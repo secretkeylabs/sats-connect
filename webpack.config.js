@@ -10,7 +10,7 @@ module.exports = {
   mode: isProduction ? NODE_ENV_PRODUCTION : NODE_ENV_DEVELOPMENT,
   entry: ['./index.ts'],
   output: {
-    filename: 'bundle.js',
+    filename: 'index.js',
     library: 'sats_connect',
     libraryTarget: 'var',
     path: path.resolve(process.cwd(), 'dist'),

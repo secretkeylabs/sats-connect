@@ -2,7 +2,7 @@ import { AppConfig, UserSession } from '@stacks/auth';
 import { decodeToken } from 'jsontokens';
 import type { AuthOptions, AuthResponsePayload } from './types';
 
-const version = __VERSION__;
+const version = '0.0.1';
 
 if (typeof window !== 'undefined') {
   window.__CONNECT_VERSION__ = version;
