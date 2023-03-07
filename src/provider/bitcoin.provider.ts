@@ -16,12 +16,17 @@ export interface BitcoinNetwork {
 }
 
 export interface BitcoinProvider {
-  getAddress: (
+  connect: (
     purpose: Purpose,
     message: string,
     network?: BitcoinNetwork
   ) => Promise<GetAddressResponse>;
-  authenticationRequest(payload: string): Promise<string>;
+  call: (
+    method: string,
+    params: Array<any>,
+    network: BitcoinNetwork
+  ) => Promise<GetAddressResponse> ;
+  disconnect: () => void;
 }
 
 declare global {
