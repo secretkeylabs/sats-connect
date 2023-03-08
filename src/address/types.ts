@@ -1,6 +1,6 @@
-import { BitcoinNetwork, Purpose } from '../provider/bitcoin.provider';
+import { BitcoinNetwork, Purpose } from '../provider';
 
-interface GetAddressPayload {
+export interface GetAddressPayload {
   purpose: Purpose;
   message: string;
   network: BitcoinNetwork;
@@ -8,7 +8,7 @@ interface GetAddressPayload {
 
 export interface GetAddressResponse {
   address: string;
-  network: string;
+  purpose: Purpose;
 }
 
 export interface GetAddressOptions {

@@ -1,3 +1,4 @@
+import { SignPsbtResponse } from '../transactions/signPsbt';
 import { GetAddressResponse } from '../address';
 
 export enum AddressPurposes {
@@ -16,17 +17,9 @@ export interface BitcoinNetwork {
 }
 
 export interface BitcoinProvider {
-  connect: (
-    purpose: Purpose,
-    message: string,
-    network?: BitcoinNetwork
-  ) => Promise<GetAddressResponse>;
-  call: (
-    method: string,
-    params: Array<any>,
-    network: BitcoinNetwork
-  ) => Promise<GetAddressResponse> ;
-  disconnect: () => void;
+  connect: (request: string) => Promise<GetAddressResponse>;
+  call: (request: string) => Promise<Record<string, any>>;
+  signPsbt: (request: string) => Promise<SignPsbtResponse>;
 }
 
 declare global {

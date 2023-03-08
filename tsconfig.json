@@ -7,7 +7,7 @@
     "baseUrl": ".",
     "declaration": true,
     "sourceMap": true,
-    "outDir": "dist/types",
+    "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -16,5 +16,5 @@
     "allowUnreachableCode": false,
     "skipLibCheck": true
   },
-  "exclude": ["./tests"]
+  "exclude": ["./tests", "./dist"]
 }

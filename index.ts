@@ -1,3 +1,3 @@
 export * from './src/address/index';
-export * from './src/provider/bitcoin.provider';
-export * from './src/auth';
+export * from './src/provider';
+export * from './src/call';
