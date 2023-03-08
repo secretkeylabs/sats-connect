@@ -1,14 +1,19 @@
 import { BitcoinNetwork, Purpose } from '../provider';
 
 export interface GetAddressPayload {
-  purpose: Purpose;
+  purposes: Array<Purpose>;
   message: string;
   network: BitcoinNetwork;
 }
 
-export interface GetAddressResponse {
+export interface Address {
   address: string;
+  publicKey: string;
   purpose: Purpose;
+}
+
+export interface GetAddressResponse {
+  addresses: Array<Address>
 }
 
 export interface GetAddressOptions {
