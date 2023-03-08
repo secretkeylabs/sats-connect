@@ -2,13 +2,13 @@ import { createUnsecuredToken, Json } from 'jsontokens';
 import { GetAddressOptions } from './types';
 
 export const openConnectPopup = async (options: GetAddressOptions) => {
-  const { message, network, purpose } = options.payload;
+  const { message, network, purposes } = options.payload;
   const provider = window.BitcoinProvider;
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
   }
-  if(!purpose) {
-    throw new Error('Address purpose is required');
+  if(!purposes) {
+    throw new Error('Address purposes are required');
   }
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);

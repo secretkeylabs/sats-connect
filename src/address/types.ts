@@ -1,4 +1,14 @@
-import { BitcoinNetwork, Purpose } from '../provider';
+import { BitcoinNetwork } from '../provider';
+
+export enum AddressPurposes {
+  PAYMENT = 'payment',
+  ORDINALS = 'ordinals',
+}
+
+export interface Purpose {
+  derivation_path?: string;
+  purpose: AddressPurposes;
+}
 
 export interface GetAddressPayload {
   purposes: Array<Purpose>;

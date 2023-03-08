@@ -1,16 +1,6 @@
 import { SignPsbtResponse } from '../transactions/signPsbt';
 import { GetAddressResponse } from '../address';
 
-export enum AddressPurposes {
-  PAYMENT = 'payment',
-  ORDINALS = 'ordinals',
-}
-
-export interface Purpose {
-  derivation_path?: string;
-  purpose: AddressPurposes;
-}
-
 export interface BitcoinNetwork {
   type: string;
   address: string;
