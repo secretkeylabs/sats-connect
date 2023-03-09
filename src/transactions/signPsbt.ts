@@ -29,7 +29,7 @@ export interface SignPsbtResponse {
 }
 
 
-export const openSignPsbtPopup = async (options: SignPsbtOptions) => {
+export const signPsbt = async (options: SignPsbtOptions) => {
   const { psbtBase64 } = options.payload;
   const provider = window.BitcoinProvider;
   if (!provider) {

@@ -1,7 +1,7 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
 import { GetAddressOptions } from './types';
 
-export const openConnectPopup = async (options: GetAddressOptions) => {
+export const getAddress = async (options: GetAddressOptions) => {
   const { message, network, purposes } = options.payload;
   const provider = window.BitcoinProvider;
   if (!provider) {
