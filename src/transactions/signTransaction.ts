@@ -30,13 +30,16 @@ export interface SignTransactionResponse {
 
 
 export const signTransaction = async (options: SignTransactionOptions) => {
-  const { psbtBase64 } = options.payload;
+  const { psbtBase64, inputsToSign } = options.payload;
   const provider = window.BitcoinProvider;
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
   }
   if (!psbtBase64) {
     throw new Error('a value for psbtBase64 representing the tx hash is required');
+  }
+  if (!inputsToSign) {
+    throw new Error('an array specifying the inputs to be signed by the wallet is required');
   }
     try {
       const request = createUnsecuredToken(options.payload as unknown as Json);
