@@ -7,7 +7,7 @@ export interface BitcoinNetwork {
 }
 
 export interface BitcoinProvider {
-  getAddress: (request: string) => Promise<GetAddressResponse>;
+  connect: (request: string) => Promise<GetAddressResponse>;
   call: (request: string) => Promise<Record<string, any>>;
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
 }
