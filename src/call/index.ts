@@ -14,7 +14,7 @@ export interface CallWalletOptions {
 }
 
 export enum CallMethod {
-  SIGN_PSBT = 'signPsbt',
+  SIGN_TRANSACTION = 'signTransaction',
   GET_ADDRESS = 'getAddress',
 }
 

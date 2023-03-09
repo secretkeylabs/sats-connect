@@ -9,7 +9,7 @@ export interface InputToSign {
 }
 
 
-export interface SignPsbtPayload {
+export interface SignTransactionPayload {
   network: BitcoinNetwork;
   message: string;
   psbtBase64: string;
@@ -17,19 +17,19 @@ export interface SignPsbtPayload {
   inputsToSign: InputToSign[];
 }
 
-export interface SignPsbtOptions {
-  payload: SignPsbtPayload;
+export interface SignTransactionOptions {
+  payload: SignTransactionPayload;
   onFinish: (response: any) => void;
   onCancel: () => void;
 }
 
-export interface SignPsbtResponse {
+export interface SignTransactionResponse {
   psbtBase64: string;
   txId?: string;
 }
 
 
-export const signPsbt = async (options: SignPsbtOptions) => {
+export const signTransaction = async (options: SignTransactionOptions) => {
   const { psbtBase64 } = options.payload;
   const provider = window.BitcoinProvider;
   if (!provider) {
@@ -40,7 +40,7 @@ export const signPsbt = async (options: SignPsbtOptions) => {
   }
     try {
       const request = createUnsecuredToken(options.payload as unknown as Json);
-      const addressResponse = await provider.signPsbt(request);
+      const addressResponse = await provider.signTransaction(request);
       options.onFinish?.(addressResponse);
     } catch (error) {
       console.error('[Connect] Error during signPsbt request', error);

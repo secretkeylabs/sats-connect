@@ -1,4 +1,4 @@
-import { SignPsbtResponse } from '../transactions/signPsbt';
+import { SignTransactionResponse } from '../transactions/signTransaction';
 import { GetAddressResponse } from '../address';
 
 export interface BitcoinNetwork {
@@ -7,9 +7,9 @@ export interface BitcoinNetwork {
 }
 
 export interface BitcoinProvider {
-  connect: (request: string) => Promise<GetAddressResponse>;
+  getAddress: (request: string) => Promise<GetAddressResponse>;
   call: (request: string) => Promise<Record<string, any>>;
-  signPsbt: (request: string) => Promise<SignPsbtResponse>;
+  signTransaction: (request: string) => Promise<SignTransactionResponse>;
 }
 
 declare global {
