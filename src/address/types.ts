@@ -11,7 +11,7 @@ export interface Purpose {
 }
 
 export interface GetAddressPayload {
-  purposes: Array<Purpose>;
+  purposes: Array<AddressPurposes>;
   message: string;
   network: BitcoinNetwork;
 }
