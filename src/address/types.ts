@@ -19,7 +19,7 @@ export interface GetAddressPayload {
 export interface Address {
   address: string;
   publicKey: string;
-  purpose: Purpose;
+  purpose: AddressPurposes;
 }
 
 export interface GetAddressResponse {
