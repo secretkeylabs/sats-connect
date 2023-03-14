@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "useUnknownInCatchVariables": false,
+    "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "skipLibCheck": true
+  },
+  "exclude": ["./tests", "./dist"]
+}
