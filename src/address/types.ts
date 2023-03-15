@@ -1,4 +1,4 @@
-import { BitcoinNetwork } from '../provider';
+import { BitcoinNetwork, AppDetails } from '../common/types';
 
 export enum AddressPurposes {
   PAYMENT = 'payment',
@@ -14,6 +14,7 @@ export interface GetAddressPayload {
   purposes: Array<AddressPurposes>;
   message: string;
   network: BitcoinNetwork;
+  appDetails?: AppDetails;
 }
 
 export interface Address {

@@ -1,10 +1,10 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork } from '../provider';
-
+import { BitcoinNetwork, AppDetails } from './../common/types';
 export interface CallWalletPayload {
   method: string;
   network: BitcoinNetwork;
   params?: Array<any>;
+  appDetails: AppDetails
 }
 
 export interface CallWalletOptions {

@@ -1,5 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork } from '../provider';
+import { BitcoinNetwork, AppDetails } from './../common/types';
 
 
 export interface InputToSign {
@@ -15,6 +15,7 @@ export interface SignTransactionPayload {
   psbtBase64: string;
   broadcast?: boolean;
   inputsToSign: InputToSign[];
+  appDetails: AppDetails;
 }
 
 export interface SignTransactionOptions {
