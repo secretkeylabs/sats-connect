@@ -17,10 +17,8 @@ export interface SendBtcTransactionOptions {
 
 export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
   const { satsAmount, recipientAddress } = options.payload;
-  console.log(satsAmount)
-  console.log(recipientAddress)
   const provider = window.BitcoinProvider;
-  console.log(provider)
+
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
   }
