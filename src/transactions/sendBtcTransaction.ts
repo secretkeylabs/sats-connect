@@ -5,7 +5,7 @@ export interface SendBtcTransactionPayload {
   network: BitcoinNetwork;
   amountSats: string;
   recipientAddress: string
-  message: string;
+  message?: string;
 }
 
 export interface SendBtcTransactionOptions {
