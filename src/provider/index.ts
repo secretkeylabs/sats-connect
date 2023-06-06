@@ -10,7 +10,8 @@ export interface BitcoinProvider {
   connect: (request: string) => Promise<GetAddressResponse>;
   call: (request: string) => Promise<Record<string, any>>;
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
-  signMessage: (request: string) => Promise<string>
+  signMessage: (request: string) => Promise<string>;
+  sendBtcTransaction: (request: string) => Promise<string>;
 }
 
 declare global {
