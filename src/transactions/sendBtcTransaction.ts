@@ -3,8 +3,9 @@ import { BitcoinNetwork } from '../provider';
 
 export interface SendBtcTransactionPayload {
   network: BitcoinNetwork;
-  amountSats: string;
-  recipientAddress: string
+  amountSats: string[];
+  recipientAddress: string[];
+  senderAddress: string;
   message?: string;
 }
 
@@ -16,17 +17,20 @@ export interface SendBtcTransactionOptions {
 
 
 export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
-  const { amountSats, recipientAddress } = options.payload;
+  const { amountSats, recipientAddress, senderAddress  } = options.payload;
   const provider = window.BitcoinProvider;
 
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
   }
   if (!amountSats) {
-    throw new Error('a value for amount to be transferred is required');
+    throw new Error('Amount to be transferred is required');
   }
   if (!recipientAddress) {
-    throw new Error('the recipient address is required');
+    throw new Error('Recipient address is required');
+  }
+  if (!senderAddress) {
+    throw new Error('Sender address is required');
   }
     try {
       const request = createUnsecuredToken(options.payload as unknown as Json);
