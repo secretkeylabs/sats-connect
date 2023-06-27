@@ -3,7 +3,7 @@ import { BitcoinNetwork } from '../provider';
 
 export interface Recipient {
   address: string;
-  amountSats: number;
+  amountSats: bigint;
 }
 
 export interface SendBtcTransactionPayload {
