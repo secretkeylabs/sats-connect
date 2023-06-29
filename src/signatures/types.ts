@@ -1,4 +1,4 @@
-import { BitcoinNetwork } from '../provider';
+import { BitcoinNetwork, BitcoinProvider } from '../provider';
 
 export interface SignMessagePayload {
   address: string;
@@ -7,6 +7,7 @@ export interface SignMessagePayload {
 }
 
 export interface SignMessageOptions {
+  getProvider?: () => Promise<BitcoinProvider>;
   onFinish: (response: string) => void;
   onCancel: () => void;
   payload: SignMessagePayload;

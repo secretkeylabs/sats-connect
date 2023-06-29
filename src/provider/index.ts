@@ -19,3 +19,7 @@ declare global {
     BitcoinProvider?: BitcoinProvider;
   }
 }
+
+export function getDefaultProvider(): BitcoinProvider | undefined {
+  return window.BitcoinProvider;
+}
