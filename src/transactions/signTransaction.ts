@@ -1,4 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
+
 import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
 export interface InputToSign {
@@ -33,6 +34,7 @@ export const signTransaction = async (options: SignTransactionOptions) => {
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
   }
+
   const { psbtBase64, inputsToSign } = options.payload;
   if (!psbtBase64) {
     throw new Error('a value for psbtBase64 representing the tx hash is required');
@@ -40,6 +42,7 @@ export const signTransaction = async (options: SignTransactionOptions) => {
   if (!inputsToSign) {
     throw new Error('an array specifying the inputs to be signed by the wallet is required');
   }
+
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
     const addressResponse = await provider.signTransaction(request);

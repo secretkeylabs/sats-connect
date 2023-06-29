@@ -1,5 +1,5 @@
-import { SignTransactionResponse } from '../transactions/signTransaction';
 import { GetAddressResponse } from '../address';
+import { SignTransactionResponse } from '../transactions/signTransaction';
 
 export interface BitcoinNetwork {
   type: 'Mainnet' | 'Testnet';

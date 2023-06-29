@@ -1,4 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
+
 import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
 export interface SendBtcTransactionPayload {
@@ -21,6 +22,7 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
   }
+
   const { amountSats, recipientAddress } = options.payload;
   if (!amountSats) {
     throw new Error('a value for amount to be transferred is required');
@@ -28,6 +30,7 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
   if (!recipientAddress) {
     throw new Error('the recipient address is required');
   }
+
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
     const addressResponse = await provider.sendBtcTransaction(request);
