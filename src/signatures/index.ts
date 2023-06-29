@@ -7,15 +7,15 @@ export const signMessage = async (options: SignMessageOptions) => {
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
   if (!provider) {
-    throw new Error('No Bitcoin Wallet installed');
+    throw new Error('No Bitcoin wallet installed');
   }
 
   const { address, message } = options.payload;
   if (!address) {
-    throw new Error('An Address is required to sign a message');
+    throw new Error('An address is required to sign a message');
   }
   if (!message) {
-    throw new Error('you need to provide a message to be signed');
+    throw new Error('A message to be signed is required');
   }
 
   try {
@@ -23,7 +23,7 @@ export const signMessage = async (options: SignMessageOptions) => {
     const response = await provider.signMessage(request);
     options.onFinish?.(response);
   } catch (error) {
-    console.error('[Connect] Error during Signing request', error);
+    console.error('[Connect] Error during sign message request', error);
     options.onCancel?.();
   }
 };

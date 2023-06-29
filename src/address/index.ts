@@ -7,7 +7,7 @@ export const getAddress = async (options: GetAddressOptions) => {
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
   if (!provider) {
-    throw new Error('No Bitcoin Wallet installed');
+    throw new Error('No Bitcoin wallet installed');
   }
 
   const { purposes } = options.payload;

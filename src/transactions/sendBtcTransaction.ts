@@ -20,15 +20,15 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
   if (!provider) {
-    throw new Error('No Bitcoin Wallet installed');
+    throw new Error('No Bitcoin wallet installed');
   }
 
   const { amountSats, recipientAddress } = options.payload;
   if (!amountSats) {
-    throw new Error('a value for amount to be transferred is required');
+    throw new Error('An amount to be transferred is required');
   }
   if (!recipientAddress) {
-    throw new Error('the recipient address is required');
+    throw new Error('A recipient address is required');
   }
 
   try {
@@ -36,7 +36,7 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
     const addressResponse = await provider.sendBtcTransaction(request);
     options.onFinish?.(addressResponse);
   } catch (error) {
-    console.error('[Connect] Error during send btc request', error);
+    console.error('[Connect] Error during send transaction request', error);
     options.onCancel?.();
   }
 };

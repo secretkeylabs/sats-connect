@@ -24,7 +24,7 @@ export const callWalletPopup = async (options: CallWalletOptions) => {
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
   if (!provider) {
-    throw new Error('No Bitcoin Wallet installed');
+    throw new Error('No Bitcoin wallet installed');
   }
 
   const { method } = options.payload;
