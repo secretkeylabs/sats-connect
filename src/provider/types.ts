@@ -1,12 +1,14 @@
 import { GetAddressResponse } from '../addresses';
-import { SignTransactionResponse } from '../transactions';
+import { CallWalletResponse } from '../call';
+import { SignMessageResponse } from '../messages';
+import { SendTransactionResponse, SignTransactionResponse } from '../transactions';
 
 export interface BitcoinProvider {
-  call: (request: string) => Promise<Record<string, any>>;
+  call: (request: string) => Promise<CallWalletResponse>;
   connect: (request: string) => Promise<GetAddressResponse>;
-  signMessage: (request: string) => Promise<string>;
+  signMessage: (request: string) => Promise<SignMessageResponse>;
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
-  sendTransaction: (request: string) => Promise<string>;
+  sendTransaction: (request: string) => Promise<SendTransactionResponse>;
 }
 
 declare global {

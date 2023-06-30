@@ -1,15 +1,13 @@
-import { BitcoinNetwork } from '../networks';
-import { GetBitcoinProviderFunc } from '../provider';
+import { RequestOptions, RequestPayload } from '../types';
 
 export enum AddressPurpose {
   Ordinals = 'ordinals',
   Payment = 'payment',
 }
 
-export interface GetAddressPayload {
+export interface GetAddressPayload extends RequestPayload {
   purposes: Array<AddressPurpose>;
   message: string;
-  network: BitcoinNetwork;
 }
 
 export interface Address {
@@ -22,9 +20,4 @@ export interface GetAddressResponse {
   addresses: Array<Address>;
 }
 
-export interface GetAddressOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: GetAddressResponse) => void;
-  onCancel: () => void;
-  payload: GetAddressPayload;
-}
+export type GetAddressOptions = RequestOptions<GetAddressPayload, GetAddressResponse>;

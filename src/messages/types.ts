@@ -1,15 +1,10 @@
-import { BitcoinNetwork } from '../networks';
-import { GetBitcoinProviderFunc } from '../provider';
+import { RequestOptions, RequestPayload } from '../types';
 
-export interface SignMessagePayload {
+export interface SignMessagePayload extends RequestPayload {
   address: string;
   message: string;
-  network: BitcoinNetwork;
 }
 
-export interface SignMessageOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: string) => void;
-  onCancel: () => void;
-  payload: SignMessagePayload;
-}
+export type SignMessageResponse = string;
+
+export type SignMessageOptions = RequestOptions<SignMessagePayload, SignMessageResponse>;

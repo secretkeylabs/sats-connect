@@ -1,15 +1,10 @@
-import { BitcoinNetwork } from '../networks';
-import { GetBitcoinProviderFunc } from '../provider';
+import { RequestOptions, RequestPayload } from '../types';
 
-export interface CallWalletPayload {
+export interface CallWalletPayload extends RequestPayload {
   method: string;
-  network: BitcoinNetwork;
   params?: Array<any>;
 }
 
-export interface CallWalletOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: Record<string, any>) => void;
-  onCancel: () => void;
-  payload: CallWalletPayload;
-}
+export type CallWalletResponse = Record<string, any>;
+
+export type CallWalletOptions = RequestOptions<CallWalletPayload, CallWalletResponse>;
