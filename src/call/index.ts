@@ -1,24 +1,7 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
 
-import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
-
-export interface CallWalletPayload {
-  method: string;
-  network: BitcoinNetwork;
-  params?: Array<any>;
-}
-
-export interface CallWalletOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: Record<string, any>) => void;
-  onCancel: () => void;
-  payload: CallWalletPayload;
-}
-
-export enum CallMethod {
-  SIGN_TRANSACTION = 'signTransaction',
-  GET_ADDRESS = 'getAddress',
-}
+import { getDefaultProvider } from '../provider';
+import { CallWalletOptions } from './types';
 
 export const callWalletPopup = async (options: CallWalletOptions) => {
   const { getProvider = getDefaultProvider } = options;
@@ -41,3 +24,5 @@ export const callWalletPopup = async (options: CallWalletOptions) => {
     options.onCancel?.();
   }
 };
+
+export * from './types';
