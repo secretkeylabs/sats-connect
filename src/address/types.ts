@@ -5,11 +5,6 @@ export enum AddressPurposes {
   ORDINALS = 'ordinals',
 }
 
-export interface Purpose {
-  derivation_path?: string;
-  purpose: AddressPurposes;
-}
-
 export interface GetAddressPayload {
   purposes: Array<AddressPurposes>;
   message: string;
