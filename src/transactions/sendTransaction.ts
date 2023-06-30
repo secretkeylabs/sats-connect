@@ -7,21 +7,21 @@ export interface Recipient {
   amountSats: bigint;
 }
 
-export interface SendBtcTransactionPayload {
+export interface SendTransactionPayload {
   network: BitcoinNetwork;
   recipients: Recipient[];
   senderAddress: string;
   message?: string;
 }
 
-export interface SendBtcTransactionOptions {
+export interface SendTransactionOptions {
   getProvider?: GetBitcoinProviderFunc;
   onFinish: (response: string) => void;
   onCancel: () => void;
-  payload: SendBtcTransactionPayload;
+  payload: SendTransactionPayload;
 }
 
-export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
+export const sendTransaction = async (options: SendTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
   if (!provider) {
@@ -38,7 +38,7 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const addressResponse = await provider.sendBtcTransaction(request);
+    const addressResponse = await provider.sendTransaction(request);
     options.onFinish?.(addressResponse);
   } catch (error) {
     console.error('[Connect] Error during send BTC transaction request', error);
