@@ -1,12 +1,12 @@
 import { BitcoinNetwork, GetBitcoinProviderFunc } from '../provider';
 
-export enum AddressPurposes {
-  PAYMENT = 'payment',
-  ORDINALS = 'ordinals',
+export enum AddressPurpose {
+  Ordinals = 'ordinals',
+  Payment = 'payment',
 }
 
 export interface GetAddressPayload {
-  purposes: Array<AddressPurposes>;
+  purposes: Array<AddressPurpose>;
   message: string;
   network: BitcoinNetwork;
 }
@@ -14,7 +14,7 @@ export interface GetAddressPayload {
 export interface Address {
   address: string;
   publicKey: string;
-  purpose: AddressPurposes;
+  purpose: AddressPurpose;
 }
 
 export interface GetAddressResponse {
