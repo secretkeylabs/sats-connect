@@ -1,4 +1,4 @@
-import { GetAddressResponse } from '../address';
+import { GetAddressResponse } from '../addresses';
 import { SignTransactionResponse } from '../transactions/signTransaction';
 
 export interface BitcoinNetwork {
