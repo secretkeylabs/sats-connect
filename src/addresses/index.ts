@@ -17,8 +17,8 @@ export const getAddress = async (options: GetAddressOptions) => {
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const addressResponse = await provider.connect(request);
-    options.onFinish?.(addressResponse);
+    const response = await provider.connect(request);
+    options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during address request', error);
     options.onCancel?.();

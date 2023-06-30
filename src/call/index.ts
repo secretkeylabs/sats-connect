@@ -17,8 +17,8 @@ export const callWalletPopup = async (options: CallWalletOptions) => {
 
   const request = createUnsecuredToken(options.payload as unknown as Json);
   try {
-    const callResponse = await provider.call(request);
-    options.onFinish?.(callResponse);
+    const response = await provider.call(request);
+    options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during call request', error);
     options.onCancel?.();

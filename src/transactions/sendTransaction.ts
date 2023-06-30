@@ -20,8 +20,8 @@ export const sendTransaction = async (options: SendTransactionOptions) => {
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const addressResponse = await provider.sendTransaction(request);
-    options.onFinish?.(addressResponse);
+    const response = await provider.sendTransaction(request);
+    options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during send BTC transaction request', error);
     options.onCancel?.();

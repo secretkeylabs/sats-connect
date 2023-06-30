@@ -20,8 +20,8 @@ export const signTransaction = async (options: SignTransactionOptions) => {
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const addressResponse = await provider.signTransaction(request);
-    options.onFinish?.(addressResponse);
+    const response = await provider.signTransaction(request);
+    options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during sign transaction request', error);
     options.onCancel?.();
