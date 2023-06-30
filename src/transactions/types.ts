@@ -5,17 +5,17 @@ export interface Recipient {
   amountSats: bigint;
 }
 
-export interface SendTransactionPayload extends RequestPayload {
+export interface SendBtcTransactionPayload extends RequestPayload {
   recipients: Recipient[];
   senderAddress: string;
   message?: string;
 }
 
-export type SendTransactionResponse = string;
+export type SendBtcTransactionResponse = string;
 
-export type SendTransactionOptions = RequestOptions<
-  SendTransactionPayload,
-  SendTransactionResponse
+export type SendBtcTransactionOptions = RequestOptions<
+  SendBtcTransactionPayload,
+  SendBtcTransactionResponse
 >;
 
 export interface InputToSign {

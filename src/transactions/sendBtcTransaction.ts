@@ -2,9 +2,9 @@ import type { Json } from 'jsontokens';
 import { createUnsecuredToken } from 'jsontokens';
 
 import { getDefaultProvider } from '../provider';
-import type { SendTransactionOptions } from './types';
+import type { SendBtcTransactionOptions } from './types';
 
-export const sendTransaction = async (options: SendTransactionOptions) => {
+export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
   if (!provider) {
@@ -21,7 +21,7 @@ export const sendTransaction = async (options: SendTransactionOptions) => {
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const response = await provider.sendTransaction(request);
+    const response = await provider.sendBtcTransaction(request);
     options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during send BTC transaction request', error);
