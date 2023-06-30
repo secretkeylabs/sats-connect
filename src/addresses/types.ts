@@ -6,7 +6,7 @@ export enum AddressPurpose {
 }
 
 export interface GetAddressPayload extends RequestPayload {
-  purposes: Array<AddressPurpose>;
+  purposes: AddressPurpose[];
   message: string;
 }
 
@@ -17,7 +17,7 @@ export interface Address {
 }
 
 export interface GetAddressResponse {
-  addresses: Array<Address>;
+  addresses: Address[];
 }
 
 export type GetAddressOptions = RequestOptions<GetAddressPayload, GetAddressResponse>;

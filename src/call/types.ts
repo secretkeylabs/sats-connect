@@ -2,7 +2,7 @@ import { RequestOptions, RequestPayload } from '../types';
 
 export interface CallWalletPayload extends RequestPayload {
   method: string;
-  params?: Array<any>;
+  params?: any[];
 }
 
 export type CallWalletResponse = Record<string, any>;

@@ -20,7 +20,7 @@ export type SendTransactionOptions = RequestOptions<
 
 export interface InputToSign {
   address: string;
-  signingIndexes: Array<number>;
+  signingIndexes: number[];
   sigHash?: number;
 }
 
