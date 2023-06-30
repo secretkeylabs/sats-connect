@@ -1,25 +1,7 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
 
-import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
-
-export interface Recipient {
-  address: string;
-  amountSats: bigint;
-}
-
-export interface SendTransactionPayload {
-  network: BitcoinNetwork;
-  recipients: Recipient[];
-  senderAddress: string;
-  message?: string;
-}
-
-export interface SendTransactionOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: string) => void;
-  onCancel: () => void;
-  payload: SendTransactionPayload;
-}
+import { getDefaultProvider } from '../provider';
+import { SendTransactionOptions } from './types';
 
 export const sendTransaction = async (options: SendTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;

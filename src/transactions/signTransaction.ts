@@ -1,32 +1,7 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
 
-import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
-
-export interface InputToSign {
-  address: string;
-  signingIndexes: Array<number>;
-  sigHash?: number;
-}
-
-export interface SignTransactionPayload {
-  network: BitcoinNetwork;
-  message: string;
-  psbtBase64: string;
-  broadcast?: boolean;
-  inputsToSign: InputToSign[];
-}
-
-export interface SignTransactionOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: any) => void;
-  onCancel: () => void;
-  payload: SignTransactionPayload;
-}
-
-export interface SignTransactionResponse {
-  psbtBase64: string;
-  txId?: string;
-}
+import { getDefaultProvider } from '../provider';
+import { SignTransactionOptions } from './types';
 
 export const signTransaction = async (options: SignTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;
