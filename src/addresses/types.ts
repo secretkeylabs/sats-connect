@@ -1,4 +1,5 @@
-import { BitcoinNetwork, GetBitcoinProviderFunc } from '../provider';
+import { BitcoinNetwork } from '../networks';
+import { GetBitcoinProviderFunc } from '../provider';
 
 export enum AddressPurpose {
   Ordinals = 'ordinals',
