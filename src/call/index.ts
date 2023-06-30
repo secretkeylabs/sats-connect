@@ -1,7 +1,8 @@
-import { createUnsecuredToken, Json } from 'jsontokens';
+import type { Json } from 'jsontokens';
+import { createUnsecuredToken } from 'jsontokens';
 
 import { getDefaultProvider } from '../provider';
-import { CallWalletOptions } from './types';
+import type { CallWalletOptions } from './types';
 
 export const callWalletPopup = async (options: CallWalletOptions) => {
   const { getProvider = getDefaultProvider } = options;

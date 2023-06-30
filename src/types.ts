@@ -1,4 +1,4 @@
-import { GetBitcoinProviderFunc } from './provider';
+import type { GetBitcoinProviderFunc } from './provider';
 
 export enum BitcoinNetworkType {
   Mainnet = 'Mainnet',

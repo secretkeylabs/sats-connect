@@ -1,7 +1,8 @@
-import { createUnsecuredToken, Json } from 'jsontokens';
+import type { Json } from 'jsontokens';
+import { createUnsecuredToken } from 'jsontokens';
 
 import { getDefaultProvider } from '../provider';
-import { GetAddressOptions } from './types';
+import type { GetAddressOptions } from './types';
 
 export const getAddress = async (options: GetAddressOptions) => {
   const { getProvider = getDefaultProvider } = options;

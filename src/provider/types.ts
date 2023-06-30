@@ -1,7 +1,7 @@
-import { GetAddressResponse } from '../addresses';
-import { CallWalletResponse } from '../call';
-import { SignMessageResponse } from '../messages';
-import { SendTransactionResponse, SignTransactionResponse } from '../transactions';
+import type { GetAddressResponse } from '../addresses';
+import type { CallWalletResponse } from '../call';
+import type { SignMessageResponse } from '../messages';
+import type { SendTransactionResponse, SignTransactionResponse } from '../transactions';
 
 export interface BitcoinProvider {
   call: (request: string) => Promise<CallWalletResponse>;

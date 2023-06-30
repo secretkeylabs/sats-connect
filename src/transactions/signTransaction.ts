@@ -1,7 +1,8 @@
-import { createUnsecuredToken, Json } from 'jsontokens';
+import type { Json } from 'jsontokens';
+import { createUnsecuredToken } from 'jsontokens';
 
 import { getDefaultProvider } from '../provider';
-import { SignTransactionOptions } from './types';
+import type { SignTransactionOptions } from './types';
 
 export const signTransaction = async (options: SignTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;

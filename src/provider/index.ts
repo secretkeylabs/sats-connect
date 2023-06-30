@@ -1,4 +1,4 @@
-import { BitcoinProvider } from './types';
+import type { BitcoinProvider } from './types';
 
 export type GetBitcoinProviderFunc = () => Promise<BitcoinProvider | undefined>;
 

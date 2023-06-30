@@ -1,7 +1,8 @@
-import { createUnsecuredToken, Json } from 'jsontokens';
+import type { Json } from 'jsontokens';
+import { createUnsecuredToken } from 'jsontokens';
 
 import { getDefaultProvider } from '../provider';
-import { SendTransactionOptions } from './types';
+import type { SendTransactionOptions } from './types';
 
 export const sendTransaction = async (options: SendTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;

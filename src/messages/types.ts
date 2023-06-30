@@ -1,4 +1,4 @@
-import { RequestOptions, RequestPayload } from '../types';
+import type { RequestOptions, RequestPayload } from '../types';
 
 export interface SignMessagePayload extends RequestPayload {
   address: string;
