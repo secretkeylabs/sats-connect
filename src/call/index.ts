@@ -1,5 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork, BitcoinProvider, getDefaultProvider } from '../provider';
+import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
 export interface CallWalletPayload {
   method: string;
@@ -8,7 +8,7 @@ export interface CallWalletPayload {
 }
 
 export interface CallWalletOptions {
-  getProvider?: () => Promise<BitcoinProvider>;
+  getProvider?: GetBitcoinProviderFunc;
   onFinish: (response: Record<string, any>) => void;
   onCancel: () => void;
   payload: CallWalletPayload;

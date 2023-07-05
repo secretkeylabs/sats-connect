@@ -1,4 +1,4 @@
-import { BitcoinNetwork, BitcoinProvider } from '../provider';
+import { BitcoinNetwork, GetBitcoinProviderFunc } from '../provider';
 
 export enum AddressPurposes {
   PAYMENT = 'payment',
@@ -27,7 +27,7 @@ export interface GetAddressResponse {
 }
 
 export interface GetAddressOptions {
-  getProvider?: () => Promise<BitcoinProvider>;
+  getProvider?: GetBitcoinProviderFunc;
   onFinish: (response: GetAddressResponse) => void;
   onCancel: () => void;
   payload: GetAddressPayload;

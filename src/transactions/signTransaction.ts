@@ -1,5 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork, BitcoinProvider, getDefaultProvider } from '../provider';
+import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
 export interface InputToSign {
   address: string;
@@ -16,7 +16,7 @@ export interface SignTransactionPayload {
 }
 
 export interface SignTransactionOptions {
-  getProvider?: () => Promise<BitcoinProvider>;
+  getProvider?: GetBitcoinProviderFunc;
   onFinish: (response: any) => void;
   onCancel: () => void;
   payload: SignTransactionPayload;

@@ -1,5 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork, BitcoinProvider, getDefaultProvider } from '../provider';
+import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
 export interface SendBtcTransactionPayload {
   network: BitcoinNetwork;
@@ -9,7 +9,7 @@ export interface SendBtcTransactionPayload {
 }
 
 export interface SendBtcTransactionOptions {
-  getProvider?: () => Promise<BitcoinProvider>;
+  getProvider?: GetBitcoinProviderFunc;
   onFinish: (response: string) => void;
   onCancel: () => void;
   payload: SendBtcTransactionPayload;
