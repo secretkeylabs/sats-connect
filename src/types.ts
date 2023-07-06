@@ -1,4 +1,4 @@
-import type { GetBitcoinProviderFunc } from './provider';
+import type { BitcoinProvider } from './provider';
 
 export enum BitcoinNetworkType {
   Mainnet = 'Mainnet',
@@ -18,5 +18,5 @@ export interface RequestOptions<Payload extends RequestPayload, Response> {
   onFinish: (response: Response) => void;
   onCancel: () => void;
   payload: Payload;
-  getProvider?: GetBitcoinProviderFunc;
+  getProvider?: () => Promise<BitcoinProvider | undefined>;
 }
