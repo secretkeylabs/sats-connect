@@ -1,5 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork } from '../provider';
+import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
 export interface CallWalletPayload {
   method: string;
@@ -8,6 +8,7 @@ export interface CallWalletPayload {
 }
 
 export interface CallWalletOptions {
+  getProvider?: GetBitcoinProviderFunc;
   onFinish: (response: Record<string, any>) => void;
   onCancel: () => void;
   payload: CallWalletPayload;
@@ -19,12 +20,13 @@ export enum CallMethod {
 }
 
 export const callWalletPopup = async (options: CallWalletOptions) => {
-  const provider = window.BitcoinProvider;
-  const { method } = options.payload;
+  const { getProvider = getDefaultProvider } = options;
+  const provider = await getProvider();
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
   }
-  if(!method) {
+  const { method } = options.payload;
+  if (!method) {
     throw new Error('A wallet method is required');
   }
   const request = createUnsecuredToken(options.payload as unknown as Json);

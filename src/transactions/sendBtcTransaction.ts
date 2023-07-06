@@ -1,5 +1,5 @@
 import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork } from '../provider';
+import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
 export interface Recipient {
   address: string;
@@ -14,15 +14,16 @@ export interface SendBtcTransactionPayload {
 }
 
 export interface SendBtcTransactionOptions {
-  payload: SendBtcTransactionPayload;
+  getProvider?: GetBitcoinProviderFunc;
   onFinish: (response: string) => void;
   onCancel: () => void;
+  payload: SendBtcTransactionPayload;
 }
-
 
 export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
   const { recipients, senderAddress  } = options.payload;
-  const provider = window.BitcoinProvider;
+  const { getProvider = getDefaultProvider } = options;
+  const provider = await getProvider();
 
   if (!provider) {
     throw new Error('No Bitcoin Wallet installed');
@@ -33,13 +34,12 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
   if (!senderAddress) {
     throw new Error('Sender address is required');
   }
-    try {
-      const request = createUnsecuredToken(options.payload as unknown as Json);
-      const addressResponse = await provider.sendBtcTransaction(request);
-      options.onFinish?.(addressResponse);
-    } catch (error) {
-      console.error('[Connect] Error during send btc request', error);
-      options.onCancel?.();
-    }
+  try {
+    const request = createUnsecuredToken(options.payload as unknown as Json);
+    const addressResponse = await provider.sendBtcTransaction(request);
+    options.onFinish?.(addressResponse);
+  } catch (error) {
+    console.error('[Connect] Error during send btc request', error);
+    options.onCancel?.();
+  }
 };
-
