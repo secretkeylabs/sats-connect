@@ -2,10 +2,15 @@ import { createUnsecuredToken, Json } from 'jsontokens';
 
 import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
 
+export interface Recipient {
+  address: string;
+  amountSats: bigint;
+}
+
 export interface SendBtcTransactionPayload {
   network: BitcoinNetwork;
-  amountSats: string;
-  recipientAddress: string;
+  recipients: Recipient[]
+  senderAddress: string;
   message?: string;
 }
 
@@ -17,18 +22,20 @@ export interface SendBtcTransactionOptions {
 }
 
 export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
+  const { recipients, senderAddress  } = options.payload;
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
+
   if (!provider) {
     throw new Error('No Bitcoin wallet installed');
   }
-
-  const { amountSats, recipientAddress } = options.payload;
-  if (!amountSats) {
-    throw new Error('An amount to be transferred is required');
+  
+  const { recipients, senderAddress } = options.payload;
+  if (!recipients || recipients.length === 0) {
+    throw new Error('At least one recipient is required');
   }
-  if (!recipientAddress) {
-    throw new Error('A recipient address is required');
+  if (!senderAddress) {
+    throw new Error('The sender address is required');
   }
 
   try {
