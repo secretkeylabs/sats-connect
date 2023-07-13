@@ -9,7 +9,7 @@ export interface Recipient {
 
 export interface SendBtcTransactionPayload {
   network: BitcoinNetwork;
-  recipients: Recipient[]
+  recipients: Recipient[];
   senderAddress: string;
   message?: string;
 }
@@ -22,14 +22,12 @@ export interface SendBtcTransactionOptions {
 }
 
 export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
-  const { recipients, senderAddress  } = options.payload;
   const { getProvider = getDefaultProvider } = options;
   const provider = await getProvider();
-
   if (!provider) {
     throw new Error('No Bitcoin wallet installed');
   }
-  
+
   const { recipients, senderAddress } = options.payload;
   if (!recipients || recipients.length === 0) {
     throw new Error('At least one recipient is required');
