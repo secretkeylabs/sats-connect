@@ -41,7 +41,7 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
     const addressResponse = await provider.sendBtcTransaction(request);
     options.onFinish?.(addressResponse);
   } catch (error) {
-    console.error('[Connect] Error during send transaction request', error);
+    console.error('[Connect] Error during send BTC transaction request', error);
     options.onCancel?.();
   }
 };
