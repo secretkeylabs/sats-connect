@@ -2,7 +2,9 @@
   "name": "sats-connect",
   "version": "0.1.11",
   "main": "dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "jest",
     "build-debug": "webpack --mode development",
