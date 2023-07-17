@@ -63,7 +63,7 @@ jobs:
       - id: publish
         run: npm publish --tag pr
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - id: published-version
         run: echo "version=$(npm pkg get version  | tr -d '"')" >> $GITHUB_OUTPUT
