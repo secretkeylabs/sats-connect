@@ -50,7 +50,7 @@ jobs:
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - run: npm ci
-      - run: npm run build:esm
+      - run: npm run build
 
       - id: current-version
         run: echo "version=$(npm pkg get version  | tr -d '"')" >> $GITHUB_OUTPUT
