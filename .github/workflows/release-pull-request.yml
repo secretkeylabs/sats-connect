@@ -1,0 +1,104 @@
+name: Release & Publish Package
+
+on:
+  pull_request:
+    branches: [develop]
+
+  workflow_dispatch:
+
+jobs:
+  fork-check:
+    runs-on: ubuntu-latest
+    outputs:
+      is-not-fork: ${{ steps.check.outputs.is_not_fork }}
+    steps:
+      - id: check
+        run: echo "::set-output name=is_not_fork::${{ github.repository == 'secretkeylabs/sats-connect' }}"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+      - run: npm ci
+      # TODO: enable linting once ready
+      # - run: npm run lint
+      # - run: npm test
+
+  publish-beta:
+    needs:
+      - test
+      - fork-check
+    if: needs.fork-check.outputs.is-not-fork == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - id: git-commit
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - run: npm ci
+      - run: npm run build
+
+      - id: current-version
+        run: echo "version=$(npm pkg get version  | tr -d '"')" >> $GITHUB_OUTPUT
+      - id: tag-version
+        run: npm version --no-git-tag-version $CURRENT_VERSION-$SHA
+        env:
+          SHA: ${{ steps.git-commit.outputs.sha }}
+          CURRENT_VERSION: ${{ steps.current-version.outputs.version }}
+
+      - id: publish
+        run: npm publish --tag pr
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+      - id: published-version
+        run: echo "version=$(npm pkg get version  | tr -d '"')" >> $GITHUB_OUTPUT
+      - run: echo published version $VERSION
+        env:
+          VERSION: ${{ steps.published-version.outputs.version }}
+
+      - name: Delete old bot comments
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_ID: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          curl \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/$REPO/issues/$PR_ID/comments \
+          | jq ".[] | select(.user.login==\"github-actions[bot]\") | .id" \
+          | xargs -I %q curl \
+            -L \
+            -X DELETE \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN"\
+            https://api.github.com/repos/$REPO/issues/comments/%q
+      - name: Post test package PR comment
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          VERSION: ${{ steps.published-version.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_URL: ${{ github.event.pull_request.comments_url }}
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            $GITHUB_URL \
+            -d "{\"body\":\"> Test this PR with \`npm i @secretkeylabs/sats-connect@$VERSION\`\"}"
