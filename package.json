@@ -1,6 +1,6 @@
 {
   "name": "sats-connect",
-  "version": "0.1.11",
+  "version": "0.5.0",
   "main": "dist/index.js",
   "files": [
     "dist"
