@@ -1,32 +1,8 @@
-import { createUnsecuredToken, Json } from 'jsontokens';
+import type { Json } from 'jsontokens';
+import { createUnsecuredToken } from 'jsontokens';
 
-import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
-
-export interface InputToSign {
-  address: string;
-  signingIndexes: Array<number>;
-  sigHash?: number;
-}
-
-export interface SignTransactionPayload {
-  network: BitcoinNetwork;
-  message: string;
-  psbtBase64: string;
-  broadcast?: boolean;
-  inputsToSign: InputToSign[];
-}
-
-export interface SignTransactionOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: any) => void;
-  onCancel: () => void;
-  payload: SignTransactionPayload;
-}
-
-export interface SignTransactionResponse {
-  psbtBase64: string;
-  txId?: string;
-}
+import { getDefaultProvider } from '../provider';
+import type { SignTransactionOptions } from './types';
 
 export const signTransaction = async (options: SignTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;
@@ -45,8 +21,8 @@ export const signTransaction = async (options: SignTransactionOptions) => {
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const addressResponse = await provider.signTransaction(request);
-    options.onFinish?.(addressResponse);
+    const response = await provider.signTransaction(request);
+    options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during sign transaction request', error);
     options.onCancel?.();

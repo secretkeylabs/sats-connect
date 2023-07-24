@@ -1,25 +1,8 @@
-import { createUnsecuredToken, Json } from 'jsontokens';
+import type { Json } from 'jsontokens';
+import { createUnsecuredToken } from 'jsontokens';
 
-import { BitcoinNetwork, GetBitcoinProviderFunc, getDefaultProvider } from '../provider';
-
-export interface Recipient {
-  address: string;
-  amountSats: bigint;
-}
-
-export interface SendBtcTransactionPayload {
-  network: BitcoinNetwork;
-  recipients: Recipient[];
-  senderAddress: string;
-  message?: string;
-}
-
-export interface SendBtcTransactionOptions {
-  getProvider?: GetBitcoinProviderFunc;
-  onFinish: (response: string) => void;
-  onCancel: () => void;
-  payload: SendBtcTransactionPayload;
-}
+import { getDefaultProvider } from '../provider';
+import type { SendBtcTransactionOptions } from './types';
 
 export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
   const { getProvider = getDefaultProvider } = options;
@@ -38,8 +21,8 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const addressResponse = await provider.sendBtcTransaction(request);
-    options.onFinish?.(addressResponse);
+    const response = await provider.sendBtcTransaction(request);
+    options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during send BTC transaction request', error);
     options.onCancel?.();
