@@ -1,19 +1,19 @@
 import type { RequestOptions, RequestPayload } from '../types';
 
-export enum AddressPurposes {
+export enum AddressPurpose {
   Ordinals = 'ordinals',
   Payment = 'payment',
 }
 
 export interface GetAddressPayload extends RequestPayload {
-  purposes: AddressPurposes[];
+  purposes: AddressPurpose[];
   message: string;
 }
 
 export interface Address {
   address: string;
   publicKey: string;
-  purpose: AddressPurposes;
+  purpose: AddressPurpose;
 }
 
 export interface GetAddressResponse {
