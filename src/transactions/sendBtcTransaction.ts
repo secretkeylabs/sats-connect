@@ -31,13 +31,13 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
 
   try {
     const serializedRecipients: SerializedRecipient[] = serializer(recipients);
-    const serialisedPayload: SerializedSendBtcTransactionPayload = {
+    const serializedPayload: SerializedSendBtcTransactionPayload = {
       network,
       senderAddress,
       message,
       recipients: serializedRecipients,
     };
-    const request = createUnsecuredToken(serialisedPayload as unknown as Json);
+    const request = createUnsecuredToken(serializedPayload as unknown as Json);
     const response = await provider.sendBtcTransaction(request);
     options.onFinish?.(response);
   } catch (error) {
