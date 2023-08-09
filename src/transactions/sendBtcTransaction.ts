@@ -2,7 +2,12 @@ import type { Json } from 'jsontokens';
 import { createUnsecuredToken } from 'jsontokens';
 
 import { getDefaultProvider } from '../provider';
-import type { Recipient, SendBtcTransactionOptions, SerializedRecipient, SerializedSendBtcTransactionPayload } from './types';
+import type {
+  Recipient,
+  SendBtcTransactionOptions,
+  SerializedRecipient,
+  SerializedSendBtcTransactionPayload,
+} from './types';
 
 const serializer = (recipient: Recipient[]): SerializedRecipient[] => {
   return recipient.map((value) => {
@@ -24,6 +29,13 @@ export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => 
   const { recipients, senderAddress, network, message } = options.payload;
   if (!recipients || recipients.length === 0) {
     throw new Error('At least one recipient is required');
+  }
+  if (
+    recipients.some(
+      (item) => typeof item.address !== 'string' || typeof item.amountSats !== 'bigint'
+    )
+  ) {
+    throw new Error('Incorrect recipient format');
   }
   if (!senderAddress) {
     throw new Error('The sender address is required');
