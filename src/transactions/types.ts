@@ -5,11 +5,19 @@ export interface Recipient {
   amountSats: bigint;
 }
 
+export type SerializedRecipient = Omit<Recipient, 'amountSats'> & {
+  amountSats: string;
+};
+
 export interface SendBtcTransactionPayload extends RequestPayload {
   recipients: Recipient[];
   senderAddress: string;
   message?: string;
 }
+
+export type SerializedSendBtcTransactionPayload = Omit<SendBtcTransactionPayload, 'recipients'> & {
+  recipients: SerializedRecipient[];
+};
 
 export type SendBtcTransactionResponse = string;
 
