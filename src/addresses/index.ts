@@ -1,15 +1,11 @@
 import type { Json } from 'jsontokens';
 import { createUnsecuredToken } from 'jsontokens';
 
-import { getDefaultProvider } from '../provider';
+import { getProviderOrThrow } from '../provider';
 import type { GetAddressOptions } from './types';
 
 export const getAddress = async (options: GetAddressOptions) => {
-  const { getProvider = getDefaultProvider } = options;
-  const provider = await getProvider();
-  if (!provider) {
-    throw new Error('No Bitcoin wallet installed');
-  }
+  const provider = await getProviderOrThrow(options.getProvider);
 
   const { purposes } = options.payload;
   if (!purposes) {

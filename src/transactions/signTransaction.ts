@@ -1,15 +1,11 @@
 import type { Json } from 'jsontokens';
 import { createUnsecuredToken } from 'jsontokens';
 
-import { getDefaultProvider } from '../provider';
+import { getProviderOrThrow } from '../provider';
 import type { SignTransactionOptions } from './types';
 
 export const signTransaction = async (options: SignTransactionOptions) => {
-  const { getProvider = getDefaultProvider } = options;
-  const provider = await getProvider();
-  if (!provider) {
-    throw new Error('No Bitcoin wallet installed');
-  }
+  const provider = await getProviderOrThrow(options.getProvider);
 
   const { psbtBase64, inputsToSign } = options.payload;
   if (!psbtBase64) {
