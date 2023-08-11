@@ -17,7 +17,7 @@ export const createTextInscription = async (options: CreateTextInscriptionOption
     throw new Error('Empty content not allowed');
   }
 
-  if (!/^[a-zA-Z]+\/[a-zA-Z]+/.test(contentType)) {
+  if (!/^[a-z]+\/[a-z0-9\-\.\+](?=;.*|$)/.test(contentType)) {
     throw new Error('Invalid content type detected');
   }
 
