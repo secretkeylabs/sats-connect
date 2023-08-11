@@ -2,7 +2,7 @@ name: Release & Publish Package
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   build:
@@ -29,6 +29,11 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
+      - run: npm publish --tag prerelease
+        if: github.event.release.prerelease
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish
+        if: !github.event.release.prerelease
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
