@@ -20,11 +20,11 @@ export type CreateTextInscriptionOptions = RequestOptions<
   CreateTextInscriptionResponse
 >;
 
-export interface CreateBinaryInscriptionPayload extends BaseCreateInscriptionPayload {
+export interface CreateFileInscriptionPayload extends BaseCreateInscriptionPayload {
   dataBase64: string;
 }
-export type CreateBinaryInscriptionResponse = CreateInscriptionResponse;
-export type CreateBinaryInscriptionOptions = RequestOptions<
-  CreateBinaryInscriptionPayload,
-  CreateBinaryInscriptionResponse
+export type CreateFileInscriptionResponse = CreateInscriptionResponse;
+export type CreateFileInscriptionOptions = RequestOptions<
+  CreateFileInscriptionPayload,
+  CreateFileInscriptionResponse
 >;

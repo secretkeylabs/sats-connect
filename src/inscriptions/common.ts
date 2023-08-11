@@ -1,7 +1,7 @@
-import type { CreateBinaryInscriptionPayload, CreateTextInscriptionPayload } from './types';
+import type { CreateFileInscriptionPayload, CreateTextInscriptionPayload } from './types';
 
 export const validateInscriptionPayload = (
-  payload: CreateTextInscriptionPayload | CreateBinaryInscriptionPayload
+  payload: CreateTextInscriptionPayload | CreateFileInscriptionPayload
 ) => {
   const { contentType, network, recipientAddress, feeAddress, inscriptionFee } = payload;
   if (network.type !== 'Mainnet') {
@@ -12,7 +12,7 @@ export const validateInscriptionPayload = (
     throw new Error('Invalid content type detected');
   }
 
-  const { dataBase64 } = payload as Partial<CreateBinaryInscriptionPayload>;
+  const { dataBase64 } = payload as Partial<CreateFileInscriptionPayload>;
   const { text } = payload as Partial<CreateTextInscriptionPayload>;
 
   const content = text || dataBase64;
