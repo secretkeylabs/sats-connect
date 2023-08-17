@@ -3,7 +3,7 @@ import type { CreateFileInscriptionPayload, CreateTextInscriptionPayload } from 
 export const validateInscriptionPayload = (
   payload: CreateTextInscriptionPayload | CreateFileInscriptionPayload
 ) => {
-  const { contentType, network, recipientAddress, feeAddress, inscriptionFee } = payload;
+  const { contentType, network, feeAddress, inscriptionFee } = payload;
   if (network.type !== 'Mainnet') {
     throw new Error('Only mainnet is currently supported for inscriptions');
   }
@@ -19,10 +19,6 @@ export const validateInscriptionPayload = (
 
   if (!content || content.length === 0) {
     throw new Error('Empty content not allowed');
-  }
-
-  if (recipientAddress.length === 0) {
-    throw new Error('Empty recipient address not allowed');
   }
 
   if ((feeAddress?.length ?? 0) > 0 && (inscriptionFee ?? 0) <= 0) {

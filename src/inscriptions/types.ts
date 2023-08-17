@@ -6,7 +6,6 @@ type CreateInscriptionResponse = {
 
 interface BaseCreateInscriptionPayload extends RequestPayload {
   contentType: string;
-  recipientAddress: string;
   inscriptionFee?: number;
   feeAddress?: string;
 }
