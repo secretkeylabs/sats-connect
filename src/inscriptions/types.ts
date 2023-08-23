@@ -8,7 +8,7 @@ interface BaseCreateInscriptionPayload extends RequestPayload {
   contentType: string;
   inscriptionFee?: number;
   feeAddress?: string;
-  feeRate?: number;
+  initialFeeRate?: number;
 }
 
 export interface CreateTextInscriptionPayload extends BaseCreateInscriptionPayload {
