@@ -1,5 +1,7 @@
 import type { CreateFileInscriptionPayload, CreateTextInscriptionPayload } from './types';
 
+const MAX_CONTENT_LENGTH = 400e3; // 400kb is the max miners will mine
+
 export const validateInscriptionPayload = (
   payload: CreateTextInscriptionPayload | CreateFileInscriptionPayload
 ) => {
@@ -19,6 +21,10 @@ export const validateInscriptionPayload = (
 
   if (!content || content.length === 0) {
     throw new Error('Empty content not allowed');
+  }
+
+  if (content.length > MAX_CONTENT_LENGTH) {
+    throw new Error('Content too large');
   }
 
   if ((feeAddress?.length ?? 0) > 0 && (inscriptionFee ?? 0) <= 0) {
