@@ -18,7 +18,7 @@ interface BaseBitcoinProvider {
 export type Capability = keyof BaseBitcoinProvider;
 
 export interface BitcoinProvider extends BaseBitcoinProvider {
-  getCapabilities: (request: string) => Promise<GetCapabilitiesResponse>;
+  getCapabilities?: (request: string) => Promise<GetCapabilitiesResponse>;
 }
 
 declare global {

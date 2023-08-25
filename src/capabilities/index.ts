@@ -5,7 +5,7 @@ import { BitcoinProvider, Capability, getProviderOrThrow } from '../provider';
 import type { GetCapabilitiesOptions } from './types';
 
 // we use this type in order for the build to fail if a new capability is added
-// but the extract capabilities method is not update
+// but the extract capabilities method is not updated
 type CapabilityMap = {
   [capabilityKey in keyof Omit<BitcoinProvider, 'getCapabilities'>]: boolean;
 };
