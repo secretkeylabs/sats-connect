@@ -7,7 +7,7 @@ import { CreateInscriptionOptions, CreateInscriptionPayload } from './types';
 const MAX_CONTENT_LENGTH = 400e3; // 400kb is the max miners will mine
 
 export const validateInscriptionPayload = (payload: CreateInscriptionPayload) => {
-  const { contentType, content, network, feeAddress, inscriptionFee } = payload;
+  const { contentType, content, payloadType, network, feeAddress, inscriptionFee } = payload;
   if (network.type !== 'Mainnet') {
     throw new Error('Only mainnet is currently supported for inscriptions');
   }
@@ -18,6 +18,10 @@ export const validateInscriptionPayload = (payload: CreateInscriptionPayload) =>
 
   if (!content || content.length === 0) {
     throw new Error('Empty content not allowed');
+  }
+
+  if (!payloadType || (payloadType !== 'BASE_64' && payloadType !== 'PLAIN_TEXT')) {
+    throw new Error('Empty invalid payloadType specified');
   }
 
   if (content.length > MAX_CONTENT_LENGTH) {
