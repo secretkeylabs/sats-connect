@@ -29,7 +29,7 @@ export const validateInscriptionPayload = (payload: CreateInscriptionPayload) =>
   }
 };
 
-export const createTextInscription = async (options: CreateInscriptionOptions) => {
+export const createInscription = async (options: CreateInscriptionOptions) => {
   const { getProvider } = options;
   const provider = await getProviderOrThrow(getProvider);
 
