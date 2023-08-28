@@ -1,3 +1,2 @@
-export * from './fileInscription';
-export * from './textInscription';
+export * from './createInscription';
 export * from './types';

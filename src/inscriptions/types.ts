@@ -1,30 +1,19 @@
 import type { RequestOptions, RequestPayload } from '../types';
 
-type CreateInscriptionResponse = {
-  txId: string;
-};
-
-interface BaseCreateInscriptionPayload extends RequestPayload {
+export interface CreateInscriptionPayload extends RequestPayload {
   contentType: string;
+  content: string;
+  payloadType: 'PLAIN_TEXT' | 'BASE_64';
   inscriptionFee?: number;
   feeAddress?: string;
   initialFeeRate?: number;
 }
 
-export interface CreateTextInscriptionPayload extends BaseCreateInscriptionPayload {
-  text: string;
-}
-export type CreateTextInscriptionResponse = CreateInscriptionResponse;
-export type CreateTextInscriptionOptions = RequestOptions<
-  CreateTextInscriptionPayload,
-  CreateTextInscriptionResponse
->;
+export type CreateInscriptionResponse = {
+  txId: string;
+};
 
-export interface CreateFileInscriptionPayload extends BaseCreateInscriptionPayload {
-  dataBase64: string;
-}
-export type CreateFileInscriptionResponse = CreateInscriptionResponse;
-export type CreateFileInscriptionOptions = RequestOptions<
-  CreateFileInscriptionPayload,
-  CreateFileInscriptionResponse
+export type CreateInscriptionOptions = RequestOptions<
+  CreateInscriptionPayload,
+  CreateInscriptionResponse
 >;
