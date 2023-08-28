@@ -37,7 +37,7 @@ export const createTextInscription = async (options: CreateInscriptionOptions) =
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const response = await provider.createTextInscription(request);
+    const response = await provider.createInscription(request);
     options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during create inscription', error);

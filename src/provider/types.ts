@@ -1,7 +1,7 @@
 import type { GetAddressResponse } from '../addresses';
 import type { CallWalletResponse } from '../call';
 import type { GetCapabilitiesResponse } from '../capabilities';
-import type { CreateFileInscriptionResponse, CreateTextInscriptionResponse } from '../inscriptions';
+import type { CreateInscriptionResponse } from '../inscriptions';
 import type { SignMessageResponse } from '../messages';
 import type { SendBtcTransactionResponse, SignTransactionResponse } from '../transactions';
 
@@ -11,8 +11,7 @@ interface BaseBitcoinProvider {
   signMessage: (request: string) => Promise<SignMessageResponse>;
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
   sendBtcTransaction: (request: string) => Promise<SendBtcTransactionResponse>;
-  createTextInscription: (request: string) => Promise<CreateTextInscriptionResponse>;
-  createFileInscription: (request: string) => Promise<CreateFileInscriptionResponse>;
+  createInscription: (request: string) => Promise<CreateInscriptionResponse>;
 }
 
 export type Capability = keyof BaseBitcoinProvider;
