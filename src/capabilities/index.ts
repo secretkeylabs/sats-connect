@@ -53,7 +53,7 @@ export const getCapabilities = async (options: GetCapabilitiesOptions) => {
 
       options.onFinish?.(extractOrValidateCapabilities(provider, new Set(response)));
     } catch (error) {
-      console.error('[Connect] Error during call request', error);
+      console.error('[Connect] Error during capabilities request', error);
     }
   }
 
@@ -61,7 +61,7 @@ export const getCapabilities = async (options: GetCapabilitiesOptions) => {
     const inferredCapabilities = extractOrValidateCapabilities(provider);
     options.onFinish?.(inferredCapabilities);
   } catch (error) {
-    console.error('[Connect] Error during call request', error);
+    console.error('[Connect] Error during capabilities request', error);
     options.onCancel?.();
   }
 };
