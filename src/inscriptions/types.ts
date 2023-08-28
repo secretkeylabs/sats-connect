@@ -7,6 +7,7 @@ export interface CreateInscriptionPayload extends RequestPayload {
   inscriptionFee?: number;
   feeAddress?: string;
   initialFeeRate?: number;
+  token?: string;
 }
 
 export type CreateInscriptionResponse = {
