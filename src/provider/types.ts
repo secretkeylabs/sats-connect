@@ -1,6 +1,6 @@
 import type { GetAddressResponse } from '../addresses';
 import type { CallWalletResponse } from '../call';
-import type { CreateFileInscriptionResponse, CreateTextInscriptionResponse } from '../inscriptions';
+import type { CreateInscriptionResponse } from '../inscriptions';
 import type { SignMessageResponse } from '../messages';
 import type { SendBtcTransactionResponse, SignTransactionResponse } from '../transactions';
 
@@ -10,8 +10,7 @@ export interface BitcoinProvider {
   signMessage: (request: string) => Promise<SignMessageResponse>;
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
   sendBtcTransaction: (request: string) => Promise<SendBtcTransactionResponse>;
-  createTextInscription: (request: string) => Promise<CreateTextInscriptionResponse>;
-  createFileInscription: (request: string) => Promise<CreateFileInscriptionResponse>;
+  createInscription: (request: string) => Promise<CreateInscriptionResponse>;
 }
 
 declare global {
