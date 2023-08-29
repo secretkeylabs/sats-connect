@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === NODE_ENV_PRODUCTION;
 
 module.exports = {
   mode: isProduction ? NODE_ENV_PRODUCTION : NODE_ENV_DEVELOPMENT,
-  entry: ['./index.ts'],
+  entry: ['./src/index.ts'],
   output: {
     filename: 'index.js',
     library: 'sats_connect',

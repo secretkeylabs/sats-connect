@@ -1,53 +1,30 @@
-import { createUnsecuredToken, Json } from 'jsontokens';
-import { BitcoinNetwork } from '../provider';
+import type { Json } from 'jsontokens';
+import { createUnsecuredToken } from 'jsontokens';
 
-
-export interface InputToSign {
-  address: string,
-  signingIndexes: Array<number>,
-  sigHash?: number,
-}
-
-
-export interface SignTransactionPayload {
-  network: BitcoinNetwork;
-  message: string;
-  psbtBase64: string;
-  broadcast?: boolean;
-  inputsToSign: InputToSign[];
-}
-
-export interface SignTransactionOptions {
-  payload: SignTransactionPayload;
-  onFinish: (response: any) => void;
-  onCancel: () => void;
-}
-
-export interface SignTransactionResponse {
-  psbtBase64: string;
-  txId?: string;
-}
-
+import { getDefaultProvider } from '../provider';
+import type { SignTransactionOptions } from './types';
 
 export const signTransaction = async (options: SignTransactionOptions) => {
-  const { psbtBase64, inputsToSign } = options.payload;
-  const provider = window.BitcoinProvider;
+  const { getProvider = getDefaultProvider } = options;
+  const provider = await getProvider();
   if (!provider) {
-    throw new Error('No Bitcoin Wallet installed');
+    throw new Error('No Bitcoin wallet installed');
   }
+
+  const { psbtBase64, inputsToSign } = options.payload;
   if (!psbtBase64) {
-    throw new Error('a value for psbtBase64 representing the tx hash is required');
+    throw new Error('A value for psbtBase64 representing the tx hash is required');
   }
   if (!inputsToSign) {
-    throw new Error('an array specifying the inputs to be signed by the wallet is required');
+    throw new Error('An array specifying the inputs to be signed by the wallet is required');
   }
-    try {
-      const request = createUnsecuredToken(options.payload as unknown as Json);
-      const addressResponse = await provider.signTransaction(request);
-      options.onFinish?.(addressResponse);
-    } catch (error) {
-      console.error('[Connect] Error during signPsbt request', error);
-      options.onCancel?.();
-    }
-};
 
+  try {
+    const request = createUnsecuredToken(options.payload as unknown as Json);
+    const response = await provider.signTransaction(request);
+    options.onFinish?.(response);
+  } catch (error) {
+    console.error('[Connect] Error during sign transaction request', error);
+    options.onCancel?.();
+  }
+};
