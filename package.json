@@ -10,7 +10,16 @@
     "build-debug": "webpack --mode development",
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-    "lint": "prettier --write ."
+    "lint": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "jsontokens": "^4.0.1",
@@ -19,6 +28,8 @@
   },
   "devDependencies": {
     "@types/jest": "^29.2.6",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
     "prettier": "^2.8.4",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
