@@ -4,9 +4,9 @@ export interface CreateInscriptionPayload extends RequestPayload {
   contentType: string;
   content: string;
   payloadType: 'PLAIN_TEXT' | 'BASE_64';
-  inscriptionFee?: number;
-  feeAddress?: string;
-  initialFeeRate?: number;
+  appFee?: number;
+  appFeeAddress?: string;
+  suggestedMinerFeeRate?: number;
   token?: string;
 }
 
