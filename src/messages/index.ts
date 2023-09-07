@@ -1,15 +1,11 @@
 import type { Json } from 'jsontokens';
 import { createUnsecuredToken } from 'jsontokens';
 
-import { getDefaultProvider } from '../provider';
+import { getProviderOrThrow } from '../provider';
 import type { SignMessageOptions } from './types';
 
 export const signMessage = async (options: SignMessageOptions) => {
-  const { getProvider = getDefaultProvider } = options;
-  const provider = await getProvider();
-  if (!provider) {
-    throw new Error('No Bitcoin wallet installed');
-  }
+  const provider = await getProviderOrThrow(options.getProvider);
 
   const { address, message } = options.payload;
   if (!address) {
