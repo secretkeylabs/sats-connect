@@ -1,7 +1,7 @@
 import type { Json } from 'jsontokens';
 import { createUnsecuredToken } from 'jsontokens';
 
-import { getDefaultProvider } from '../provider';
+import { getProviderOrThrow } from '../provider';
 import type {
   Recipient,
   SendBtcTransactionOptions,
@@ -20,11 +20,7 @@ const serializer = (recipient: Recipient[]): SerializedRecipient[] => {
 };
 
 export const sendBtcTransaction = async (options: SendBtcTransactionOptions) => {
-  const { getProvider = getDefaultProvider } = options;
-  const provider = await getProvider();
-  if (!provider) {
-    throw new Error('No Bitcoin wallet installed');
-  }
+  const provider = await getProviderOrThrow(options.getProvider);
 
   const { recipients, senderAddress, network, message } = options.payload;
   if (!recipients || recipients.length === 0) {

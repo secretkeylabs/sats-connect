@@ -1,7 +1,15 @@
 import type { BitcoinProvider } from './types';
 
-export async function getDefaultProvider(): Promise<BitcoinProvider | undefined> {
-  return window.BitcoinProvider;
+export async function getProviderOrThrow(
+  getProvider?: () => Promise<BitcoinProvider | undefined>
+): Promise<BitcoinProvider> {
+  const provider = (await getProvider?.()) || window.BitcoinProvider;
+
+  if (!provider) {
+    throw new Error('No Bitcoin wallet installed');
+  }
+
+  return provider;
 }
 
 export * from './types';
