@@ -8,10 +8,6 @@ const MAX_CONTENT_LENGTH = 400e3; // 400kb is the max miners will mine
 
 export const validateInscriptionPayload = (payload: CreateInscriptionPayload) => {
   const { contentType, content, payloadType, network, appFeeAddress, appFee } = payload;
-  if (network.type !== 'Mainnet') {
-    throw new Error('Only mainnet is currently supported for inscriptions');
-  }
-
   if (!/^[a-z]+\/[a-z0-9\-\.\+]+(?=;.*|$)/.test(contentType)) {
     throw new Error('Invalid content type detected');
   }
