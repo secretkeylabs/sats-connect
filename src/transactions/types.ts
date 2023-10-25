@@ -32,11 +32,14 @@ export interface InputToSign {
   sigHash?: number;
 }
 
-export interface SignTransactionPayload extends RequestPayload {
-  message: string;
+export type PsbtPayload = {
   psbtBase64: string;
   inputsToSign: InputToSign[];
   broadcast?: boolean;
+};
+
+export interface SignTransactionPayload extends RequestPayload, PsbtPayload {
+  message: string;
 }
 
 export interface SignTransactionResponse {
@@ -47,4 +50,16 @@ export interface SignTransactionResponse {
 export type SignTransactionOptions = RequestOptions<
   SignTransactionPayload,
   SignTransactionResponse
+>;
+
+export interface SignMultipleTransactionsPayload extends RequestPayload {
+  message: string;
+  psbts: PsbtPayload[];
+}
+
+export type SignMultipleTransactionsResponse = SignTransactionResponse[];
+
+export type SignMultipleTransactionOptions = RequestOptions<
+  SignMultipleTransactionsPayload,
+  SignMultipleTransactionsResponse
 >;

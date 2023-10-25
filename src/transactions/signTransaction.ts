@@ -1,6 +1,5 @@
 import type { Json } from 'jsontokens';
 import { createUnsecuredToken } from 'jsontokens';
-
 import { getProviderOrThrow } from '../provider';
 import type { SignTransactionOptions } from './types';
 
