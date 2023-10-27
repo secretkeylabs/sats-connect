@@ -105,3 +105,6 @@ dist
 
 # vitest
 *.ts.snap
+
+#jest HTML report
+test-report.html
