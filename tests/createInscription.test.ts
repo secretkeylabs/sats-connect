@@ -17,7 +17,7 @@ describe('test suite - createInscription', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.createInscriptionResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await createInscription(options)).toBeUndefined();
   });
@@ -34,7 +34,7 @@ describe('test suite - createInscription', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.createInscriptionResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await createInscription(options)).toBeUndefined();
   });
@@ -55,7 +55,7 @@ describe('test suite - createInscription', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.createInscriptionResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await createInscription(options)).toBeUndefined();
   });
@@ -69,8 +69,8 @@ describe('test suite - createInscription', () => {
         content: 'content',
         payloadType: 'PLAIN_TEXT',
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(createInscription(options)).rejects.toThrowError(
       'Only mainnet is currently supported for inscriptions'
@@ -86,8 +86,8 @@ describe('test suite - createInscription', () => {
         content: 'content',
         payloadType: 'PLAIN_TEXT',
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(createInscription(options)).rejects.toThrowError('Invalid content type detected');
   });
@@ -101,10 +101,26 @@ describe('test suite - createInscription', () => {
         content: '',
         payloadType: 'PLAIN_TEXT',
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(createInscription(options)).rejects.toThrowError('Empty content not allowed');
+  });
+
+  it('test - invalid payloadType', async () => {
+    const options: CreateInscriptionOptions = {
+      getProvider: mockGetProvider,
+      payload: {
+        network: { type: BitcoinNetworkType.Mainnet },
+        contentType: 'text/html',
+        content: 'content',
+      },
+      onFinish: () => {},
+      onCancel: () => {},
+    } as any;
+    await expect(createInscription(options)).rejects.toThrowError(
+      'Empty invalid payloadType specified'
+    );
   });
 
   it('test - content exceed max length', async () => {
@@ -116,8 +132,8 @@ describe('test suite - createInscription', () => {
         content: 'A'.repeat(400e3 + 1),
         payloadType: 'PLAIN_TEXT',
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(createInscription(options)).rejects.toThrowError('Content too large');
   });
@@ -133,8 +149,8 @@ describe('test suite - createInscription', () => {
         appFeeAddress: '2NEYt8s1QPVmTmFTefMLidtmy66ZoqfSz7n',
         appFee: 0,
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(createInscription(options)).rejects.toThrowError(
       'Invalid combination of app fee address and fee provided'

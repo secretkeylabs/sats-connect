@@ -22,7 +22,7 @@ describe('test suite - getCapabilities', () => {
           'createInscription',
         ]);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await getCapabilities(options)).toBeUndefined();
   });

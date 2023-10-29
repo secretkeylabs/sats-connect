@@ -25,7 +25,7 @@ describe('test suite - sendBtcTransaction', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.sendBtcTransactionResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await sendBtcTransaction(options)).toBeUndefined();
   });
@@ -51,7 +51,7 @@ describe('test suite - sendBtcTransaction', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.sendBtcTransactionResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await sendBtcTransaction(options)).toBeUndefined();
   });
@@ -64,11 +64,50 @@ describe('test suite - sendBtcTransaction', () => {
         recipients: [],
         senderAddress: 'bc1pcphm62adk8hah900lwqmsp3l57zuafnfh7ws7vcn0r65ee7lhalqmfge3t',
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(sendBtcTransaction(options)).rejects.toThrowError(
       'At least one recipient is required'
+    );
+  });
+
+  it('test - invalid recipient format', async () => {
+    const options: SendBtcTransactionOptions = {
+      getProvider: mockGetProvider,
+      payload: {
+        network: { type: BitcoinNetworkType.Testnet },
+        recipients: [
+          {
+            address: 0,
+            amountSats: 1500n,
+          },
+        ],
+        senderAddress: 'bc1pcphm62adk8hah900lwqmsp3l57zuafnfh7ws7vcn0r65ee7lhalqmfge3t',
+      },
+      onFinish: () => {},
+      onCancel: () => {},
+    } as any;
+    await expect(sendBtcTransaction(options)).rejects.toThrowError('Incorrect recipient format');
+  });
+
+  it('test - no sender address', async () => {
+    const options: SendBtcTransactionOptions = {
+      getProvider: mockGetProvider,
+      payload: {
+        network: { type: BitcoinNetworkType.Testnet },
+        recipients: [
+          {
+            address: '2NBC9AJ9ttmn1anzL2HvvVML8NWzCfeXFq4',
+            amountSats: 1500n,
+          },
+        ],
+      },
+      onFinish: () => {},
+      onCancel: () => {},
+    } as any;
+    await expect(sendBtcTransaction(options)).rejects.toThrowError(
+      'The sender address is required'
     );
   });
 });
