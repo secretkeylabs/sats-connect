@@ -16,7 +16,7 @@ describe('test suite - signMessage', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.signMessageResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await signMessage(options)).toBeUndefined();
   });
@@ -29,8 +29,8 @@ describe('test suite - signMessage', () => {
         address: '',
         message: 'message',
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(signMessage(options)).rejects.toThrowError(
       'An address is required to sign a message'
@@ -45,8 +45,8 @@ describe('test suite - signMessage', () => {
         address: 'bc1pcphm62adk8hah900lwqmsp3l57zuafnfh7ws7vcn0r65ee7lhalqmfge3t',
         message: '',
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(signMessage(options)).rejects.toThrowError('A message to be signed is required');
   });

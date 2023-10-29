@@ -18,8 +18,23 @@ describe('test suite - getAddress', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.connectResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await getAddress(options)).toBeUndefined();
+  });
+
+  it('test - invalid purposes', async () => {
+    const options: GetAddressOptions = {
+      getProvider: mockGetProvider,
+      payload: {
+        message: 'message',
+        network: {
+          type: BitcoinNetworkType.Mainnet,
+        },
+      },
+      onFinish: () => {},
+      onCancel: () => {},
+    } as any;
+    await expect(getAddress(options)).rejects.toThrow('Address purposes are required');
   });
 });

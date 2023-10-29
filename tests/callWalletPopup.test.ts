@@ -17,8 +17,22 @@ describe('test suite - callWalletPopup', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.callResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await callWalletPopup(options)).toBeUndefined();
+  });
+
+  it('test - invalid wallet method', async () => {
+    const options: CallWalletOptions = {
+      getProvider: mockGetProvider,
+      payload: {
+        network: {
+          type: BitcoinNetworkType.Mainnet,
+        },
+      },
+      onFinish: () => {},
+      onCancel: () => {},
+    } as any;
+    await expect(callWalletPopup(options)).rejects.toThrow('A wallet method is required');
   });
 });

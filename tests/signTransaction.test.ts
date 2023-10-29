@@ -26,7 +26,7 @@ describe('test suite - signTransaction', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.signTransactionResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await signTransaction(options)).toBeUndefined();
   });
@@ -55,7 +55,7 @@ describe('test suite - signTransaction', () => {
       onFinish: (response) => {
         expect(response).toEqual(data.signTransactionResponse);
       },
-      onCancel: jest.fn(),
+      onCancel: () => {},
     };
     expect(await signTransaction(options)).toBeUndefined();
   });
@@ -79,11 +79,28 @@ describe('test suite - signTransaction', () => {
           },
         ],
       },
-      onFinish: jest.fn(),
-      onCancel: jest.fn(),
+      onFinish: () => {},
+      onCancel: () => {},
     };
     await expect(signTransaction(options)).rejects.toThrowError(
       'A value for psbtBase64 representing the tx hash is required'
+    );
+  });
+
+  it('test - invalid inputsToSign', async () => {
+    const options: SignTransactionOptions = {
+      getProvider: mockGetProvider,
+      payload: {
+        network: { type: BitcoinNetworkType.Mainnet },
+        psbtBase64: 'cHNidP8BAJwCAmO+JvQJxhVDDpm3tV5PmPfzvJOSL4GOdjEOpAAAAAAnrAAA==',
+        broadcast: false,
+        message: 'message',
+      },
+      onFinish: () => {},
+      onCancel: () => {},
+    } as any;
+    await expect(signTransaction(options)).rejects.toThrowError(
+      'An array specifying the inputs to be signed by the wallet is required'
     );
   });
 });
