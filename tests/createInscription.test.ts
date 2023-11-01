@@ -156,4 +156,22 @@ describe('test suite - createInscription', () => {
       'Invalid combination of app fee address and fee provided'
     );
   });
+
+  it('test - invalid combination of app fee address without fee', async () => {
+    const options: CreateInscriptionOptions = {
+      getProvider: mockGetProvider,
+      payload: {
+        network: { type: BitcoinNetworkType.Mainnet },
+        contentType: 'text/html',
+        content: 'content',
+        payloadType: 'PLAIN_TEXT',
+        appFeeAddress: '2NEYt8s1QPVmTmFTefMLidtmy66ZoqfSz7n',
+      },
+      onFinish: () => {},
+      onCancel: () => {},
+    };
+    await expect(createInscription(options)).rejects.toThrowError(
+      'Invalid combination of app fee address and fee provided'
+    );
+  });
 });
