@@ -14,6 +14,6 @@ describe('test suite - getProvider', () => {
   });
 
   it('test - invalid getProvider', async () => {
-    await expect(getProviderOrThrow(undefined)).rejects.toThrowError('window is not defined');
+    await expect(getProviderOrThrow(undefined)).rejects.toThrowError('No Bitcoin wallet installed');
   });
 });

@@ -13,6 +13,7 @@ import type { SendBtcTransactionOptions } from '../src/transactions/types';
 import type { CreateInscriptionOptions } from '../src/inscriptions/types';
 
 jest.mock('../src/provider', () => ({
+  ...jest.requireActual('../src/provider'),
   getProviderOrThrow: jest.fn(),
 }));
 
