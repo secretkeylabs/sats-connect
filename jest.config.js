@@ -14,4 +14,7 @@ module.exports = {
       },
     ],
   ],
+  "globals": {
+    "window": {}
+  }
 };
