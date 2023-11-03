@@ -1,4 +1,4 @@
-import type { Capability } from 'src/provider';
+import type { Capability } from '../provider';
 import type { RequestOptions, RequestPayload } from '../types';
 
 export interface GetCapabilitiesPayload extends RequestPayload {}
