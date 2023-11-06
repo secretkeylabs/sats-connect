@@ -38,6 +38,11 @@ export type PsbtPayload = {
   broadcast?: boolean;
 };
 
+export type SignMultiplePsbtPayload = {
+  psbtBase64: string;
+  inputsToSign: InputToSign[];
+};
+
 export interface SignTransactionPayload extends RequestPayload, PsbtPayload {
   message: string;
 }
@@ -54,7 +59,8 @@ export type SignTransactionOptions = RequestOptions<
 
 export interface SignMultipleTransactionsPayload extends RequestPayload {
   message: string;
-  psbts: PsbtPayload[];
+  psbts: SignMultiplePsbtPayload[];
+  broadcast?: boolean;
 }
 
 export type SignMultipleTransactionsResponse = SignTransactionResponse[];
