@@ -29,11 +29,15 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
-      - run: npm publish --tag prerelease
+      - id: use-tag-version
         if: github.event.release.prerelease
+        run: npm version --no-git-tag-version $(git describe --tags --abbrev=0 | sed 's/^v//')
+      - id: publish-prerelease
+        if: github.event.release.prerelease
+        run: npm publish --tag prerelease
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish
-        if: "!github.event.release.prerelease"
+        if: '!github.event.release.prerelease'
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

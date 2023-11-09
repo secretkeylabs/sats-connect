@@ -4,14 +4,11 @@ import { createUnsecuredToken } from 'jsontokens';
 import { getProviderOrThrow } from '../provider';
 import { CreateInscriptionOptions, CreateInscriptionPayload } from './types';
 
-const MAX_CONTENT_LENGTH = 400e3; // 400kb is the max miners will mine
+const MAX_CONTENT_LENGTH_MAINNET = 400e3; // 400kb is the max miners will mine
+const MAX_CONTENT_LENGTH_TESTNET = 60e3; // 60kb limit on Testnet to prevent spam
 
 export const validateInscriptionPayload = (payload: CreateInscriptionPayload) => {
   const { contentType, content, payloadType, network, appFeeAddress, appFee } = payload;
-  if (network.type !== 'Mainnet') {
-    throw new Error('Only mainnet is currently supported for inscriptions');
-  }
-
   if (!/^[a-z]+\/[a-z0-9\-\.\+]+(?=;.*|$)/.test(contentType)) {
     throw new Error('Invalid content type detected');
   }
@@ -24,7 +21,10 @@ export const validateInscriptionPayload = (payload: CreateInscriptionPayload) =>
     throw new Error('Empty invalid payloadType specified');
   }
 
-  if (content.length > MAX_CONTENT_LENGTH) {
+  if (
+    content.length >
+    (network.type === 'Mainnet' ? MAX_CONTENT_LENGTH_MAINNET : MAX_CONTENT_LENGTH_TESTNET)
+  ) {
     throw new Error('Content too large');
   }
 
