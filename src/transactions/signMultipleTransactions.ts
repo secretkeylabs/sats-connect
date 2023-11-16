@@ -10,6 +10,11 @@ export const signMultipleTransactions = async (options: SignMultipleTransactionO
   if (!psbts || !psbts.length) {
     throw new Error('psbts array is required');
   }
+
+  if (psbts.length > 100) {
+    throw new Error('psbts array must contain less than 100 psbts');
+  }
+
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
     const response = await provider.signMultipleTransactions(request);
