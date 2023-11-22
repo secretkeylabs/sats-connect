@@ -60,7 +60,6 @@ export type SignTransactionOptions = RequestOptions<
 export interface SignMultipleTransactionsPayload extends RequestPayload {
   message: string;
   psbts: SignMultiplePsbtPayload[];
-  broadcast?: boolean;
 }
 
 export type SignMultipleTransactionsResponse = SignTransactionResponse[];
