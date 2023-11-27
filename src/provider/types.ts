@@ -12,6 +12,7 @@ interface BaseBitcoinProvider {
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
   sendBtcTransaction: (request: string) => Promise<SendBtcTransactionResponse>;
   createInscription: (request: string) => Promise<CreateInscriptionResponse>;
+  createRepeatInscriptions: (request: string) => Promise<CreateInscriptionResponse>;
 }
 
 export type Capability = keyof BaseBitcoinProvider;

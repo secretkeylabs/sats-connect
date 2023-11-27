@@ -10,11 +10,20 @@ export interface CreateInscriptionPayload extends RequestPayload {
   token?: string;
 }
 
+export interface CreateRepeatInscriptionsPayload extends CreateInscriptionPayload {
+  repeat: number;
+}
+
 export type CreateInscriptionResponse = {
   txId: string;
 };
 
 export type CreateInscriptionOptions = RequestOptions<
   CreateInscriptionPayload,
+  CreateInscriptionResponse
+>;
+
+export type CreateRepeatInscriptionsOptions = RequestOptions<
+  CreateRepeatInscriptionsPayload,
   CreateInscriptionResponse
 >;
