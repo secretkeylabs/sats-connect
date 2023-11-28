@@ -1,4 +1,4 @@
-import { getProviderOrThrow } from 'src/provider';
+import { getProviderOrThrow } from '../provider';
 import { CreateInscriptionOptions, CreateRepeatInscriptionsOptions } from './types';
 import { Json, createUnsecuredToken } from 'jsontokens';
 import { validateInscriptionPayload } from './utils';
