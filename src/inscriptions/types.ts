@@ -18,6 +18,10 @@ export type CreateInscriptionResponse = {
   txId: string;
 };
 
+export type CreateRepeatInscriptionsResponse = {
+  txId: string;
+};
+
 export type CreateInscriptionOptions = RequestOptions<
   CreateInscriptionPayload,
   CreateInscriptionResponse
@@ -25,5 +29,5 @@ export type CreateInscriptionOptions = RequestOptions<
 
 export type CreateRepeatInscriptionsOptions = RequestOptions<
   CreateRepeatInscriptionsPayload,
-  CreateInscriptionResponse
+  CreateRepeatInscriptionsResponse
 >;
