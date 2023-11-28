@@ -34,6 +34,7 @@ const extractOrValidateCapabilities = (
     signTransaction: validateCapability('signTransaction'),
     sendBtcTransaction: validateCapability('sendBtcTransaction'),
     createInscription: validateCapability('createInscription'),
+    createRepeatInscriptions: validateCapability('createRepeatInscriptions'),
   };
 
   return Object.entries(capabilityMap).reduce((acc, [capability, value]) => {
