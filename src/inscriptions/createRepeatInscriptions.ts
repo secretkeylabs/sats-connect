@@ -1,5 +1,5 @@
 import { getProviderOrThrow } from '../provider';
-import { CreateInscriptionOptions, CreateRepeatInscriptionsOptions } from './types';
+import { CreateRepeatInscriptionsOptions } from './types';
 import { Json, createUnsecuredToken } from 'jsontokens';
 import { validateInscriptionPayload } from './utils';
 
@@ -11,7 +11,7 @@ export const createRepeatInscriptions = async (options: CreateRepeatInscriptions
 
   try {
     const request = createUnsecuredToken(options.payload as unknown as Json);
-    const response = await provider.createInscription(request);
+    const response = await provider.createRepeatInscriptions(request);
     options.onFinish?.(response);
   } catch (error) {
     console.error('[Connect] Error during create repeat inscriptions', error);
