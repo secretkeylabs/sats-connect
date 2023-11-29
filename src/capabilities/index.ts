@@ -34,6 +34,7 @@ const extractOrValidateCapabilities = (
     signTransaction: validateCapability('signTransaction'),
     sendBtcTransaction: validateCapability('sendBtcTransaction'),
     createInscription: validateCapability('createInscription'),
+    createRepeatInscriptions: validateCapability('createRepeatInscriptions'),
     signMultipleTransactions: validateCapability('signMultipleTransactions'),
   };
 

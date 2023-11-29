@@ -1,7 +1,7 @@
 import type { GetAddressResponse } from '../addresses';
 import type { CallWalletResponse } from '../call';
 import type { GetCapabilitiesResponse } from '../capabilities';
-import type { CreateInscriptionResponse } from '../inscriptions';
+import type { CreateInscriptionResponse, CreateRepeatInscriptionsResponse } from '../inscriptions';
 import type { SignMessageResponse } from '../messages';
 import type {
   SendBtcTransactionResponse,
@@ -16,6 +16,7 @@ interface BaseBitcoinProvider {
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
   sendBtcTransaction: (request: string) => Promise<SendBtcTransactionResponse>;
   createInscription: (request: string) => Promise<CreateInscriptionResponse>;
+  createRepeatInscriptions: (request: string) => Promise<CreateRepeatInscriptionsResponse>;
   signMultipleTransactions: (request: string) => Promise<SignMultipleTransactionsResponse>;
 }
 
