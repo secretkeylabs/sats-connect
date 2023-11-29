@@ -3,7 +3,11 @@ import type { CallWalletResponse } from '../call';
 import type { GetCapabilitiesResponse } from '../capabilities';
 import type { CreateInscriptionResponse, CreateRepeatInscriptionsResponse } from '../inscriptions';
 import type { SignMessageResponse } from '../messages';
-import type { SendBtcTransactionResponse, SignTransactionResponse } from '../transactions';
+import type {
+  SendBtcTransactionResponse,
+  SignMultipleTransactionsResponse,
+  SignTransactionResponse,
+} from '../transactions';
 
 interface BaseBitcoinProvider {
   call: (request: string) => Promise<CallWalletResponse>;
@@ -13,6 +17,7 @@ interface BaseBitcoinProvider {
   sendBtcTransaction: (request: string) => Promise<SendBtcTransactionResponse>;
   createInscription: (request: string) => Promise<CreateInscriptionResponse>;
   createRepeatInscriptions: (request: string) => Promise<CreateRepeatInscriptionsResponse>;
+  signMultipleTransactions: (request: string) => Promise<SignMultipleTransactionsResponse>;
 }
 
 export type Capability = keyof BaseBitcoinProvider;
