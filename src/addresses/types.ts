@@ -3,6 +3,7 @@ import type { RequestOptions, RequestPayload } from '../types';
 export enum AddressPurpose {
   Ordinals = 'ordinals',
   Payment = 'payment',
+  STX = 'stx',
 }
 
 export interface GetAddressPayload extends RequestPayload {
