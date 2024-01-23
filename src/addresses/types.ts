@@ -11,10 +11,20 @@ export interface GetAddressPayload extends RequestPayload {
   message: string;
 }
 
+export enum AddressTypes {
+  p2pkh = 'p2pkh',
+  p2sh = 'p2sh',
+  p2wpkh = 'p2wpkh',
+  p2wsh = 'p2wsh',
+  p2tr = 'p2tr',
+  stacks = 'stacks',
+}
+
 export interface Address {
   address: string;
   publicKey: string;
   purpose: AddressPurpose;
+  addressType?: AddressTypes;
 }
 
 export interface GetAddressResponse {
