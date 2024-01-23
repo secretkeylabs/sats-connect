@@ -29,5 +29,8 @@ export interface BitcoinProvider extends BaseBitcoinProvider {
 declare global {
   interface Window {
     BitcoinProvider?: BitcoinProvider;
+    XverseProviders?:{
+      BitcoinProvider?: BitcoinProvider;
+    }
   }
 }
