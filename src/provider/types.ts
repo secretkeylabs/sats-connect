@@ -1,5 +1,4 @@
 import type { GetAddressResponse } from '../addresses';
-import type { CallWalletResponse } from '../call';
 import type { GetCapabilitiesResponse } from '../capabilities';
 import type { CreateInscriptionResponse, CreateRepeatInscriptionsResponse } from '../inscriptions';
 import type { SignMessageResponse } from '../messages';
@@ -10,7 +9,8 @@ import type {
 } from '../transactions';
 
 interface BaseBitcoinProvider {
-  call: (request: string) => Promise<CallWalletResponse>;
+  request: (method: string, options: Record<string, any>) => Promise<Record<string, any>>;
+  listen: (method: string, callback: () => void) => void;
   connect: (request: string) => Promise<GetAddressResponse>;
   signMessage: (request: string) => Promise<SignMessageResponse>;
   signTransaction: (request: string) => Promise<SignTransactionResponse>;
@@ -26,13 +26,25 @@ export interface BitcoinProvider extends BaseBitcoinProvider {
   getCapabilities?: (request: string) => Promise<GetCapabilitiesResponse>;
 }
 
+export interface WebbtcProvider {
+  id: string;
+  name: string;
+  icon: string;
+  webUrl?: string;
+  chromeWebStoreUrl?: string;
+  mozillaAddOnsUrl?: string;
+  googlePlayStoreUrl?: string;
+  iOSAppStoreUrl?: string;
+  methods?: string[];
+}
+
 declare global {
   interface XverseProviders {
     BitcoinProvider?: BitcoinProvider;
   }
-
   interface Window {
     BitcoinProvider?: BitcoinProvider;
-    XverseProviders?: XverseProviders
+    XverseProviders?: XverseProviders;
+    webbtc_providers: WebbtcProvider[];
   }
 }
