@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "es2020",
+    "target": "es6",
     "module": "commonjs",
+    "lib": ["es5", "es6", "dom"],
     "moduleResolution": "node",
     "baseUrl": ".",
-    "declaration": true,
-    "sourceMap": true,
+    "declaration": false,
+    "sourceMap": false,
     "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

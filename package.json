@@ -8,6 +8,7 @@
   "scripts": {
     "test": "jest",
     "build-debug": "webpack --mode development",
+    "build-single": "webpack --mode production",
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
     "lint": "prettier --write .",
@@ -35,10 +36,10 @@
     "rimraf": "^3.0.2",
     "stream-browserify": "^3.0.0",
     "ts-jest": "^29.0.5",
-    "ts-loader": "^9.4.1",
-    "typescript": "^4.9.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^4.9.5",
     "vm-browserify": "^1.1.2",
-    "webpack": "^5.74.0",
+    "webpack": "^5.90.3",
     "webpack-cli": "^4.10.0"
   },
   "repository": {
