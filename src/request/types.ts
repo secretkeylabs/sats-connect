@@ -28,15 +28,6 @@ export interface RpcErrorResponse<TError extends RpcError = RpcError> {
   error: TError;
 }
 
-const x: RpcErrorResponse = {
-  error: {
-    code: RpcErrorCode.INTERNAL_ERROR,
-    id: 200,
-    jsonrpc: '2.0',
-    message: 'Faulty Transaction',
-  },
-};
-
 export interface Method<T, U> {
   request: T;
   response: U;
