@@ -22,3 +22,5 @@ export const request = async (
     console.error('[Connect] Error during request', error);
   }
 };
+
+export * from './types';
