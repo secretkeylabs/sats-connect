@@ -1,3 +1,4 @@
+import { Params, Requests, Return } from 'src/request';
 import type { GetAddressResponse } from '../addresses';
 import type { GetCapabilitiesResponse } from '../capabilities';
 import type { CreateInscriptionResponse, CreateRepeatInscriptionsResponse } from '../inscriptions';
@@ -8,8 +9,19 @@ import type {
   SignTransactionResponse,
 } from '../transactions';
 
+/*
+export const request = async <Method extends keyof Requests>(
+  method: Method,
+  options: Args<Method>,
+  providerId?: string
+): Promise<Return<Method>> => {
+  */
+
 interface BaseBitcoinProvider {
-  request: (method: string, options: Record<string, any>) => Promise<Record<string, any>>;
+  request: <Method extends keyof Requests>(
+    method: Method,
+    options: Params<Method>
+  ) => Promise<Return<Method>>;
   listen: (method: string, callback: () => void) => void;
   connect: (request: string) => Promise<GetAddressResponse>;
   signMessage: (request: string) => Promise<SignMessageResponse>;

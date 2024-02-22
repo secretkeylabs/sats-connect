@@ -35,8 +35,198 @@ export interface Method<T, U> {
 
 export type Methods = Record<string, Method<any, any>>;
 
-interface Requests {
+interface FunctionArgs {
+  /**
+   * An array of hex-encoded strings representing the function arguments.
+   *
+   * To convert Clarity values to their hex representation, the `cvToString`
+   * helper from the `@stacks/transactions` package may be helpful.
+   *
+   * ```js
+   * import { cvToString } from '@stacks/transactions';
+   *
+   * const functionArgs = [someClarityValue1, someClarityValue2];
+   * const hexArgs = functionArgs.map(cvToString);
+   * ```
+   */
+  functionArgs: Array<string>;
+}
+
+interface Pubkey {
+  /**
+   * When sending a transfer STX request to a wallet, users can generally
+   * choose from which accout they want to send the STX tokens from. In
+   * cases where applications want the transfer to be made from a specific
+   * account, they can provide the `pubkey` of the address they'd like the
+   * transfer to be made from. It is up to wallet providers to handle this
+   * field as they see fit.
+   */
+  pubkey?: string;
+}
+
+interface ContractAddress {
+  /**
+   * The Crockford base-32 encoded Stacks address of the contract.
+   */
+  contractAddress: string;
+}
+
+interface ContractName {
+  /**
+   * The name of the contract.
+   */
+  contractName: string;
+}
+
+interface FunctionName {
+  /**
+   * The name of the function to call.
+   */
+  functionName: string;
+}
+
+interface PostConditions {
+  /**
+   * A hex-encoded string representing the post conditions.
+   *
+   * A post condition may be converted to it's hex representation using the `serializePostCondition` helper from the `@stacks/transactions` package,
+   *
+   * ```js
+   * import { serializePostCondition } from '@stacks/transactions';
+   *
+   * const postCondition = somePostCondition;
+   * const hexPostCondition = serializePostCondition(postCondition).toString('hex');
+   */
+  postConditions: Array<string>;
+}
+
+interface PostConditionMode {
+  /**
+   * The mode of the post conditions.
+   */
+  postConditionMode?: number;
+}
+
+interface AnchorMode {
+  /**
+   * The anchor mode.
+   */
+  anchorMode?: 'TODO'; // AnchorMode
+}
+
+interface Nonce {
+  /**
+   * A number in string format.
+   */
+  nonce?: string; // BigInt
+}
+
+interface ParameterFormatVersion {
+  /**
+   * Version of parameter format.
+   */
+  version?: string;
+}
+
+interface Sponsored {
+  /**
+   * Whether the transaction is sponsored.
+   */
+  sponsored?: boolean;
+}
+
+interface Recipient {
+  /**
+   * The Crockford base-32 encoded Stacks address of the recipient.
+   */
+  recipient: string;
+}
+
+interface Amount {
+  /**
+   * Amount of STX tokens to transfer in microstacks as a string. Anything
+   * parseable by `BigInt` is acceptable.
+   *
+   * Example,
+   *
+   * ```js
+   * const amount1 = 1234;
+   * const amount2 = 1234n;
+   * const amount3 = '1234';
+   * ```
+   */
+  amount: number | string;
+}
+
+interface Memo {
+  /**
+   * A string representing the memo.
+   */
+  memo?: string;
+}
+
+interface TxId {
+  /**
+   * The transaction ID of the transfer STX transaction as a hex-encoded string.
+   */
+  txid: string;
+}
+
+interface Transaction {
+  /**
+   * The transaction of the transfer STX transaction as a hex-encoded string.
+   */
+  transaction: string;
+}
+
+interface Message {
+  /**
+   * Message payload to be signed.
+   */
+  message: string;
+}
+
+export interface Requests {
   stx_contractCall: {
+    args: Pubkey &
+      FunctionArgs &
+      ContractAddress &
+      ContractName &
+      FunctionName &
+      PostConditions &
+      PostConditionMode &
+      AnchorMode &
+      Nonce &
+      ParameterFormatVersion &
+      Sponsored;
+    return: TxId & Transaction;
+  };
+  stx_transferStx: {
+    args: Pubkey &
+      Recipient &
+      Amount &
+      Memo &
+      PostConditions &
+      PostConditionMode &
+      ParameterFormatVersion;
+    return: TxId & Transaction;
+  };
+  stx_signMessage: {
+    args: Pubkey &
+      ParameterFormatVersion & {
+        /**
+         * The domain to be signed.
+         */
+        domain: string;
+
+        /**
+         * Version of parameter format.
+         */
+        version?: string;
+      };
+    return: {};
+  };
+  stx_contractDeploy: {
     args: {
       /**
        * The stacks address of sender.
@@ -44,34 +234,14 @@ interface Requests {
       pubkey: string;
 
       /**
-       * The address of the contract.
-       */
-      contractAddress: string;
-
-      /**
-       * The name of the contract.
+       * The name of the contract being deployed.
        */
       contractName: string;
 
       /**
-       * The name of the function to call.
+       * The code body of the contract.
        */
-      functionName: string;
-
-      /**
-       * An array of hex-encoded strings representing the function arguments.
-       *
-       * To convert Clarity values to their hex representation, the `cvToString`
-       * helper from the `@stacks/transactions` package may be helpful.
-       *
-       * ```js
-       * import { cvToString } from '@stacks/transactions';
-       *
-       * const functionArgs = [someClarityValue1, someClarityValue2];
-       * const hexArgs = functionArgs.map(cvToString);
-       * ```
-       */
-      functionArgs: Array<string>;
+      codeBody: string;
 
       /**
        * A hex-encoded string representing the post conditions.
@@ -84,58 +254,26 @@ interface Requests {
        * const postCondition = somePostCondition;
        * const hexPostCondition = serializePostCondition(postCondition).toString('hex');
        */
-      postConditions: Array<string>; // Array<PostCondition>
+      postConditions: Array<string>;
 
       /**
        * The mode of the post conditions.
        */
-      postConditionMode?: number; // PostConditionMode
+      postConditionMode?: number;
 
       /**
-       * The anchor mode.
+       * Version of parameter format.
        */
-      anchorMode?: 'TODO'; // AnchorMode
-      /** A stringified BigInt */
-      nonce?: string; // BigInt
-      version?: string;
-      sponsored?: boolean;
-    };
-    return: {};
-  };
-  stx_transfer: {
-    args: {
-      pubkey: string;
-      recipient: string;
-      amount: string; // BigInt
-      memo?: string;
-      postConditions?: Array<string>; // Array<PostCond>
-      postConditionMode?: string; // PostConditionMode
-      version?: string;
-    };
-    return: {};
-  };
-  stx_signMessage: {
-    args: {
-      pubkey: string;
-      message: string;
-      version?: string;
-    };
-    return: {};
-  };
-  stx_contractDeploy: {
-    args: {
-      pubkey: string;
-      contractName: string;
-      codeBody: string;
-      postConditions?: Array<string>; // Array<PostCond>
-      postConditionMode?: string; // PostConditionMode
       version?: string;
     };
     return: {};
   };
 }
 
-type Return<Method> = Method extends keyof Requests ? Requests[Method]['return'] : unknown;
-type Args<Method> = Method extends keyof Requests ? Requests[Method]['args'] : unknown;
+export type Return<Method> = Method extends keyof Requests ? Requests[Method]['return'] : unknown;
+export type Params<Method> = Method extends keyof Requests ? Requests[Method]['args'] : unknown;
 
-export type Request<Method extends keyof Requests> = (requestMethod: Method, args: Args<Method>) => Return<Method>;
+export type Request<Method extends keyof Requests> = (
+  requestMethod: Method,
+  args: Params<Method>
+) => Return<Method>;

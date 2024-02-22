@@ -1,10 +1,11 @@
 import { getProviderById } from '../provider';
+import { Params, Request, Requests, Return } from './types';
 
-export const request = async (
-  method: string,
-  options: Record<string, any>,
+export const request = async <Method extends keyof Requests>(
+  method: Method,
+  options: Params<Method>,
   providerId?: string
-) => {
+): Promise<Return<Method>> => {
   let provider = window.XverseProviders?.BitcoinProvider;
   if (providerId) {
     provider = await getProviderById(providerId);
@@ -16,11 +17,7 @@ export const request = async (
     throw new Error('A wallet method is required');
   }
 
-  try {
-    return provider.request(method, options);
-  } catch (error) {
-    console.error('[Connect] Error during request', error);
-  }
+  return provider.request(method, options);
 };
 
 export * from './types';
