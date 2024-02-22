@@ -274,7 +274,3 @@ export type Request<Method extends keyof Requests | string> = (
   requestMethod: Method,
   args: Params<Method>
 ) => Return<Method>;
-
-const foo: Request<keyof Requests | string> = (requestMethod, args) => {
-  if (requestMethod === '') return {} as any;
-};
