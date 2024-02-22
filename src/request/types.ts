@@ -186,9 +186,44 @@ interface Message {
   message: string;
 }
 
+interface Signature {
+  /**
+   * Signature of the message.
+   */
+  signature: string;
+}
+
+interface PublicKey {
+  /**
+   * Public key of the signer.
+   */
+  publicKey: string;
+}
+
+interface Domain {
+  /**
+   * The domain to be signed.
+   */
+  domain: string;
+}
+
+interface CodeBody {
+  /**
+   * The code body of the Clarity contract.
+   */
+  codeBody: string;
+}
+
+interface ClarityVersion {
+  /**
+   * The Clarity version of the contract.
+   */
+  clarityVersion?: string;
+}
+
 export interface Requests {
   stx_contractCall: {
-    args: Pubkey &
+    params: Pubkey &
       FunctionArgs &
       ContractAddress &
       ContractName &
@@ -199,81 +234,47 @@ export interface Requests {
       Nonce &
       ParameterFormatVersion &
       Sponsored;
-    return: TxId & Transaction;
+    result: TxId & Transaction;
   };
   stx_transferStx: {
-    args: Pubkey &
+    params: Pubkey &
       Recipient &
       Amount &
       Memo &
       PostConditions &
       PostConditionMode &
       ParameterFormatVersion;
-    return: TxId & Transaction;
+    result: TxId & Transaction;
   };
   stx_signMessage: {
-    args: Pubkey &
-      ParameterFormatVersion & {
-        /**
-         * The domain to be signed.
-         */
-        domain: string;
-
-        /**
-         * Version of parameter format.
-         */
-        version?: string;
-      };
-    return: {};
+    params: Pubkey & ParameterFormatVersion & Message;
+    result: Signature & PublicKey;
+  };
+  stx_signStructuredMessage: {
+    params: Pubkey & ParameterFormatVersion & Domain & Message;
+    result: Signature & PublicKey;
   };
   stx_contractDeploy: {
-    args: {
-      /**
-       * The stacks address of sender.
-       */
-      pubkey: string;
-
-      /**
-       * The name of the contract being deployed.
-       */
-      contractName: string;
-
-      /**
-       * The code body of the contract.
-       */
-      codeBody: string;
-
-      /**
-       * A hex-encoded string representing the post conditions.
-       *
-       * A post condition may be converted to it's hex representation using the `serializePostCondition` helper from the `@stacks/transactions` package,
-       *
-       * ```js
-       * import { serializePostCondition } from '@stacks/transactions';
-       *
-       * const postCondition = somePostCondition;
-       * const hexPostCondition = serializePostCondition(postCondition).toString('hex');
-       */
-      postConditions: Array<string>;
-
-      /**
-       * The mode of the post conditions.
-       */
-      postConditionMode?: number;
-
-      /**
-       * Version of parameter format.
-       */
-      version?: string;
-    };
-    return: {};
+    params: Pubkey &
+      ParameterFormatVersion &
+      ContractName &
+      CodeBody &
+      PostConditions &
+      PostConditionMode &
+      Sponsored &
+      ClarityVersion;
+    result: TxId & Transaction;
   };
 }
 
-export type Return<Method> = Method extends keyof Requests ? Requests[Method]['return'] : unknown;
-export type Params<Method> = Method extends keyof Requests ? Requests[Method]['args'] : unknown;
+export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : unknown;
+export type Params<Method> = Method extends keyof Requests ? Requests[Method]['params'] : unknown;
 
-export type Request<Method extends keyof Requests> = (
+export type Request<Method extends keyof Requests | string> = (
   requestMethod: Method,
   args: Params<Method>
 ) => Return<Method>;
+
+const foo: Request<keyof Requests | string> = (requestMethod, args) => {
+  if (requestMethod === '') return {} as any;
+};

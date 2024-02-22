@@ -3,7 +3,7 @@ import { Params, Request, Requests, Return } from './types';
 
 export const request = async <Method extends keyof Requests>(
   method: Method,
-  options: Params<Method>,
+  params: Params<Method>,
   providerId?: string
 ): Promise<Return<Method>> => {
   let provider = window.XverseProviders?.BitcoinProvider;
@@ -17,7 +17,7 @@ export const request = async <Method extends keyof Requests>(
     throw new Error('A wallet method is required');
   }
 
-  return provider.request(method, options);
+  return provider.request(method, params);
 };
 
 export * from './types';
