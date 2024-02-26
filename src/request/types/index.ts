@@ -1,13 +1,13 @@
 import { GetAddresses, GetInfo, SendTransfer, SignMessage, SignPsbt } from './btcMethods';
 import {
-  ContractCall,
-  ContractDeploy,
-  GetAccounts,
-  SignStructuredMessage,
-  SignStxMessage,
-  SignTransaction,
-  TransferStx,
-  GetAddresses as StxGetAddresses,
+  StxContractCall,
+  StxContractDeploy,
+  StxGetAccounts,
+  StxSignStructuredMessage,
+  StxSignStxMessage,
+  StxSignTransaction,
+  StxTransferStx,
+  StxGetAddresses,
 } from './stxMethods';
 
 export interface Requests {
@@ -16,13 +16,13 @@ export interface Requests {
   signMessage: SignMessage;
   sendTransfer: SendTransfer;
   signPsbt: SignPsbt;
-  stx_contractCall: ContractCall;
-  stx_transferStx: TransferStx;
-  stx_signMessage: SignStxMessage;
-  stx_signStructuredMessage: SignStructuredMessage;
-  stx_contractDeploy: ContractDeploy;
-  stx_signTransaction: SignTransaction;
-  stx_getAccounts: GetAccounts;
+  stx_contractCall: StxContractCall;
+  stx_transferStx: StxTransferStx;
+  stx_signMessage: StxSignStxMessage;
+  stx_signStructuredMessage: StxSignStructuredMessage;
+  stx_contractDeploy: StxContractDeploy;
+  stx_signTransaction: StxSignTransaction;
+  stx_getAccounts: StxGetAccounts;
   stx_getAddresses: StxGetAddresses;
 }
 

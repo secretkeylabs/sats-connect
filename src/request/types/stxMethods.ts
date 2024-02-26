@@ -207,7 +207,7 @@ type ContractCallParams = ContractAddress &
   Partial<Pubkey> &
   Partial<Sponsored>;
 type ContractCallResult = TxId & Transaction;
-export type ContractCall = MethodParamsAndResult<ContractCallParams, ContractCallResult>;
+export type StxContractCall = MethodParamsAndResult<ContractCallParams, ContractCallResult>;
 
 // Types for `stx_transferStx` request
 type TransferStxParams = Amount &
@@ -218,12 +218,12 @@ type TransferStxParams = Amount &
   Partial<PostConditions> &
   Partial<Pubkey>;
 type TransferStxResult = TxId & Transaction;
-export type TransferStx = MethodParamsAndResult<TransferStxParams, TransferStxResult>;
+export type StxTransferStx = MethodParamsAndResult<TransferStxParams, TransferStxResult>;
 
 // Types for `stx_signMessage` request
 type SignStxMessageParams = Message & Partial<Pubkey> & Partial<ParameterFormatVersion>;
 type SignStxMessageResult = Signature & PublicKey;
-export type SignStxMessage = MethodParamsAndResult<SignStxMessageParams, SignStxMessageResult>;
+export type StxSignStxMessage = MethodParamsAndResult<SignStxMessageParams, SignStxMessageResult>;
 
 // Types for `stx_signStructuredMessage` request
 type SignStructuredMessageParams = Domain &
@@ -231,7 +231,7 @@ type SignStructuredMessageParams = Domain &
   Partial<ParameterFormatVersion> &
   Partial<Pubkey>;
 type SignStructuredMessageResult = Signature & PublicKey;
-export type SignStructuredMessage = MethodParamsAndResult<
+export type StxSignStructuredMessage = MethodParamsAndResult<
   SignStructuredMessageParams,
   SignStructuredMessageResult
 >;
@@ -246,23 +246,26 @@ type ContractDeployParams = CodeBody &
   Partial<PostConditions> &
   Partial<Pubkey>;
 type ContractDeployResult = TxId & Transaction;
-export type ContractDeploy = MethodParamsAndResult<ContractDeployParams, ContractDeployResult>;
+export type StxContractDeploy = MethodParamsAndResult<ContractDeployParams, ContractDeployResult>;
 
 // Types for `stx_getAccounts` request
 type GetAccountsParams = {};
 type GetAccountsResult = {
   addresses: Array<Address & PublicKey & { gaiaHubUrl: string; gaiaAppKey: string }>;
 };
-export type GetAccounts = MethodParamsAndResult<GetAccountsParams, GetAccountsResult>;
+export type StxGetAccounts = MethodParamsAndResult<GetAccountsParams, GetAccountsResult>;
 
 // Types for `stx_getAddresses` request
 type GetAddressesParams = {};
 type GetAddressesResult = {
   addresses: Array<Address & PublicKey>;
 };
-export type GetAddresses = MethodParamsAndResult<GetAddressesParams, GetAddressesResult>;
+export type StxGetAddresses = MethodParamsAndResult<GetAddressesParams, GetAddressesResult>;
 
 // Types for `stx_signTransaction` request
 type SignTransactionParams = Transaction & Partial<Pubkey>;
 type SignTransactionResult = Transaction;
-export type SignTransaction = MethodParamsAndResult<SignTransactionParams, SignTransactionResult>;
+export type StxSignTransaction = MethodParamsAndResult<
+  SignTransactionParams,
+  SignTransactionResult
+>;
