@@ -36,6 +36,13 @@ interface ContractAddress {
   contractAddress: string;
 }
 
+interface Address {
+  /**
+   * A Crockford base-32 encoded Stacks address.
+   */
+  address: string;
+}
+
 interface ContractName {
   /**
    * The name of the contract.
@@ -61,6 +68,7 @@ interface PostConditions {
    *
    * const postCondition = somePostCondition;
    * const hexPostCondition = serializePostCondition(postCondition).toString('hex');
+   * ```
    */
   postConditions: Array<string>;
 }
@@ -160,7 +168,7 @@ interface Signature {
 
 interface PublicKey {
   /**
-   * Public key of the signer.
+   * Public key as hex-encoded string.
    */
   publicKey: string;
 }
@@ -239,6 +247,20 @@ type ContractDeployParams = CodeBody &
   Partial<Pubkey>;
 type ContractDeployResult = TxId & Transaction;
 export type ContractDeploy = MethodParamsAndResult<ContractDeployParams, ContractDeployResult>;
+
+// Types for `stx_getAccounts` request
+type GetAccountsParams = {};
+type GetAccountsResult = {
+  addresses: Array<Address & PublicKey & { gaiaHubUrl: string; gaiaAppKey: string }>;
+};
+export type GetAccounts = MethodParamsAndResult<GetAccountsParams, GetAccountsResult>;
+
+// Types for `stx_getAddresses` request
+type GetAddressesParams = {};
+type GetAddressesResult = {
+  addresses: Array<Address & PublicKey>;
+};
+export type GetAddresses = MethodParamsAndResult<GetAddressesParams, GetAddressesResult>;
 
 // Types for `stx_signTransaction` request
 type SignTransactionParams = Transaction & Partial<Pubkey>;

@@ -2,10 +2,12 @@ import { GetAddresses, GetInfo, SendTransfer, SignMessage, SignPsbt } from './bt
 import {
   ContractCall,
   ContractDeploy,
+  GetAccounts,
   SignStructuredMessage,
   SignStxMessage,
   SignTransaction,
   TransferStx,
+  GetAddresses as StxGetAddresses,
 } from './stxMethods';
 
 export interface Requests {
@@ -20,6 +22,8 @@ export interface Requests {
   stx_signStructuredMessage: SignStructuredMessage;
   stx_contractDeploy: ContractDeploy;
   stx_signTransaction: SignTransaction;
+  stx_getAccounts: GetAccounts;
+  stx_getAddresses: StxGetAddresses;
 }
 
 export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : unknown;
