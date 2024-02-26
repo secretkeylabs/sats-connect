@@ -49,11 +49,11 @@ export enum RpcErrorCode {
   METHOD_NOT_SUPPORTED = -32001, // method is not supported for the address provided
 }
 
-export interface RpcError extends RpcBase {
+export interface RpcError {
   code: number | RpcErrorCode;
   message: string;
 }
 
-export interface RpcErrorResponse<TError extends RpcError = RpcError> {
+export interface RpcErrorResponse<TError extends RpcError = RpcError> extends RpcBase {
   error: TError;
 }
