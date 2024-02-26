@@ -9,6 +9,11 @@ export interface RpcRequest<T extends string, U> extends RpcBase {
   params: U;
 }
 
+export interface MethodParamsAndResult<TParams, TResult> {
+  params: TParams;
+  result: TResult;
+}
+
 export enum RpcErrorCode {
   PARSE_ERROR = -32700, // Parse error Invalid JSON
   INVALID_REQUEST = -32600, // The JSON sent is not a valid Request object.

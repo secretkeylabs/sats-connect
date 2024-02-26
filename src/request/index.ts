@@ -20,4 +20,4 @@ export const request = async <Method extends keyof Requests>(
   return provider.request(method, params);
 };
 
-export * from './types/requests';
+export * from './types';

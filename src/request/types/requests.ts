@@ -1,55 +1,22 @@
-import { Address, AddressPurpose } from '../../addresses';
-import { InputToSign, SendBtcTransactionPayload } from '../../transactions';
+import { GetAddresses, GetInfo, SendTransfer, SignMessage, SignPsbt } from './btc';
+import {
+  ContractCall,
+  ContractDeploy,
+  SignStructuredMessage,
+  SignStxMessage,
+  SignTransaction,
+  TransferStx,
+} from './stx';
 
 export interface Requests {
-  getInfo: {
-    params: null;
-    result: {
-      version: Number | String;
-      methods?: Array<string>;
-      supports?: Array<string>;
-    };
-  };
-  getAddresses: {
-    params: {
-      purposes: AddressPurpose[];
-      message?: string;
-    };
-    result: {
-      addresses: Address[];
-    };
-  };
-  signMessage: {
-    params: {
-      address: string;
-      message: string;
-    };
-    result: {
-      signature: string;
-      messageHash: string;
-      address: string;
-    };
-  };
-  sendTransfer: {
-    params: SendBtcTransactionPayload;
-    result: {
-      txid: string;
-    };
-  };
-  signPsbt: {
-    params: {
-      psbt: string;
-      signInputs: InputToSign[];
-      broadcast?: boolean;
-    };
-    result: {
-      txid?: string;
-      psbt?: string;
-    };
-  };
+  getInfo: GetInfo;
+  getAddresses: GetAddresses;
+  signMessage: SignMessage;
+  sendTransfer: SendTransfer;
+  signPsbt: SignPsbt;
   stx_contractCall: ContractCall;
   stx_transferStx: TransferStx;
-  stx_signMessage: SignMessage;
+  stx_signMessage: SignStxMessage;
   stx_signStructuredMessage: SignStructuredMessage;
   stx_contractDeploy: ContractDeploy;
   stx_signTransaction: SignTransaction;

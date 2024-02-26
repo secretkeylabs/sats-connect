@@ -1,3 +1,5 @@
+import { MethodParamsAndResult } from './rpc';
+
 interface FunctionArgs {
   /**
    * An array of hex-encoded strings representing the function arguments.
@@ -184,11 +186,6 @@ interface ClarityVersion {
   clarityVersion?: string;
 }
 
-interface MethodParamsAndResult<TParams, TResult> {
-  params: TParams;
-  result: TResult;
-}
-
 // Types for `stx_contractCall` request
 type ContractCallParams = ContractAddress &
   ContractName &
@@ -202,7 +199,7 @@ type ContractCallParams = ContractAddress &
   Partial<Pubkey> &
   Partial<Sponsored>;
 type ContractCallResult = TxId & Transaction;
-type ContractCall = MethodParamsAndResult<ContractCallParams, ContractCallResult>;
+export type ContractCall = MethodParamsAndResult<ContractCallParams, ContractCallResult>;
 
 // Types for `stx_transferStx` request
 type TransferStxParams = Amount &
@@ -213,12 +210,12 @@ type TransferStxParams = Amount &
   Partial<PostConditions> &
   Partial<Pubkey>;
 type TransferStxResult = TxId & Transaction;
-type TransferStx = MethodParamsAndResult<TransferStxParams, TransferStxResult>;
+export type TransferStx = MethodParamsAndResult<TransferStxParams, TransferStxResult>;
 
 // Types for `stx_signMessage` request
-type SignMessageParams = Message & Partial<Pubkey> & Partial<ParameterFormatVersion>;
-type SignMessageResult = Signature & PublicKey;
-type SignMessage = MethodParamsAndResult<SignMessageParams, SignMessageResult>;
+type SignStxMessageParams = Message & Partial<Pubkey> & Partial<ParameterFormatVersion>;
+type SignStxMessageResult = Signature & PublicKey;
+export type SignStxMessage = MethodParamsAndResult<SignStxMessageParams, SignStxMessageResult>;
 
 // Types for `stx_signStructuredMessage` request
 type SignStructuredMessageParams = Domain &
@@ -226,7 +223,7 @@ type SignStructuredMessageParams = Domain &
   Partial<ParameterFormatVersion> &
   Partial<Pubkey>;
 type SignStructuredMessageResult = Signature & PublicKey;
-type SignStructuredMessage = MethodParamsAndResult<
+export type SignStructuredMessage = MethodParamsAndResult<
   SignStructuredMessageParams,
   SignStructuredMessageResult
 >;
@@ -241,9 +238,9 @@ type ContractDeployParams = CodeBody &
   Partial<PostConditions> &
   Partial<Pubkey>;
 type ContractDeployResult = TxId & Transaction;
-type ContractDeploy = MethodParamsAndResult<ContractDeployParams, ContractDeployResult>;
+export type ContractDeploy = MethodParamsAndResult<ContractDeployParams, ContractDeployResult>;
 
 // Types for `stx_signTransaction` request
 type SignTransactionParams = Transaction & Partial<Pubkey>;
 type SignTransactionResult = Transaction;
-type SignTransaction = MethodParamsAndResult<SignTransactionParams, SignTransactionResult>;
+export type SignTransaction = MethodParamsAndResult<SignTransactionParams, SignTransactionResult>;
