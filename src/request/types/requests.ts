@@ -25,7 +25,7 @@ export interface Requests {
 export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : unknown;
 export type Params<Method> = Method extends keyof Requests ? Requests[Method]['params'] : unknown;
 
-export type Request<Method extends keyof Requests | string> = (
+export type Request = <Method extends keyof Requests>(
   requestMethod: Method,
   params: Params<Method>
-) => Return<Method>;
+) => Promise<Return<Method>>;
