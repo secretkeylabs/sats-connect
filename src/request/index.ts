@@ -1,5 +1,5 @@
 import { getProviderById } from '../provider';
-import { Request } from './types/requests';
+import { Request } from './types';
 
 export const request: Request = async (method, params, providerId?: string) => {
   let provider = window.XverseProviders?.BitcoinProvider;

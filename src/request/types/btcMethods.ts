@@ -1,5 +1,5 @@
-import { Address, AddressPurpose } from 'src/addresses';
-import { MethodParamsAndResult } from './rpc';
+import { Address, AddressPurpose } from '../../addresses';
+import { MethodParamsAndResult } from '../../types';
 
 type GetInfoResult = {
   version: Number | String;

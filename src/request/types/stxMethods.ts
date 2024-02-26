@@ -1,4 +1,4 @@
-import { MethodParamsAndResult } from './rpc';
+import { MethodParamsAndResult } from '../../types';
 
 interface FunctionArgs {
   /**
