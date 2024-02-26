@@ -9,14 +9,6 @@ import type {
   SignTransactionResponse,
 } from '../transactions';
 
-/*
-export const request = async <Method extends keyof Requests>(
-  method: Method,
-  options: Args<Method>,
-  providerId?: string
-): Promise<Return<Method>> => {
-  */
-
 interface BaseBitcoinProvider {
   request: <Method extends keyof Requests>(
     method: Method,

@@ -1,5 +1,5 @@
 import { getProviderById } from '../provider';
-import { Params, Request, Requests, Return } from './types';
+import { Params, Requests, Return } from './types/requests';
 
 export const request = async <Method extends keyof Requests>(
   method: Method,
@@ -20,4 +20,4 @@ export const request = async <Method extends keyof Requests>(
   return provider.request(method, params);
 };
 
-export * from './types';
+export * from './types/requests';

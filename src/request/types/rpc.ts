@@ -27,27 +27,3 @@ export interface RpcError extends RpcBase {
 export interface RpcErrorResponse<TError extends RpcError = RpcError> {
   error: TError;
 }
-
-export interface Method<T, U> {
-  request: T;
-  response: U;
-}
-
-export type Methods = Record<string, Method<any, any>>;
-
-export interface Requests {
-  stx_contractCall: ContractCall;
-  stx_transferStx: TransferStx;
-  stx_signMessage: SignMessage;
-  stx_signStructuredMessage: SignStructuredMessage;
-  stx_contractDeploy: ContractDeploy;
-  stx_signTransaction: SignTransaction;
-}
-
-export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : unknown;
-export type Params<Method> = Method extends keyof Requests ? Requests[Method]['params'] : unknown;
-
-export type Request<Method extends keyof Requests | string> = (
-  requestMethod: Method,
-  args: Params<Method>
-) => Return<Method>;
