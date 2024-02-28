@@ -53,7 +53,7 @@ type SignInputsByAddress = {
 export type SignPsbtParams = {
   psbt: string;
   signInputs: number[] | SignInputsByAddress;
-  allowedSignHash: number;
+  allowedSignHash?: number;
   broadcast?: boolean;
 };
 
@@ -62,4 +62,4 @@ export type SignPsbtResult = {
   txid?: string;
 };
 
-export type SignPsbt = MethodParamsAndResult<SendTransferParams, SendTransferResult>;
+export type SignPsbt = MethodParamsAndResult<SignPsbtParams, SignPsbtResult>;

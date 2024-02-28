@@ -1,4 +1,5 @@
 import type { BitcoinProvider } from './provider';
+import { Requests, Return } from './request';
 
 export enum BitcoinNetworkType {
   Mainnet = 'Mainnet',
@@ -56,4 +57,8 @@ export interface RpcError {
 
 export interface RpcErrorResponse<TError extends RpcError = RpcError> extends RpcBase {
   error: TError;
+}
+
+export interface RpcSuccessResponse<Method extends keyof Requests> extends RpcBase {
+  result: Return<Method>;
 }

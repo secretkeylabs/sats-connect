@@ -1,3 +1,4 @@
+import { RpcSuccessResponse } from 'src/types';
 import { GetAddresses, GetInfo, SendTransfer, SignMessage, SignPsbt } from './btcMethods';
 import {
   StxContractCall,
@@ -31,8 +32,8 @@ export type Params<Method> = Method extends keyof Requests ? Requests[Method]['p
 
 export type Request<Method extends keyof Requests = keyof Requests> = (
   requestMethod: Method,
-  params: Params<Method>
-) => Promise<Return<Method>>;
+  param?: Params<Method>
+) => Promise<RpcSuccessResponse<Method>>;
 
 export * from './stxMethods';
 export * from './btcMethods';
