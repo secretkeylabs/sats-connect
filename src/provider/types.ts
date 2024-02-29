@@ -1,4 +1,4 @@
-import { Request } from 'src/request';
+import { Params, Requests, Return } from 'src/request';
 import type { GetAddressResponse } from '../addresses';
 import type { GetCapabilitiesResponse } from '../capabilities';
 import type { CreateInscriptionResponse, CreateRepeatInscriptionsResponse } from '../inscriptions';
@@ -10,7 +10,11 @@ import type {
 } from '../transactions';
 
 interface BaseBitcoinProvider {
-  request: Request;
+  request: <Method extends keyof Requests>(
+    method: Method,
+    options: Params<Method>,
+    providerId?: string
+  ) => Promise<Return<Method>>;
   listen: (method: string, callback: () => void) => void;
   connect: (request: string) => Promise<GetAddressResponse>;
   signMessage: (request: string) => Promise<SignMessageResponse>;

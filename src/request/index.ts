@@ -1,7 +1,11 @@
 import { getProviderById } from '../provider';
-import { Request } from './types';
+import { Params, Requests, Return } from './types';
 
-export const request: Request = async (method, params, providerId?: string) => {
+export const request = async <Method extends keyof Requests>(
+  method: Method,
+  params: Params<Method>,
+  providerId?: string
+): Promise<Return<Method>> => {
   let provider = window.XverseProviders?.BitcoinProvider;
   if (providerId) {
     provider = await getProviderById(providerId);
