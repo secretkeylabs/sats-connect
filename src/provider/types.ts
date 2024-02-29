@@ -1,4 +1,4 @@
-import { Params, Requests, Return } from 'src/request';
+import { Params, Requests } from '../request';
 import type { GetAddressResponse } from '../addresses';
 import type { GetCapabilitiesResponse } from '../capabilities';
 import type { CreateInscriptionResponse, CreateRepeatInscriptionsResponse } from '../inscriptions';
@@ -8,13 +8,14 @@ import type {
   SignMultipleTransactionsResponse,
   SignTransactionResponse,
 } from '../transactions';
+import { RpcResponse } from '../types';
 
 interface BaseBitcoinProvider {
   request: <Method extends keyof Requests>(
     method: Method,
     options: Params<Method>,
     providerId?: string
-  ) => Promise<Return<Method>>;
+  ) => Promise<RpcResponse<Method>>;
   listen: (method: string, callback: () => void) => void;
   connect: (request: string) => Promise<GetAddressResponse>;
   signMessage: (request: string) => Promise<SignMessageResponse>;

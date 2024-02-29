@@ -1,11 +1,12 @@
+import { RpcResponse } from '../types';
 import { getProviderById } from '../provider';
-import { Params, Requests, Return } from './types';
+import { Params, Requests } from './types';
 
 export const request = async <Method extends keyof Requests>(
   method: Method,
   params: Params<Method>,
   providerId?: string
-): Promise<Return<Method>> => {
+): Promise<RpcResponse<Method>> => {
   let provider = window.XverseProviders?.BitcoinProvider;
   if (providerId) {
     provider = await getProviderById(providerId);

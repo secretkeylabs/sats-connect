@@ -62,3 +62,8 @@ export interface RpcErrorResponse<TError extends RpcError = RpcError> extends Rp
 export interface RpcSuccessResponse<Method extends keyof Requests> extends RpcBase {
   result: Return<Method>;
 }
+
+export type RpcResponse<Method extends keyof Requests> =
+  RpcSuccessResponse<Method> extends RpcSuccessResponse<Method>
+    ? RpcSuccessResponse<Method>
+    : RpcErrorResponse;
