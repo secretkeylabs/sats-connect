@@ -36,8 +36,8 @@ export type BtcRequestMethod = keyof BtcRequests;
 
 export type Requests = BtcRequests & StxRequests;
 
-export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : unknown;
-export type Params<Method> = Method extends keyof Requests ? Requests[Method]['params'] : unknown;
+export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : never;
+export type Params<Method> = Method extends keyof Requests ? Requests[Method]['params'] : never;
 
 export type Request<Method extends keyof Requests> = (
   requestMethod: Method,
