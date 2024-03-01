@@ -11,12 +11,7 @@ import {
   StxGetAddresses,
 } from './stxMethods';
 
-export interface Requests {
-  getInfo: GetInfo;
-  getAddresses: GetAddresses;
-  signMessage: SignMessage;
-  sendTransfer: SendTransfer;
-  signPsbt: SignPsbt;
+export interface StxRequests {
   stx_contractCall: StxContractCall;
   stx_transferStx: StxTransferStx;
   stx_signMessage: StxSignStxMessage;
@@ -26,6 +21,16 @@ export interface Requests {
   stx_getAccounts: StxGetAccounts;
   stx_getAddresses: StxGetAddresses;
 }
+
+export interface BtcRequests {
+  getInfo: GetInfo;
+  getAddresses: GetAddresses;
+  signMessage: SignMessage;
+  sendTransfer: SendTransfer;
+  signPsbt: SignPsbt;
+}
+
+export type Requests = BtcRequests & StxRequests;
 
 export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : unknown;
 export type Params<Method> = Method extends keyof Requests ? Requests[Method]['params'] : unknown;
