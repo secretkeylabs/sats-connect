@@ -22,7 +22,7 @@ export interface RequestOptions<Payload extends RequestPayload, Response> {
   getProvider?: () => Promise<BitcoinProvider | undefined>;
 }
 
-// RPC Types
+// RPC Request and Response types
 
 export type RpcId = string | number | null | undefined;
 
@@ -40,19 +40,47 @@ export interface MethodParamsAndResult<TParams, TResult> {
   result: TResult;
 }
 
+/**
+ * @enum {number} RpcErrorCode
+ * @description JSON-RPC error codes
+ * @see https://www.jsonrpc.org/specification#error_object
+ */
 export enum RpcErrorCode {
-  PARSE_ERROR = -32700, // Parse error Invalid JSON
-  INVALID_REQUEST = -32600, // The JSON sent is not a valid Request object.
-  METHOD_NOT_FOUND = -32601, // The method does not exist/is not available.
-  INVALID_PARAMS = -32602, // Invalid method parameter(s)
-  INTERNAL_ERROR = -32603, // Internal JSON-RPC error
-  USER_REJECTION = -32000, // user rejected/canceled the request
-  METHOD_NOT_SUPPORTED = -32001, // method is not supported for the address provided
+  /**
+   * Parse error Invalid JSON
+   **/
+  PARSE_ERROR = -32700,
+  /**
+   * The JSON sent is not a valid Request object.
+   **/
+  INVALID_REQUEST = -32600,
+  /**
+   * The method does not exist/is not available.
+   **/
+  METHOD_NOT_FOUND = -32601,
+  /**
+   * Invalid method parameter(s).
+   */
+  INVALID_PARAMS = -32602,
+  /**
+   * Internal JSON-RPC error.
+   * This is a generic error, used when the server encounters an error in performing the request.
+   **/
+  INTERNAL_ERROR = -32603,
+  /**
+   * user rejected/canceled the request
+   */
+  USER_REJECTION = -32000,
+  /**
+   * method is not supported for the address provided
+   */
+  METHOD_NOT_SUPPORTED = -32001,
 }
 
 export interface RpcError {
   code: number | RpcErrorCode;
   message: string;
+  data?: any;
 }
 
 export interface RpcErrorResponse<TError extends RpcError = RpcError> extends RpcBase {
