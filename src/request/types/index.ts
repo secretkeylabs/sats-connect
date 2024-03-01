@@ -22,6 +22,8 @@ export interface StxRequests {
   stx_getAddresses: StxGetAddresses;
 }
 
+export type StxRequestMethod = keyof StxRequests;
+
 export interface BtcRequests {
   getInfo: GetInfo;
   getAddresses: GetAddresses;
@@ -29,6 +31,8 @@ export interface BtcRequests {
   sendTransfer: SendTransfer;
   signPsbt: SignPsbt;
 }
+
+export type BtcRequestMethod = keyof BtcRequests;
 
 export type Requests = BtcRequests & StxRequests;
 
