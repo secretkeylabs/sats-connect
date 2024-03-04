@@ -1,21 +1,5 @@
+import { z } from 'zod';
 import { MethodParamsAndResult } from '../../types';
-
-interface FunctionArgs {
-  /**
-   * An array of hex-encoded strings representing the function arguments.
-   *
-   * To convert Clarity values to their hex representation, the `cvToString`
-   * helper from the `@stacks/transactions` package may be helpful.
-   *
-   * ```js
-   * import { cvToString } from '@stacks/transactions';
-   *
-   * const functionArgs = [someClarityValue1, someClarityValue2];
-   * const hexArgs = functionArgs.map(cvToString);
-   * ```
-   */
-  functionArgs: Array<string>;
-}
 
 interface Pubkey {
   /**
@@ -29,13 +13,6 @@ interface Pubkey {
   pubkey: string;
 }
 
-interface ContractAddress {
-  /**
-   * The contract's Crockford base-32 encoded Stacks address.
-   */
-  contractAddress: string;
-}
-
 interface Address {
   /**
    * A Crockford base-32 encoded Stacks address.
@@ -47,14 +24,7 @@ interface ContractName {
   /**
    * The name of the contract.
    */
-  contractName: string;
-}
-
-interface FunctionName {
-  /**
-   * The name of the function to call.
-   */
-  functionName: string;
+  contract: string;
 }
 
 interface PostConditions {
@@ -195,17 +165,40 @@ interface ClarityVersion {
 }
 
 // Types for `stx_callContract` request
-type CallContractParams = ContractAddress &
-  ContractName &
-  FunctionArgs &
-  FunctionName &
-  Partial<AnchorMode> &
-  Partial<Nonce> &
-  Partial<ParameterFormatVersion> &
-  Partial<PostConditionMode> &
-  Partial<PostConditions> &
-  Partial<Pubkey> &
-  Partial<Sponsored>;
+export const callContractSchema = z.object({
+  /**
+   * The contract's Crockford base-32 encoded Stacks address and name.
+   *
+   * E.g. `"SPKE...GD5C.my-contract"`
+   */
+  contract: z.string(),
+
+  /**
+   * The name of the function to call.
+   *
+   * Note: spec changes ongoing,
+   * https://github.com/stacksgov/sips/pull/166#pullrequestreview-1914236999
+   */
+  functionName: z.string().min(1),
+
+  /**
+   * The function's arguments. The arguments are expected to be hex-encoded
+   * strings of Clarity values.
+   *
+   * To convert Clarity values to their hex representation, the `cvToString`
+   * helper from the `@stacks/transactions` package may be helpful.
+   *
+   * ```js
+   * import { cvToString } from '@stacks/transactions';
+   *
+   * const functionArgs = [someClarityValue1, someClarityValue2];
+   * const hexArgs = functionArgs.map(cvToString);
+   * ```
+   */
+  arguments: z.array(z.string()).optional().nullable(),
+});
+
+type CallContractParams = z.infer<typeof callContractSchema>;
 type CallContractResult = TxId & Transaction;
 export type StxCallContract = MethodParamsAndResult<CallContractParams, CallContractResult>;
 
