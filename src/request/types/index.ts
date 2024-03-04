@@ -1,25 +1,25 @@
 import { RpcSuccessResponse } from 'src/types';
 import { GetAddresses, GetInfo, SendTransfer, SignMessage, SignPsbt } from './btcMethods';
 import {
-  StxContractCall,
-  StxContractDeploy,
+  StxCallContract,
+  StxDeployContract,
   StxGetAccounts,
+  StxGetAddresses,
   StxSignStructuredMessage,
   StxSignStxMessage,
   StxSignTransaction,
   StxTransferStx,
-  StxGetAddresses,
 } from './stxMethods';
 
 export interface StxRequests {
-  stx_contractCall: StxContractCall;
-  stx_transferStx: StxTransferStx;
-  stx_signMessage: StxSignStxMessage;
-  stx_signStructuredMessage: StxSignStructuredMessage;
-  stx_contractDeploy: StxContractDeploy;
-  stx_signTransaction: StxSignTransaction;
+  stx_callContract: StxCallContract;
+  stx_deployContract: StxDeployContract;
   stx_getAccounts: StxGetAccounts;
   stx_getAddresses: StxGetAddresses;
+  stx_signMessage: StxSignStxMessage;
+  stx_signStructuredMessage: StxSignStructuredMessage;
+  stx_signTransaction: StxSignTransaction;
+  stx_transferStx: StxTransferStx;
 }
 
 export type StxRequestMethod = keyof StxRequests;

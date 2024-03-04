@@ -194,8 +194,8 @@ interface ClarityVersion {
   clarityVersion?: string;
 }
 
-// Types for `stx_contractCall` request
-type ContractCallParams = ContractAddress &
+// Types for `stx_callContract` request
+type CallContractParams = ContractAddress &
   ContractName &
   FunctionArgs &
   FunctionName &
@@ -206,8 +206,8 @@ type ContractCallParams = ContractAddress &
   Partial<PostConditions> &
   Partial<Pubkey> &
   Partial<Sponsored>;
-type ContractCallResult = TxId & Transaction;
-export type StxContractCall = MethodParamsAndResult<ContractCallParams, ContractCallResult>;
+type CallContractResult = TxId & Transaction;
+export type StxCallContract = MethodParamsAndResult<CallContractParams, CallContractResult>;
 
 // Types for `stx_transferStx` request
 type TransferStxParams = Amount &
@@ -236,8 +236,8 @@ export type StxSignStructuredMessage = MethodParamsAndResult<
   SignStructuredMessageResult
 >;
 
-// Types for `stx_contractDeploy` request
-type ContractDeployParams = CodeBody &
+// Types for `stx_deployContract` request
+type DeployContractParams = CodeBody &
   ContractName &
   Sponsored &
   Partial<ClarityVersion> &
@@ -245,8 +245,8 @@ type ContractDeployParams = CodeBody &
   Partial<PostConditionMode> &
   Partial<PostConditions> &
   Partial<Pubkey>;
-type ContractDeployResult = TxId & Transaction;
-export type StxContractDeploy = MethodParamsAndResult<ContractDeployParams, ContractDeployResult>;
+type DeployContractResult = TxId & Transaction;
+export type StxDeployContract = MethodParamsAndResult<DeployContractParams, DeployContractResult>;
 
 // Types for `stx_getAccounts` request
 type GetAccountsParams = {};
