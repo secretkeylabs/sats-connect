@@ -23,8 +23,8 @@ export function getProviderById(providerId: string) {
     const provider = window.webbtc_providers.find((provider) => provider.id === providerId);
     return provider?.id?.split('.').reduce((acc: any, part) => acc?.[part], window);
   } else {
-    console.error('window.webbtc_providers is not defined or not an array');
-    return null;
+    console.log('window.webbtc_providers is not defined or not an array');
+    return undefined;
   }
 }
 

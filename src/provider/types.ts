@@ -51,6 +51,6 @@ declare global {
   interface Window {
     BitcoinProvider?: BitcoinProvider;
     XverseProviders?: XverseProviders;
-    webbtc_providers: WebbtcProvider[];
+    webbtc_providers?: WebbtcProvider[];
   }
 }

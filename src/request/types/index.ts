@@ -39,10 +39,5 @@ export type Requests = BtcRequests & StxRequests;
 export type Return<Method> = Method extends keyof Requests ? Requests[Method]['result'] : never;
 export type Params<Method> = Method extends keyof Requests ? Requests[Method]['params'] : never;
 
-export type Request<Method extends keyof Requests> = (
-  requestMethod: Method,
-  param?: Params<Method>
-) => Promise<RpcSuccessResponse<Method>>;
-
 export * from './stxMethods';
 export * from './btcMethods';

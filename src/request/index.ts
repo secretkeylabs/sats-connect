@@ -7,7 +7,7 @@ export const request = async <Method extends keyof Requests>(
   params: Params<Method>,
   providerId?: string
 ): Promise<RpcResponse<Method>> => {
-  let provider = window.XverseProviders?.BitcoinProvider;
+  let provider = window.XverseProviders?.BitcoinProvider || window.BitcoinProvider;
   if (providerId) {
     provider = await getProviderById(providerId);
   }
