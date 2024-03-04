@@ -24,8 +24,7 @@
   "dependencies": {
     "jsontokens": "^4.0.1",
     "process": "^0.11.10",
-    "util": "^0.12.4",
-    "zod": "3.22.4"
+    "util": "^0.12.4"
   },
   "devDependencies": {
     "@types/jest": "^29.2.6",

@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { MethodParamsAndResult } from '../../types';
 
 interface Pubkey {
@@ -165,13 +164,13 @@ interface ClarityVersion {
 }
 
 // Types for `stx_callContract` request
-export const callContractSchema = z.object({
+interface CallContractParams {
   /**
    * The contract's Crockford base-32 encoded Stacks address and name.
    *
    * E.g. `"SPKE...GD5C.my-contract"`
    */
-  contract: z.string(),
+  contract: string;
 
   /**
    * The name of the function to call.
@@ -179,7 +178,7 @@ export const callContractSchema = z.object({
    * Note: spec changes ongoing,
    * https://github.com/stacksgov/sips/pull/166#pullrequestreview-1914236999
    */
-  functionName: z.string().min(1),
+  functionName: string;
 
   /**
    * The function's arguments. The arguments are expected to be hex-encoded
@@ -195,10 +194,8 @@ export const callContractSchema = z.object({
    * const hexArgs = functionArgs.map(cvToString);
    * ```
    */
-  arguments: z.array(z.string()).optional().nullable(),
-});
-
-type CallContractParams = z.infer<typeof callContractSchema>;
+  arguments?: Array<string>;
+}
 type CallContractResult = TxId & Transaction;
 export type StxCallContract = MethodParamsAndResult<CallContractParams, CallContractResult>;
 
