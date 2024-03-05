@@ -164,7 +164,7 @@ interface ClarityVersion {
 }
 
 // Types for `stx_callContract` request
-interface CallContractParams {
+export interface CallContractParams {
   /**
    * The contract's Crockford base-32 encoded Stacks address and name.
    *
@@ -253,8 +253,8 @@ type GetAddressesResult = {
 export type StxGetAddresses = MethodParamsAndResult<GetAddressesParams, GetAddressesResult>;
 
 // Types for `stx_signTransaction` request
-type SignTransactionParams = Transaction & Partial<Pubkey>;
-type SignTransactionResult = Transaction;
+export type SignTransactionParams = Transaction & Partial<Pubkey>;
+export type SignTransactionResult = Transaction;
 export type StxSignTransaction = MethodParamsAndResult<
   SignTransactionParams,
   SignTransactionResult
