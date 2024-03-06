@@ -1,4 +1,4 @@
-import { RpcResponse } from '../types';
+import { RpcResponse, RpcSuccessResponse } from '../types';
 import { getProviderById } from '../provider';
 import { Params, Requests } from './types';
 
@@ -19,6 +19,12 @@ export const request = async <Method extends keyof Requests>(
   }
 
   return provider.request(method, params);
+};
+
+export const isRpcSuccessResponse = <Method extends keyof Requests>(
+  response: RpcResponse<Method>
+): response is RpcSuccessResponse<Method> => {
+  return Object.hasOwn(response, 'result');
 };
 
 export * from './types';
