@@ -16,7 +16,6 @@ interface BaseBitcoinProvider {
     options: Params<Method>,
     providerId?: string
   ) => Promise<RpcResponse<Method>>;
-  listen: (method: string, callback: () => void) => void;
   connect: (request: string) => Promise<GetAddressResponse>;
   signMessage: (request: string) => Promise<SignMessageResponse>;
   signTransaction: (request: string) => Promise<SignTransactionResponse>;

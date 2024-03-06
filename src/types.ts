@@ -24,7 +24,7 @@ export interface RequestOptions<Payload extends RequestPayload, Response> {
 
 // RPC Request and Response types
 
-export type RpcId = string | number | null | undefined;
+export type RpcId = string | null;
 
 export interface RpcBase {
   jsonrpc: '2.0';
@@ -92,6 +92,5 @@ export interface RpcSuccessResponse<Method extends keyof Requests> extends RpcBa
 }
 
 export type RpcResponse<Method extends keyof Requests> =
-  RpcSuccessResponse<Method> extends RpcSuccessResponse<Method>
-    ? RpcSuccessResponse<Method>
-    : RpcErrorResponse;
+  | RpcSuccessResponse<Method>
+  | RpcErrorResponse;
