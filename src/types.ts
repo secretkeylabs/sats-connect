@@ -94,3 +94,16 @@ export interface RpcSuccessResponse<Method extends keyof Requests> extends RpcBa
 export type RpcResponse<Method extends keyof Requests> =
   | RpcSuccessResponse<Method>
   | RpcErrorResponse;
+
+export type RpcResult<Method extends keyof Requests> =
+  | {
+      result: RpcSuccessResponse<Method>['result'];
+      status: 'success';
+    }
+  | {
+      error: RpcErrorResponse['error'];
+      status: 'error';
+    }
+  | {
+      status: 'cancelled';
+    };
