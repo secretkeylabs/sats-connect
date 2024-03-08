@@ -28,7 +28,7 @@ const extractOrValidateCapabilities = (
   };
 
   const capabilityMap: CapabilityMap = {
-    call: validateCapability('call'),
+    request: validateCapability('request'),
     connect: validateCapability('connect'),
     signMessage: validateCapability('signMessage'),
     signTransaction: validateCapability('signTransaction'),

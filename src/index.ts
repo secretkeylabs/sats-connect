@@ -1,5 +1,5 @@
 export * from './addresses';
-export * from './call';
+export * from './request';
 export * from './capabilities';
 export * from './inscriptions';
 export * from './messages';
