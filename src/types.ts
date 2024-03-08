@@ -103,7 +103,4 @@ export type RpcResult<Method extends keyof Requests> =
   | {
       error: RpcErrorResponse['error'];
       status: 'error';
-    }
-  | {
-      status: 'cancelled';
     };

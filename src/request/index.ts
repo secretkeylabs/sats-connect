@@ -1,5 +1,5 @@
 import { getProviderById } from '../provider';
-import { RpcBase, RpcErrorCode, RpcResult, RpcSuccessResponse } from '../types';
+import { RpcBase, RpcResult, RpcSuccessResponse } from '../types';
 import { Params, Requests } from './types';
 
 export const request = async <Method extends keyof Requests>(
@@ -24,12 +24,6 @@ export const request = async <Method extends keyof Requests>(
     return {
       status: 'success',
       result: response.result,
-    };
-  }
-
-  if (response.error.code === RpcErrorCode.USER_REJECTION) {
-    return {
-      status: 'cancelled',
     };
   }
 
