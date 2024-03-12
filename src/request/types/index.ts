@@ -1,5 +1,11 @@
-import { RpcSuccessResponse } from 'src/types';
-import { GetAddresses, GetInfo, SendTransfer, SignMessage, SignPsbt } from './btcMethods';
+import {
+  GetAccounts,
+  GetAddresses,
+  GetInfo,
+  SendTransfer,
+  SignMessage,
+  SignPsbt,
+} from './btcMethods';
 import {
   StxCallContract,
   StxDeployContract,
@@ -27,6 +33,7 @@ export type StxRequestMethod = keyof StxRequests;
 export interface BtcRequests {
   getInfo: GetInfo;
   getAddresses: GetAddresses;
+  getAccounts: GetAccounts;
   signMessage: SignMessage;
   sendTransfer: SendTransfer;
   signPsbt: SignPsbt;

@@ -123,3 +123,7 @@ export type SignPsbtResult = {
 };
 
 export type SignPsbt = MethodParamsAndResult<SignPsbtParams, SignPsbtResult>;
+
+export type GetAccountResult = Address[] | Record<string, string> | string[];
+
+export type GetAccounts = MethodParamsAndResult<null, GetAccountResult>;
