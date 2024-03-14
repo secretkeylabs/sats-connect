@@ -31,7 +31,7 @@ export interface BitcoinProvider extends BaseBitcoinProvider {
   getCapabilities?: (request: string) => Promise<GetCapabilitiesResponse>;
 }
 
-export interface WebbtcProvider {
+export interface Provider {
   id: string;
   name: string;
   icon: string;
@@ -50,6 +50,6 @@ declare global {
   interface Window {
     BitcoinProvider?: BitcoinProvider;
     XverseProviders?: XverseProviders;
-    webbtc_providers?: WebbtcProvider[];
+    btc_providers?: Provider[];
   }
 }
