@@ -109,14 +109,14 @@ interface Memo {
 
 interface TxId {
   /**
-   * The transaction ID of the transfer STX transaction as a hex-encoded string.
+   * The ID of the transaction.
    */
   txid: string;
 }
 
 interface Transaction {
   /**
-   * An STX transaction as a hex-encoded string.
+   * A Stacks transaction as a hex-encoded string.
    */
   transaction: string;
 }
@@ -196,23 +196,23 @@ export interface CallContractParams {
    */
   arguments?: Array<string>;
 }
-type CallContractResult = TxId & Transaction;
+export type CallContractResult = TxId & Transaction;
 export type StxCallContract = MethodParamsAndResult<CallContractParams, CallContractResult>;
 
 // Types for `stx_transferStx` request
-type TransferStxParams = Amount &
+export type TransferStxParams = Amount &
   Recipient &
   Partial<Memo> &
   Partial<ParameterFormatVersion> &
   Partial<PostConditionMode> &
   Partial<PostConditions> &
   Partial<Pubkey>;
-type TransferStxResult = TxId & Transaction;
+export type TransferStxResult = TxId & Transaction;
 export type StxTransferStx = MethodParamsAndResult<TransferStxParams, TransferStxResult>;
 
 // Types for `stx_signMessage` request
-type SignStxMessageParams = Message & Partial<Pubkey> & Partial<ParameterFormatVersion>;
-type SignStxMessageResult = Signature & PublicKey;
+export type SignStxMessageParams = Message & Partial<Pubkey> & Partial<ParameterFormatVersion>;
+export type SignStxMessageResult = Signature & PublicKey;
 export type StxSignStxMessage = MethodParamsAndResult<SignStxMessageParams, SignStxMessageResult>;
 
 // Types for `stx_signStructuredMessage` request
@@ -220,34 +220,42 @@ type SignStructuredMessageParams = Domain &
   Message &
   Partial<ParameterFormatVersion> &
   Partial<Pubkey>;
-type SignStructuredMessageResult = Signature & PublicKey;
+export type SignStructuredMessageResult = Signature & PublicKey;
 export type StxSignStructuredMessage = MethodParamsAndResult<
   SignStructuredMessageParams,
   SignStructuredMessageResult
 >;
 
 // Types for `stx_deployContract` request
-type DeployContractParams = CodeBody &
-  ContractName &
-  Sponsored &
-  Partial<ClarityVersion> &
-  Partial<ParameterFormatVersion> &
-  Partial<PostConditionMode> &
-  Partial<PostConditions> &
-  Partial<Pubkey>;
-type DeployContractResult = TxId & Transaction;
+export interface DeployContractParams {
+  /**
+   * Name of the contract.
+   */
+  name: string;
+
+  /**
+   * The code of the Clarity contract.
+   */
+  clarityCode: string;
+
+  /**
+   * The version of the Clarity contract.
+   */
+  clarityVersion?: string;
+}
+export type DeployContractResult = TxId & Transaction;
 export type StxDeployContract = MethodParamsAndResult<DeployContractParams, DeployContractResult>;
 
 // Types for `stx_getAccounts` request
-type GetAccountsParams = {};
-type GetAccountsResult = {
+export type GetAccountsParams = {};
+export type GetAccountsResult = {
   addresses: Array<Address & PublicKey & { gaiaHubUrl: string; gaiaAppKey: string }>;
 };
 export type StxGetAccounts = MethodParamsAndResult<GetAccountsParams, GetAccountsResult>;
 
 // Types for `stx_getAddresses` request
-type GetAddressesParams = {};
-type GetAddressesResult = {
+export type GetAddressesParams = undefined | null;
+export type GetAddressesResult = {
   addresses: Array<Address & PublicKey>;
 };
 export type StxGetAddresses = MethodParamsAndResult<GetAddressesParams, GetAddressesResult>;
