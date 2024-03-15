@@ -1,4 +1,4 @@
-import { type BitcoinProvider, type WebbtcProvider } from './types';
+import { type BitcoinProvider, type Provider } from './types';
 
 export async function getProviderOrThrow(
   getProvider?: () => Promise<BitcoinProvider | undefined>
@@ -13,17 +13,17 @@ export async function getProviderOrThrow(
   return provider;
 }
 
-export function getProviders(): WebbtcProvider[] {
-  if (!window.webbtc_providers) window.webbtc_providers = [];
-  return window.webbtc_providers;
+export function getProviders(): Provider[] {
+  if (!window.btc_providers) window.btc_providers = [];
+  return window.btc_providers;
 }
 
 export function getProviderById(providerId: string) {
-  if (Array.isArray(window.webbtc_providers)) {
-    const provider = window.webbtc_providers.find((provider) => provider.id === providerId);
+  if (Array.isArray(window.btc_providers)) {
+    const provider = window.btc_providers.find((provider) => provider.id === providerId);
     return provider?.id?.split('.').reduce((acc: any, part) => acc?.[part], window);
   } else {
-    console.log('window.webbtc_providers is not defined or not an array');
+    console.log('window.btc_providers is not defined or not an array');
     return undefined;
   }
 }
