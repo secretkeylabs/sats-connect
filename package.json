@@ -22,7 +22,8 @@
     ]
   },
   "dependencies": {
-    "jsontokens": "^4.0.1",
+    "@sats-connect/core": "file:../sats-connect-core",
+    "@sats-connect/ui": "file:../sats-connect-ui",
     "process": "^0.11.10",
     "util": "^0.12.4"
   },
