@@ -6,7 +6,8 @@ import {
 } from '@sats-connect/core';
 import { SatsConnectAdapter } from '@sats-connect/core/dist/adapters/satsConnectAdapter';
 
-import { registerWalletSelector, selectProvider } from '@sats-connect/ui';
+import { ProviderOption, registerWalletSelector, selectProvider } from '@sats-connect/ui';
+import { unisat as unisatIcon, xverse as xverseIcon } from './icons';
 
 const getDefaultProvider = () => {
   return 'xverseProviders.bitcoinProvider';
@@ -16,8 +17,6 @@ type WalletProviderConfig = {
   providerId: string;
   userAdapters?: Record<string, Adapter>;
 };
-
-function customSelectorConfig(providers: SupportedWallet[]) {}
 
 class WalletProvider {
   private static providerId: string;
@@ -30,6 +29,64 @@ class WalletProvider {
 
   private static isProviderSet(): boolean {
     return !!WalletProvider.providerId;
+  }
+
+  private static defaultProviderOrdering(providers: SupportedWallet[]): Array<ProviderOption> {
+    const providerOptions: Array<ProviderOption> = [];
+
+    // Xverse
+    const xverseProvider = providers.find(
+      (provider) => provider.id === 'xverseProviders.bitcoinProvider'
+    );
+    if (xverseProvider) {
+      providerOptions.push({
+        name: xverseProvider.name,
+        id: xverseProvider.id,
+        icon: xverseProvider.icon,
+      });
+    } else {
+      providerOptions.push({
+        name: 'Xverse',
+        id: 'xverseProviders.bitcoinProvider',
+        icon: xverseIcon,
+        installPrompt: {
+          url: 'https://chromewebstore.google.com/detail/xverse-wallet/idnnbdplmphpflfnlkomgpfbpcgelopg',
+        },
+      });
+    }
+
+    // Unisat
+    const unisatProvider = providers.find((provider) => provider.id === 'unisat');
+    if (unisatProvider && unisatProvider.isInstalled) {
+      providerOptions.push({
+        name: unisatProvider.name,
+        id: unisatProvider.id,
+        icon: unisatProvider.icon,
+      });
+    }
+
+    // Rest
+    providerOptions.concat(
+      providers
+        .filter((provider) => {
+          return provider.id !== 'xverseProviders.bitcoinProvider' && provider.id !== 'unisat';
+        })
+        .map((provider) => {
+          return {
+            name: provider.name,
+            id: provider.id,
+            icon: provider.icon,
+          };
+        })
+    );
+
+    return providerOptions;
+  }
+  static customProviderOrdering?: (providers: SupportedWallet[]) => Array<ProviderOption>;
+  static setCustomProviderOrdering(
+    customProviderOrdering: (providers: SupportedWallet[]) => Array<ProviderOption>
+  ) {
+    this.customProviderOrdering = customProviderOrdering;
   }
 
   // selectProvider
@@ -46,7 +103,9 @@ class WalletProvider {
           throw new Error('No wallets detected, may want to prompt user to install a wallet.');
         }
 
-        const selectorConfig = customSelectorConfig(providers);
+        const selectorConfig = this.customProviderOrdering
+          ? this.customProviderOrdering(providers)
+          : this.defaultProviderOrdering(providers);
         nextProviderId = await selectProvider(selectorConfig);
         setDefaultProvider(nextProviderId);
       }
