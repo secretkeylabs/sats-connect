@@ -8,18 +8,19 @@ import { SatsConnectAdapter } from '@sats-connect/core/dist/adapters/satsConnect
 
 import { ProviderOption, registerWalletSelector, selectProvider } from '@sats-connect/ui';
 import { unisat as unisatIcon, xverse as xverseIcon } from './icons';
-
-const getDefaultProvider = () => {
-  return 'xverseProviders.bitcoinProvider';
-};
+import { setDefaultProvider } from '@sats-connect/core';
+import { getDefaultProvider } from '@sats-connect/core';
+import { removeDefaultProvider } from '@sats-connect/core';
 
 type WalletProviderConfig = {
   providerId: string;
   userAdapters?: Record<string, Adapter>;
 };
 
+registerWalletSelector();
+
 class WalletProvider {
-  private static providerId: string;
+  private static providerId: string | undefined;
 
   private static defaultAdapters: Record<string, SatsConnectAdapter> = defaultAdapters;
 
@@ -89,31 +90,38 @@ class WalletProvider {
     this.customProviderOrdering = customProviderOrdering;
   }
 
-  // selectProvider
-  // disconnect
+  static async selectProvider() {
+    const providers = getSupportedWallets();
+
+    if (providers.length === 0) {
+      throw new Error('No wallets detected, may want to prompt user to install a wallet.');
+    }
+
+    const selectorConfig = this.customProviderOrdering
+      ? this.customProviderOrdering(providers)
+      : this.defaultProviderOrdering(providers);
+    const nextProviderId = await selectProvider(selectorConfig);
+    setDefaultProvider(nextProviderId);
+    this.providerId = nextProviderId;
+  }
+
+  static async disconnect() {
+    this.providerId = undefined;
+    removeDefaultProvider();
+  }
 
   public static async request(method: string, params?: any): Promise<any> {
     if (!this.isProviderSet()) {
-      let nextProviderId = getDefaultProvider();
-      if (!nextProviderId) {
-        registerWalletSelector();
-        const providers = getSupportedWallets();
-
-        if (providers.length === 0) {
-          throw new Error('No wallets detected, may want to prompt user to install a wallet.');
-        }
-
-        const selectorConfig = this.customProviderOrdering
-          ? this.customProviderOrdering(providers)
-          : this.defaultProviderOrdering(providers);
-        nextProviderId = await selectProvider(selectorConfig);
-        setDefaultProvider(nextProviderId);
+      const defaultProvider = getDefaultProvider();
+      if (defaultProvider) {
+        WalletProvider.providerId = defaultProvider;
+      } else {
+        await WalletProvider.selectProvider();
       }
-      WalletProvider.providerId = nextProviderId; // Or provider = new WalletProvider(nextProviderId)
     }
-    // # Option 1
+
     const adapter = { ...WalletProvider.defaultAdapters, ...WalletProvider.userAdapters }[
-      WalletProvider.providerId
+      WalletProvider.providerId as string
     ];
     return new adapter().request(method, params);
   }
