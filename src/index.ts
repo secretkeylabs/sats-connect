@@ -1,13 +1,8 @@
-import {
-  SupportedWallet,
-  defaultAdapters,
-  getProviders,
-  getSupportedWallets,
-} from '@sats-connect/core';
+import { SupportedWallet, defaultAdapters, getSupportedWallets } from '@sats-connect/core';
 import { SatsConnectAdapter } from '@sats-connect/core/dist/adapters/satsConnectAdapter';
 
 import { ProviderOption, registerWalletSelector, selectProvider } from '@sats-connect/ui';
-import { unisat as unisatIcon, xverse as xverseIcon } from './icons';
+import { xverse as xverseIcon } from './icons';
 import { setDefaultProvider } from '@sats-connect/core';
 import { getDefaultProvider } from '@sats-connect/core';
 import { removeDefaultProvider } from '@sats-connect/core';
