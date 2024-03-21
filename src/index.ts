@@ -22,16 +22,17 @@ class WalletProvider {
 
   private static userAdapters: Record<string, new () => SatsConnectAdapter> = {};
 
+  static customProviderOrdering?: (providers: SupportedWallet[]) => Array<ProviderOption>;
+
   private static isProviderSet(): boolean {
     return !!WalletProvider.providerId;
   }
 
   private static defaultProviderOrdering(providers: SupportedWallet[]): Array<ProviderOption> {
     const providerOptions: Array<ProviderOption> = [];
-
     // Xverse
     const xverseProvider = providers.find(
-      (provider) => provider.id === 'xverseProviders.bitcoinProvider'
+      (provider) => provider.id === 'XverseProviders.BitcoinProvider'
     );
     if (xverseProvider) {
       providerOptions.push({
@@ -42,7 +43,7 @@ class WalletProvider {
     } else {
       providerOptions.push({
         name: 'Xverse',
-        id: 'xverseProviders.bitcoinProvider',
+        id: 'XverseProviders.BitcoinProvider',
         icon: xverseIcon,
       });
     }
@@ -74,7 +75,6 @@ class WalletProvider {
 
     return providerOptions;
   }
-  static customProviderOrdering?: (providers: SupportedWallet[]) => Array<ProviderOption>;
   static setCustomProviderOrdering(
     customProviderOrdering: (providers: SupportedWallet[]) => Array<ProviderOption>
   ) {
@@ -113,10 +113,18 @@ class WalletProvider {
         await WalletProvider.selectProvider();
       }
     }
-
     const adapter = { ...WalletProvider.defaultAdapters, ...WalletProvider.userAdapters }[
       WalletProvider.providerId as string
     ];
-    return new adapter().request(method, params);
+
+    const response = await new adapter().request(method, params);
+    if (!response) {
+      throw new Error('No response from wallet');
+    }
+    return response;
   }
 }
+
+export * from '@sats-connect/core';
+
+export default WalletProvider;
