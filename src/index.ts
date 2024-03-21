@@ -1,27 +1,26 @@
-import { SupportedWallet, defaultAdapters, getSupportedWallets } from '@sats-connect/core';
-import { SatsConnectAdapter } from '@sats-connect/core/dist/adapters/satsConnectAdapter';
-
+import {
+  Params,
+  Requests,
+  RpcResult,
+  SupportedWallet,
+  defaultAdapters,
+  getSupportedWallets,
+  SatsConnectAdapter,
+  setDefaultProvider,
+  getDefaultProvider,
+  removeDefaultProvider,
+} from '@sats-connect/core';
 import { ProviderOption, registerWalletSelector, selectProvider } from '@sats-connect/ui';
 import { xverse as xverseIcon } from './icons';
-import { setDefaultProvider } from '@sats-connect/core';
-import { getDefaultProvider } from '@sats-connect/core';
-import { removeDefaultProvider } from '@sats-connect/core';
-
-type WalletProviderConfig = {
-  providerId: string;
-  userAdapters?: Record<string, Adapter>;
-};
 
 registerWalletSelector();
 
 class WalletProvider {
   private static providerId: string | undefined;
 
-  private static defaultAdapters: Record<string, SatsConnectAdapter> = defaultAdapters;
+  private static defaultAdapters: Record<string, new () => SatsConnectAdapter> = defaultAdapters;
 
-  private static userAdapters: Record<string, SatsConnectAdapter> = {};
-
-  private config: WalletProviderConfig;
+  private static userAdapters: Record<string, new () => SatsConnectAdapter> = {};
 
   private static isProviderSet(): boolean {
     return !!WalletProvider.providerId;
@@ -45,9 +44,6 @@ class WalletProvider {
         name: 'Xverse',
         id: 'xverseProviders.bitcoinProvider',
         icon: xverseIcon,
-        installPrompt: {
-          url: 'https://chromewebstore.google.com/detail/xverse-wallet/idnnbdplmphpflfnlkomgpfbpcgelopg',
-        },
       });
     }
 
@@ -105,7 +101,10 @@ class WalletProvider {
     removeDefaultProvider();
   }
 
-  public static async request(method: string, params?: any): Promise<any> {
+  public static async request<Method extends keyof Requests>(
+    method: Method,
+    params: Params<Method>
+  ): Promise<RpcResult<Method>> {
     if (!this.isProviderSet()) {
       const defaultProvider = getDefaultProvider();
       if (defaultProvider) {
