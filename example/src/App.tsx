@@ -1,4 +1,4 @@
-import { AddressPurpose, BitcoinNetworkType, getAddress, type Address } from 'sats-connect';
+import { BitcoinNetworkType, type Address } from 'sats-connect';
 import WalletProvider from 'sats-connect';
 import './App.css';
 import { AddressDisplay, NetworkSelector, SendBtc, SendStx } from './components';
@@ -14,35 +14,15 @@ function App() {
   const isConnected = addressInfo.length > 0;
 
   const onConnect = async () => {
-    WalletProvider.request('getAccounts', null)
-      .then((response) => {
-        console.log(response);
-      })
-      .then((err) => {
-        console.log(err);
-      });
-    // getAddress({
-    //   payload: {
-    //     purposes: [
-    //       AddressPurpose.Stacks,
-    //       AddressPurpose.Payment,
-    //       AddressPurpose.Ordinals,
-    //     ],
-    //     message: "My awesome dapp needs your address info",
-    //     network: {
-    //       type: network,
-    //     },
-    //   },
-    //   onFinish: (response) => {
-    //     setAddressInfo(response.addresses);
-    //   },
-    //   onCancel: () => {
-    //     alert("User cancelled the request");
-    //   },
-    // });
+    const response = await WalletProvider.request('getAccounts', null);
+    if (response.status === 'success') {
+      setAddressInfo(response.result);
+      console.log(response.result);
+    }
   };
 
   const onDisconnect = () => {
+    WalletProvider.disconnect();
     setAddressInfo([]);
   };
 
