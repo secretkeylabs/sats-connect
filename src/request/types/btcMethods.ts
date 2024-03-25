@@ -124,6 +124,13 @@ export type SignPsbtResult = {
 
 export type SignPsbt = MethodParamsAndResult<SignPsbtParams, SignPsbtResult>;
 
+export type GetAccountsParams = {
+  /**
+   * a message to be displayed to the user in the request prompt.
+   */
+  message?: string;
+};
+
 export type GetAccountResult = Address[];
 
-export type GetAccounts = MethodParamsAndResult<null, GetAccountResult>;
+export type GetAccounts = MethodParamsAndResult<GetAccountsParams, GetAccountResult>;
