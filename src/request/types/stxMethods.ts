@@ -247,11 +247,10 @@ export type DeployContractResult = TxId & Transaction;
 export type StxDeployContract = MethodParamsAndResult<DeployContractParams, DeployContractResult>;
 
 // Types for `stx_getAccounts` request
-export type GetAccountsParams = {};
 export type GetAccountsResult = {
   addresses: Array<Address & PublicKey & { gaiaHubUrl: string; gaiaAppKey: string }>;
 };
-export type StxGetAccounts = MethodParamsAndResult<GetAccountsParams, GetAccountsResult>;
+export type StxGetAccounts = MethodParamsAndResult<{}, GetAccountsResult>;
 
 // Types for `stx_getAddresses` request
 export type GetAddressesParams = undefined | null;
