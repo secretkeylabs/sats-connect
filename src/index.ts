@@ -10,6 +10,7 @@ import {
   getDefaultProvider,
   removeDefaultProvider,
   RpcErrorCode,
+  BaseAdapter,
 } from '@sats-connect/core';
 import {
   Config,
@@ -112,8 +113,9 @@ class WalletProvider {
       }
     }
     const adapter = { ...this.defaultAdapters, ...this.userAdapters }[this.providerId as string];
-
-    const response = await new adapter().request(method, params);
+    const response = adapter
+      ? await new adapter().request(method, params)
+      : await new BaseAdapter(this.providerId as string).request(method, params);
     if (!response) {
       return {
         status: 'error',
