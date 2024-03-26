@@ -11,14 +11,9 @@ import {
   removeDefaultProvider,
   RpcErrorCode,
   BaseAdapter,
+  createDefaultConfig,
 } from '@sats-connect/core';
-import {
-  Config,
-  loadSelector,
-  selectWalletProvider,
-  TWalletProviderOption,
-} from '@sats-connect/ui';
-import { xverse as xverseIcon } from './icons';
+import { Config, loadSelector, selectWalletProvider } from '@sats-connect/ui';
 
 loadSelector();
 
@@ -29,53 +24,12 @@ class WalletProvider {
 
   private static userAdapters: Record<string, new () => SatsConnectAdapter> = {};
 
-  static createCustomConfig?: (providers: SupportedWallet[]) => Array<TWalletProviderOption>;
+  static createCustomConfig?: (providers: SupportedWallet[]) => Config;
 
   private static isProviderSet(): boolean {
     return !!WalletProvider.providerId;
   }
 
-  private static createProviderOption(provider: SupportedWallet): TWalletProviderOption {
-    return {
-      name: provider.name,
-      id: provider.id,
-      icon: provider.icon,
-    };
-  }
-
-  private static createDefaultConfig(providers: SupportedWallet[]): Config {
-    const config: Config = [];
-    // Xverse
-    const xverseProvider = providers.find(
-      (provider) => provider.id === 'XverseProviders.BitcoinProvider'
-    );
-    config.push(
-      xverseProvider
-        ? this.createProviderOption(xverseProvider)
-        : {
-            name: 'Xverse',
-            id: 'XverseProviders.BitcoinProvider',
-            icon: xverseIcon,
-          }
-    );
-
-    // Unisat
-    const unisatProvider = providers.find((provider) => provider.id === 'unisat');
-    if (unisatProvider && unisatProvider.isInstalled) {
-      config.push(this.createProviderOption(unisatProvider));
-    }
-
-    // Rest
-    config.concat(
-      providers
-        .filter((provider) => {
-          return provider.id !== 'xverseProviders.bitcoinProvider' && provider.id !== 'unisat';
-        })
-        .map((provider) => this.createProviderOption(provider))
-    );
-
-    return config;
-  }
   static setCreateCustomConfig(createCustomConfig: (providers: SupportedWallet[]) => Config) {
     this.createCustomConfig = createCustomConfig;
   }
@@ -89,7 +43,7 @@ class WalletProvider {
 
     const selectorConfig = this.createCustomConfig
       ? this.createCustomConfig(providers)
-      : this.createDefaultConfig(providers);
+      : createDefaultConfig(providers);
     const nextProviderId = await selectWalletProvider(selectorConfig);
     setDefaultProvider(nextProviderId);
     this.providerId = nextProviderId;
