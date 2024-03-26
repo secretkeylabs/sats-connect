@@ -126,6 +126,14 @@ export type SignPsbt = MethodParamsAndResult<SignPsbtParams, SignPsbtResult>;
 
 export type GetAccountsParams = {
   /**
+   * The purposes for which to generate addresses.
+   * possible values are "payment", "ordinals", ...
+   */
+  purposes: Array<AddressPurpose>;
+  /**
+   * a message to be displayed to the user in the request prompt.
+   */
+  /**
    * a message to be displayed to the user in the request prompt.
    */
   message?: string;
