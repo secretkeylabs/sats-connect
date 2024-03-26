@@ -7,7 +7,6 @@
   ],
   "scripts": {
     "test": "jest",
-    "build-debug": "webpack --mode development",
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
     "lint": "prettier --write .",
@@ -23,24 +22,15 @@
   },
   "dependencies": {
     "@sats-connect/core": "file:../sats-connect-core",
-    "@sats-connect/ui": "file:../sats-connect-ui",
-    "process": "^0.11.10",
-    "util": "^0.12.4"
+    "@sats-connect/ui": "file:../sats-connect-ui"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.6",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
     "prettier": "^2.8.4",
-    "process": "^0.11.10",
     "rimraf": "^3.0.2",
-    "stream-browserify": "^3.0.0",
     "ts-jest": "^29.0.5",
-    "ts-loader": "^9.4.1",
-    "typescript": "^4.9.4",
-    "vm-browserify": "^1.1.2",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
+    "typescript": "^4.9.4"
   },
   "repository": {
     "type": "git",

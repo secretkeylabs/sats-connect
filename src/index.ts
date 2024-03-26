@@ -9,11 +9,12 @@ import {
   setDefaultProvider,
   getDefaultProvider,
   removeDefaultProvider,
+  RpcErrorCode,
 } from '@sats-connect/core';
-import { ProviderOption, registerWalletSelector, selectProvider } from '@sats-connect/ui';
+import { loadSelector, selectWalletProvider, TWalletProviderOption } from '@sats-connect/ui';
 import { xverse as xverseIcon } from './icons';
 
-registerWalletSelector();
+loadSelector();
 
 class WalletProvider {
   private static providerId: string | undefined;
@@ -22,40 +23,42 @@ class WalletProvider {
 
   private static userAdapters: Record<string, new () => SatsConnectAdapter> = {};
 
-  static customProviderOrdering?: (providers: SupportedWallet[]) => Array<ProviderOption>;
+  static customProviderOrdering?: (providers: SupportedWallet[]) => Array<TWalletProviderOption>;
 
   private static isProviderSet(): boolean {
     return !!WalletProvider.providerId;
   }
 
-  private static defaultProviderOrdering(providers: SupportedWallet[]): Array<ProviderOption> {
-    const providerOptions: Array<ProviderOption> = [];
+  private static createProviderOption(provider: SupportedWallet): TWalletProviderOption {
+    return {
+      name: provider.name,
+      id: provider.id,
+      icon: provider.icon,
+    };
+  }
+
+  private static defaultProviderOrdering(
+    providers: SupportedWallet[]
+  ): Array<TWalletProviderOption> {
+    const providerOptions: Array<TWalletProviderOption> = [];
     // Xverse
     const xverseProvider = providers.find(
       (provider) => provider.id === 'XverseProviders.BitcoinProvider'
     );
-    if (xverseProvider) {
-      providerOptions.push({
-        name: xverseProvider.name,
-        id: xverseProvider.id,
-        icon: xverseProvider.icon,
-      });
-    } else {
-      providerOptions.push({
-        name: 'Xverse',
-        id: 'XverseProviders.BitcoinProvider',
-        icon: xverseIcon,
-      });
-    }
+    providerOptions.push(
+      xverseProvider
+        ? this.createProviderOption(xverseProvider)
+        : {
+            name: 'Xverse',
+            id: 'XverseProviders.BitcoinProvider',
+            icon: xverseIcon,
+          }
+    );
 
     // Unisat
     const unisatProvider = providers.find((provider) => provider.id === 'unisat');
     if (unisatProvider && unisatProvider.isInstalled) {
-      providerOptions.push({
-        name: unisatProvider.name,
-        id: unisatProvider.id,
-        icon: unisatProvider.icon,
-      });
+      providerOptions.push(this.createProviderOption(unisatProvider));
     }
 
     // Rest
@@ -64,19 +67,13 @@ class WalletProvider {
         .filter((provider) => {
           return provider.id !== 'xverseProviders.bitcoinProvider' && provider.id !== 'unisat';
         })
-        .map((provider) => {
-          return {
-            name: provider.name,
-            id: provider.id,
-            icon: provider.icon,
-          };
-        })
+        .map((provider) => this.createProviderOption(provider))
     );
 
     return providerOptions;
   }
   static setCustomProviderOrdering(
-    customProviderOrdering: (providers: SupportedWallet[]) => Array<ProviderOption>
+    customProviderOrdering: (providers: SupportedWallet[]) => Array<TWalletProviderOption>
   ) {
     this.customProviderOrdering = customProviderOrdering;
   }
@@ -91,7 +88,7 @@ class WalletProvider {
     const selectorConfig = this.customProviderOrdering
       ? this.customProviderOrdering(providers)
       : this.defaultProviderOrdering(providers);
-    const nextProviderId = await selectProvider(selectorConfig);
+    const nextProviderId = await selectWalletProvider(selectorConfig);
     setDefaultProvider(nextProviderId);
     this.providerId = nextProviderId;
   }
@@ -119,7 +116,13 @@ class WalletProvider {
 
     const response = await new adapter().request(method, params);
     if (!response) {
-      throw new Error('No response from wallet');
+      return {
+        status: 'error',
+        error: {
+          code: RpcErrorCode.INTERNAL_ERROR,
+          message: 'Wallet Error processing the request',
+        },
+      };
     }
     return response;
   }
