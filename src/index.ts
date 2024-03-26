@@ -11,7 +11,12 @@ import {
   removeDefaultProvider,
   RpcErrorCode,
 } from '@sats-connect/core';
-import { loadSelector, selectWalletProvider, TWalletProviderOption } from '@sats-connect/ui';
+import {
+  Config,
+  loadSelector,
+  selectWalletProvider,
+  TWalletProviderOption,
+} from '@sats-connect/ui';
 import { xverse as xverseIcon } from './icons';
 
 loadSelector();
@@ -23,7 +28,7 @@ class WalletProvider {
 
   private static userAdapters: Record<string, new () => SatsConnectAdapter> = {};
 
-  static customProviderOrdering?: (providers: SupportedWallet[]) => Array<TWalletProviderOption>;
+  static createCustomConfig?: (providers: SupportedWallet[]) => Array<TWalletProviderOption>;
 
   private static isProviderSet(): boolean {
     return !!WalletProvider.providerId;
@@ -37,15 +42,13 @@ class WalletProvider {
     };
   }
 
-  private static defaultProviderOrdering(
-    providers: SupportedWallet[]
-  ): Array<TWalletProviderOption> {
-    const providerOptions: Array<TWalletProviderOption> = [];
+  private static createDefaultConfig(providers: SupportedWallet[]): Config {
+    const config: Config = [];
     // Xverse
     const xverseProvider = providers.find(
       (provider) => provider.id === 'XverseProviders.BitcoinProvider'
     );
-    providerOptions.push(
+    config.push(
       xverseProvider
         ? this.createProviderOption(xverseProvider)
         : {
@@ -58,11 +61,11 @@ class WalletProvider {
     // Unisat
     const unisatProvider = providers.find((provider) => provider.id === 'unisat');
     if (unisatProvider && unisatProvider.isInstalled) {
-      providerOptions.push(this.createProviderOption(unisatProvider));
+      config.push(this.createProviderOption(unisatProvider));
     }
 
     // Rest
-    providerOptions.concat(
+    config.concat(
       providers
         .filter((provider) => {
           return provider.id !== 'xverseProviders.bitcoinProvider' && provider.id !== 'unisat';
@@ -70,12 +73,10 @@ class WalletProvider {
         .map((provider) => this.createProviderOption(provider))
     );
 
-    return providerOptions;
+    return config;
   }
-  static setCustomProviderOrdering(
-    customProviderOrdering: (providers: SupportedWallet[]) => Array<TWalletProviderOption>
-  ) {
-    this.customProviderOrdering = customProviderOrdering;
+  static setCreateCustomConfig(createCustomConfig: (providers: SupportedWallet[]) => Config) {
+    this.createCustomConfig = createCustomConfig;
   }
 
   static async selectProvider() {
@@ -85,9 +86,9 @@ class WalletProvider {
       throw new Error('No wallets detected, may want to prompt user to install a wallet.');
     }
 
-    const selectorConfig = this.customProviderOrdering
-      ? this.customProviderOrdering(providers)
-      : this.defaultProviderOrdering(providers);
+    const selectorConfig = this.createCustomConfig
+      ? this.createCustomConfig(providers)
+      : this.createDefaultConfig(providers);
     const nextProviderId = await selectWalletProvider(selectorConfig);
     setDefaultProvider(nextProviderId);
     this.providerId = nextProviderId;
@@ -105,14 +106,12 @@ class WalletProvider {
     if (!this.isProviderSet()) {
       const defaultProvider = getDefaultProvider();
       if (defaultProvider) {
-        WalletProvider.providerId = defaultProvider;
+        this.providerId = defaultProvider;
       } else {
-        await WalletProvider.selectProvider();
+        await this.selectProvider();
       }
     }
-    const adapter = { ...WalletProvider.defaultAdapters, ...WalletProvider.userAdapters }[
-      WalletProvider.providerId as string
-    ];
+    const adapter = { ...this.defaultAdapters, ...this.userAdapters }[this.providerId as string];
 
     const response = await new adapter().request(method, params);
     if (!response) {
