@@ -11,11 +11,11 @@ const AddressDisplay = ({ network, addresses, onDisconnect }: Props) => {
     <div className="card">
       <h3>Connected Addresses - ({network})</h3>
       {addresses.map((address) => (
-        <p key={address.address}>
+        <div key={address.purpose}>
           <h4>{address.purpose}</h4>
           <div>Address: {address.address}</div>
           <div>Public key: {address.publicKey}</div>
-        </p>
+        </div>
       ))}
       <div>
         <button onClick={onDisconnect}>Disconnect</button>

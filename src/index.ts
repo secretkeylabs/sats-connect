@@ -13,11 +13,11 @@ import {
   BaseAdapter,
   createDefaultConfig,
 } from '@sats-connect/core';
-import { Config, loadSelector, selectWalletProvider } from '@sats-connect/ui';
+import { Config, loadSelector, selectWalletProvider, close } from '@sats-connect/ui';
 
 loadSelector();
 
-class WalletProvider {
+class Wallet {
   private static providerId: string | undefined;
 
   private static defaultAdapters: Record<string, new () => SatsConnectAdapter> = defaultAdapters;
@@ -27,7 +27,7 @@ class WalletProvider {
   static createCustomConfig?: (providers: SupportedWallet[]) => Config;
 
   private static isProviderSet(): boolean {
-    return !!WalletProvider.providerId;
+    return !!this.providerId;
   }
 
   static setCreateCustomConfig(createCustomConfig: (providers: SupportedWallet[]) => Config) {
@@ -45,8 +45,8 @@ class WalletProvider {
       ? this.createCustomConfig(providers)
       : createDefaultConfig(providers);
     const nextProviderId = await selectWalletProvider(selectorConfig);
-    setDefaultProvider(nextProviderId);
     this.providerId = nextProviderId;
+    close();
   }
 
   static async disconnect() {
@@ -58,8 +58,8 @@ class WalletProvider {
     method: Method,
     params: Params<Method>
   ): Promise<RpcResult<Method>> {
+    const defaultProvider = getDefaultProvider();
     if (!this.isProviderSet()) {
-      const defaultProvider = getDefaultProvider();
       if (defaultProvider) {
         this.providerId = defaultProvider;
       } else {
@@ -70,6 +70,15 @@ class WalletProvider {
     const response = adapter
       ? await new adapter().request(method, params)
       : await new BaseAdapter(this.providerId as string).request(method, params);
+    if (
+      !defaultProvider &&
+      response?.status === 'error' &&
+      response.error?.code === RpcErrorCode.USER_REJECTION
+    ) {
+      this.providerId = undefined;
+    } else {
+      setDefaultProvider(this.providerId as string);
+    }
     if (!response) {
       return {
         status: 'error',
@@ -85,4 +94,4 @@ class WalletProvider {
 
 export * from '@sats-connect/core';
 
-export default WalletProvider;
+export default Wallet;
