@@ -21,7 +21,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.0.1-80ec315",
+    "@sats-connect/core": "0.0.2-7d8cb11",
     "@sats-connect/ui": "0.0.2-fa73f78"
   },
   "devDependencies": {

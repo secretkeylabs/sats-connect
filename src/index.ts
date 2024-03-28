@@ -13,7 +13,14 @@ import {
   BaseAdapter,
   createDefaultConfig,
 } from '@sats-connect/core';
-import { Config, loadSelector, selectWalletProvider, close } from '@sats-connect/ui';
+import {
+  Config,
+  loadSelector,
+  selectWalletProvider,
+  close,
+  walletOpen,
+  walletClose,
+} from '@sats-connect/ui';
 
 loadSelector();
 
@@ -46,7 +53,6 @@ class Wallet {
       : createDefaultConfig(providers);
     const nextProviderId = await selectWalletProvider(selectorConfig);
     this.providerId = nextProviderId;
-    close();
   }
 
   static async disconnect() {
@@ -67,18 +73,19 @@ class Wallet {
       }
     }
     const adapter = { ...this.defaultAdapters, ...this.userAdapters }[this.providerId as string];
+    walletOpen(this.providerId as string);
     const response = adapter
       ? await new adapter().request(method, params)
       : await new BaseAdapter(this.providerId as string).request(method, params);
-    if (
-      !defaultProvider &&
-      response?.status === 'error' &&
-      response.error?.code === RpcErrorCode.USER_REJECTION
-    ) {
-      this.providerId = undefined;
+    walletClose();
+    if (response?.status === 'error' && response.error?.code === RpcErrorCode.USER_REJECTION) {
+      if (!defaultProvider) {
+        this.providerId = undefined;
+      }
     } else {
       setDefaultProvider(this.providerId as string);
     }
+    close();
     if (!response) {
       return {
         status: 'error',
