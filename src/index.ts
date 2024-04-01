@@ -29,8 +29,6 @@ class Wallet {
 
   private static defaultAdapters: Record<string, new () => SatsConnectAdapter> = defaultAdapters;
 
-  private static userAdapters: Record<string, new () => SatsConnectAdapter> = {};
-
   static createCustomConfig?: (providers: SupportedWallet[]) => Config;
 
   private static isProviderSet(): boolean {
@@ -72,7 +70,7 @@ class Wallet {
         await this.selectProvider();
       }
     }
-    const adapter = { ...this.defaultAdapters, ...this.userAdapters }[this.providerId as string];
+    const adapter = this.defaultAdapters[this.providerId as string];
     walletOpen(this.providerId as string);
     const response = adapter
       ? await new adapter().request(method, params)
