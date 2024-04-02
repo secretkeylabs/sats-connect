@@ -67,7 +67,18 @@ class Wallet {
       if (defaultProvider) {
         this.providerId = defaultProvider;
       } else {
-        await this.selectProvider();
+        try {
+          await this.selectProvider();
+        } catch {
+          return {
+            status: 'error',
+            error: {
+              code: RpcErrorCode.INTERNAL_ERROR,
+              message:
+                'Failed to select the provider. User may have cancelled the selection prompt.',
+            },
+          };
+        }
       }
     }
     const adapter = this.defaultAdapters[this.providerId as string];
