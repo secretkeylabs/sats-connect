@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import WalletProvider, { BitcoinNetworkType, RpcErrorCode } from 'sats-connect';
+import Wallet, { BitcoinNetworkType, RpcErrorCode } from 'sats-connect';
 
 type Props = {
   network: BitcoinNetworkType;
@@ -12,7 +12,7 @@ const SendStx = ({ network }: Props) => {
   const [txnId, setTxnId] = useState('');
 
   const onClick = async () => {
-    const response = await WalletProvider.request('stx_transferStx', {
+    const response = await Wallet.request('stx_transferStx', {
       recipient: address,
       amount: +amount,
       memo: memo === '' ? undefined : memo,

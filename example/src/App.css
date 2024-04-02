@@ -2,7 +2,6 @@
   min-height: 100vh;
   background-color: #282c34;
   color: #aeaeae;
-  ;
   font-size: calc(10px + 1vmin);
 
   display: flex;
@@ -37,7 +36,7 @@
 }
 
 .action {
-  color: #FF4D00;
+  color: #ff4d00;
 }
 
 .networkSelectorButton {

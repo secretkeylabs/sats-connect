@@ -1,9 +1,7 @@
-import { Address, BitcoinNetworkType } from 'sats-connect';
-import WalletProvider from 'sats-connect';
+import Wallet, { Address, BitcoinNetworkType, AddressPurpose } from 'sats-connect';
 import './App.css';
 import { AddressDisplay, NetworkSelector, SendBtc, SendStx } from './components';
 import { useLocalStorage } from './hooks';
-import { AddressPurpose } from '@sats-connect/core';
 
 function App() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -15,7 +13,7 @@ function App() {
   const isConnected = addressInfo.length > 0;
 
   const onConnect = async () => {
-    const response = await WalletProvider.request('getAccounts', {
+    const response = await Wallet.request('getAccounts', {
       purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
       message: 'Cool app wants to know your addresses!',
     });
@@ -26,7 +24,7 @@ function App() {
   };
 
   const onDisconnect = () => {
-    WalletProvider.disconnect();
+    Wallet.disconnect();
     setAddressInfo([]);
   };
 

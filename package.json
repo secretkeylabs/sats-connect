@@ -1,13 +1,16 @@
 {
   "name": "sats-connect",
   "version": "2.1.0",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "module": "dist/index.mjs",
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "jest",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsup src/index.ts --format esm --dts",
+    "dev:example": "cd example && npm start",
     "clean": "rimraf dist",
     "lint": "prettier --write .",
     "prepare": "husky install"
@@ -21,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.0.2-7d8cb11",
+    "@sats-connect/core": "0.0.3",
     "@sats-connect/ui": "0.0.2-42ab886"
   },
   "devDependencies": {
@@ -30,6 +33,7 @@
     "prettier": "^2.8.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.5",
+    "tsup": "^8.0.2",
     "typescript": "^4.9.4"
   },
   "repository": {
