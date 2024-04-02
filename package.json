@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@sats-connect/core": "0.0.2-7d8cb11",
-    "@sats-connect/ui": "0.0.2-fa73f78"
+    "@sats-connect/ui": "0.0.2-42ab886"
   },
   "devDependencies": {
     "husky": "^8.0.3",
