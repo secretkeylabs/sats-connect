@@ -30,6 +30,7 @@ const MintRunes = ({ addresses, network }: Props) => {
       feeRate: +feeRate,
       repeats: +repeats,
       runeName: runeName,
+      network: network,
     });
 
     if (response.status === 'success') {
@@ -44,10 +45,11 @@ const MintRunes = ({ addresses, network }: Props) => {
   const onClickExecute = async () => {
     const response = await Wallet.request('runes_mint', {
       destinationAddress: ordinalsAddress,
-      feeRate: 12,
-      repeats: 1,
-      runeName: 'BTC',
+      feeRate: +feeRate,
+      repeats: +repeats,
+      runeName,
       refundAddress: paymentAddress,
+      network,
     });
 
     if (response.status === 'success') {
