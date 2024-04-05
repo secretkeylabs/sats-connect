@@ -29,17 +29,19 @@ class Wallet {
 
   private static defaultAdapters: Record<string, new () => SatsConnectAdapter> = defaultAdapters;
 
-  static createCustomConfig?: (providers: SupportedWallet[]) => Config;
+  private static createCustomConfig?: (providers: SupportedWallet[]) => Config;
 
   private static isProviderSet(): boolean {
     return !!this.providerId;
   }
 
-  static setCreateCustomConfig(createCustomConfig: (providers: SupportedWallet[]) => Config) {
+  public static setCreateCustomConfig(
+    createCustomConfig: (providers: SupportedWallet[]) => Config
+  ) {
     this.createCustomConfig = createCustomConfig;
   }
 
-  static async selectProvider() {
+  public static async selectProvider() {
     const providers = getSupportedWallets();
 
     if (providers.length === 0) {
@@ -53,7 +55,7 @@ class Wallet {
     this.providerId = nextProviderId;
   }
 
-  static async disconnect() {
+  public static async disconnect() {
     this.providerId = undefined;
     removeDefaultProvider();
   }
