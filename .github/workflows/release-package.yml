@@ -37,7 +37,6 @@ jobs:
       - id: npm-publish-latest
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        continue-on-error: true
         run: npm publish
       - id: set-dist-tag-latest
         if: ${{steps.npm-publish-latest.outcome.failure}}
