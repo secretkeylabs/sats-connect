@@ -25,21 +25,23 @@ import {
 loadSelector();
 
 class Wallet {
-  private providerId: string | undefined;
+  private static providerId: string | undefined;
 
-  private defaultAdapters: Record<string, new () => SatsConnectAdapter> = defaultAdapters;
+  private static defaultAdapters: Record<string, new () => SatsConnectAdapter> = defaultAdapters;
 
-  createCustomConfig?: (providers: SupportedWallet[]) => Config;
+  private static createCustomConfig?: (providers: SupportedWallet[]) => Config;
 
-  private isProviderSet(): boolean {
+  private static isProviderSet(): boolean {
     return !!this.providerId;
   }
 
-  public setCreateCustomConfig(createCustomConfig: (providers: SupportedWallet[]) => Config) {
+  public static setCreateCustomConfig(
+    createCustomConfig: (providers: SupportedWallet[]) => Config
+  ) {
     this.createCustomConfig = createCustomConfig;
   }
 
-  public async selectProvider() {
+  public static async selectProvider() {
     const providers = getSupportedWallets();
 
     if (providers.length === 0) {
@@ -53,12 +55,12 @@ class Wallet {
     this.providerId = nextProviderId;
   }
 
-  public async disconnect() {
+  public static async disconnect() {
     this.providerId = undefined;
     removeDefaultProvider();
   }
 
-  public async request<Method extends keyof Requests>(
+  public static async request<Method extends keyof Requests>(
     method: Method,
     params: Params<Method>
   ): Promise<RpcResult<Method>> {
@@ -110,4 +112,4 @@ class Wallet {
 
 export * from '@sats-connect/core';
 
-export default new Wallet();
+export default Wallet;

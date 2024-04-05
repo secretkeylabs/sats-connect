@@ -2,8 +2,6 @@
   "name": "sats-connect",
   "version": "2.1.0",
   "main": "dist/index.mjs",
-  "types": "dist/index.d.mts",
-  "module": "dist/index.mjs",
   "files": [
     "dist"
   ],
@@ -24,7 +22,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.0.3",
+    "@sats-connect/core": "0.0.3-31f526d",
     "@sats-connect/ui": "0.0.2-42ab886"
   },
   "devDependencies": {
