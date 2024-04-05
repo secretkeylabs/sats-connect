@@ -22,6 +22,39 @@ Developers building apps on the Bitcoin ecosystem can use Sats connect to intera
 npm i sats-connect
 ```
 
+## Usage
+
+### import 
+
+```
+import Wallet from 'sats-connect';
+```
+
+
+### Connect Wallet 
+
+```
+const response = await Wallet.request('getAccounts', {
+	purposes: [
+		AddressPurpose.Payment,
+		AddressPurpose.Ordinals,
+		AddressPurpose.Stacks
+	],
+	message: 'Cool app wants to know your addresses!'
+});
+```
+### Request a wallet action
+
+```
+await Wallet.request('sendTransfer', {...});
+```
+
+### Disconnect Wallet
+
+```
+await Wallet.disconnect();
+```
+
 ## Documentation
 
 For full documentation, visit [docs.xverse.app](https://docs.xverse.app/sats-connect/).
