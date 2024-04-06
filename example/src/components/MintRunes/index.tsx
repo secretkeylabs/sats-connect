@@ -69,25 +69,21 @@ const MintRunes = ({ addresses, network }: Props) => {
     <>
       <div className="card">
         <h3>Mint Runes</h3>
-        {!fundTxId && (
-          <>
-            <div>
-              <h4>feeRate (sats/vb)</h4>
-              <input type="number" value={feeRate} onChange={(e) => setFeeRate(e.target.value)} />
-            </div>
-            <div>
-              <h4>Rune Name</h4>
-              <input type="text" value={runeName} onChange={(e) => setRuneName(e.target.value)} />
-            </div>
-            <div>
-              <h4>Repeat</h4>
-              <input type="number" value={repeats} onChange={(e) => setRepeats(e.target.value)} />
-            </div>
-            <button onClick={onClickEstimate} disabled={!runeName || !feeRate || !repeats}>
-              Estimate Mint
-            </button>
-          </>
-        )}
+        <div>
+          <h4>feeRate (sats/vb)</h4>
+          <input type="number" value={feeRate} onChange={(e) => setFeeRate(e.target.value)} />
+        </div>
+        <div>
+          <h4>Rune Name</h4>
+          <input type="text" value={runeName} onChange={(e) => setRuneName(e.target.value)} />
+        </div>
+        <div>
+          <h4>Repeat</h4>
+          <input type="number" value={repeats} onChange={(e) => setRepeats(e.target.value)} />
+        </div>
+        <button onClick={onClickEstimate} disabled={!runeName || !feeRate || !repeats}>
+          Estimate Mint
+        </button>
       </div>
 
       {totalCost && (
