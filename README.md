@@ -24,34 +24,30 @@ npm i sats-connect
 
 ## Usage
 
-### import 
+### import
 
-```
+```ts
 import Wallet from 'sats-connect';
 ```
 
+### Connect Wallet
 
-### Connect Wallet 
-
-```
+```ts
 const response = await Wallet.request('getAccounts', {
-	purposes: [
-		AddressPurpose.Payment,
-		AddressPurpose.Ordinals,
-		AddressPurpose.Stacks
-	],
-	message: 'Cool app wants to know your addresses!'
+  purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+  message: 'Cool app wants to know your addresses!',
 });
 ```
+
 ### Request a wallet action
 
-```
+```ts
 await Wallet.request('sendTransfer', {...});
 ```
 
 ### Disconnect Wallet
 
-```
+```ts
 await Wallet.disconnect();
 ```
 
