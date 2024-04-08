@@ -11,7 +11,6 @@ import {
   removeDefaultProvider,
   RpcErrorCode,
   BaseAdapter,
-  createDefaultConfig,
 } from '@sats-connect/core';
 import {
   Config,
@@ -21,6 +20,7 @@ import {
   walletOpen,
   walletClose,
 } from '@sats-connect/ui';
+import { makeDefaultConfig } from '@sats-connect/make-default-provider-config';
 
 loadSelector();
 
@@ -48,9 +48,11 @@ class Wallet {
       throw new Error('No wallets detected, may want to prompt user to install a wallet.');
     }
 
+    console.log('[ARY]: providers', providers);
+
     const selectorConfig = this.createCustomConfig
       ? this.createCustomConfig(providers)
-      : createDefaultConfig(providers);
+      : makeDefaultConfig(providers);
     const nextProviderId = await selectWalletProvider(selectorConfig);
     this.providerId = nextProviderId;
   }
