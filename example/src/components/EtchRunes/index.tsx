@@ -15,6 +15,8 @@ const EtchRunes = ({ addresses, network }: Props) => {
   const [symbol, setSymbol] = useState<string>('');
   const [preMine, setPreMine] = useState<string>('');
   const [divisibility, setDivisibility] = useState<string>('');
+  const [amount, setAmount] = useState<string>('');
+  const [mintCap, setMintCap] = useState<string>('');
 
   const ordinalsAddress = useMemo(
     () => addresses.find((a) => a.purpose === AddressPurpose.Ordinals)?.address || '',
@@ -33,6 +35,13 @@ const EtchRunes = ({ addresses, network }: Props) => {
       symbol: symbol || undefined,
       premine: preMine || undefined,
       divisibility: +divisibility || undefined,
+      terms:
+        amount || mintCap
+          ? {
+              amount: amount || undefined,
+              cap: mintCap || undefined,
+            }
+          : undefined,
       isMintable: true,
       runeName: runeName,
       network: network,
@@ -52,6 +61,13 @@ const EtchRunes = ({ addresses, network }: Props) => {
       destinationAddress: ordinalsAddress,
       symbol: symbol || undefined,
       premine: preMine || undefined,
+      terms:
+        amount || mintCap
+          ? {
+              amount: amount || undefined,
+              cap: mintCap || undefined,
+            }
+          : undefined,
       feeRate: +feeRate,
       isMintable: true,
       runeName,
@@ -104,6 +120,14 @@ const EtchRunes = ({ addresses, network }: Props) => {
           <div>
             <h4>Premine</h4>
             <input type="number" value={preMine} onChange={(e) => setPreMine(e.target.value)} />
+          </div>
+          <div>
+            <h4>Amount</h4>
+            <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
+          </div>
+          <div>
+            <h4>Mint Cap</h4>
+            <input type="number" value={mintCap} onChange={(e) => setMintCap(e.target.value)} />
           </div>
           <div>
             <h4>feeRate (sats/vb)</h4>

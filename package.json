@@ -8,6 +8,7 @@
   "scripts": {
     "test": "jest",
     "build": "npm run clean && tsup src/index.ts --format esm --dts",
+    "dev:build": "tsup src/index.ts --format esm --dts --watch",
     "dev:example": "cd example && npm start",
     "clean": "rimraf dist",
     "lint": "prettier --write .",
