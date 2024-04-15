@@ -54,3 +54,16 @@ await Wallet.disconnect();
 ## Documentation
 
 For full documentation, visit [docs.xverse.app](https://docs.xverse.app/sats-connect/).
+
+## Development
+
+### Build the package
+
+```bash
+npm run build
+```
+### Run example app
+
+```bash
+npm run dev:example
+```
