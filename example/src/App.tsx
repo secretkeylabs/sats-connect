@@ -1,6 +1,13 @@
 import Wallet, { Address, BitcoinNetworkType, AddressPurpose } from 'sats-connect';
 import './App.css';
-import { AddressDisplay, NetworkSelector, SendBtc, SendStx, MintRunes } from './components';
+import {
+  AddressDisplay,
+  NetworkSelector,
+  SendBtc,
+  SendStx,
+  MintRunes,
+  EtchRunes,
+} from './components';
 import { useLocalStorage } from './hooks';
 
 function App() {
@@ -51,6 +58,7 @@ function App() {
         <SendStx network={network} />
         <SendBtc network={network} />
         <MintRunes network={network} addresses={addressInfo} />
+        <EtchRunes network={network} addresses={addressInfo} />
       </div>
     </div>
   );
