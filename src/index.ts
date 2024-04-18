@@ -22,8 +22,6 @@ import {
 } from '@sats-connect/ui';
 import { makeDefaultConfig } from '@sats-connect/make-default-provider-config';
 
-loadSelector();
-
 export class Wallet {
   private providerId: string | undefined;
 
@@ -40,6 +38,7 @@ export class Wallet {
   }
 
   public async selectProvider() {
+    loadSelector();
     const providers = getSupportedWallets();
 
     if (providers.length === 0) {
