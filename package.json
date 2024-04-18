@@ -25,7 +25,7 @@
   "dependencies": {
     "@sats-connect/core": "0.0.6",
     "@sats-connect/make-default-provider-config": "0.0.1",
-    "@sats-connect/ui": "^0.0.4-66a9179"
+    "@sats-connect/ui": "0.0.4-394d09e"
   },
   "devDependencies": {
     "husky": "^8.0.3",
