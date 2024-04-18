@@ -24,7 +24,7 @@ import { makeDefaultConfig } from '@sats-connect/make-default-provider-config';
 
 loadSelector();
 
-class Wallet {
+export class Wallet {
   private providerId: string | undefined;
 
   private defaultAdapters: Record<string, new () => SatsConnectAdapter> = defaultAdapters;
