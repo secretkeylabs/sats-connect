@@ -46,8 +46,6 @@ class Wallet {
       throw new Error('No wallets detected, may want to prompt user to install a wallet.');
     }
 
-    console.log('[ARY]: providers', providers);
-
     const selectorConfig = this.createCustomConfig
       ? this.createCustomConfig(providers)
       : makeDefaultConfig(providers);
