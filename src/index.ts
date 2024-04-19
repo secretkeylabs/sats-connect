@@ -22,8 +22,6 @@ import {
 } from '@sats-connect/ui';
 import { makeDefaultConfig } from '@sats-connect/make-default-provider-config';
 
-loadSelector();
-
 class Wallet {
   private providerId: string | undefined;
 
@@ -62,6 +60,8 @@ class Wallet {
     method: Method,
     params: Params<Method>
   ): Promise<RpcResult<Method>> {
+    loadSelector();
+
     const defaultProvider = getDefaultProvider();
     if (!this.isProviderSet()) {
       if (defaultProvider) {
