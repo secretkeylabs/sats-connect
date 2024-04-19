@@ -23,17 +23,17 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.0.7",
+    "@sats-connect/core": "0.0.8",
     "@sats-connect/ui": "0.0.5",
-    "@sats-connect/make-default-provider-config": "0.0.1"
+    "@sats-connect/make-default-provider-config": "0.0.2"
   },
   "devDependencies": {
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.3",
-    "prettier": "^2.8.4",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^29.0.5",
-    "tsup": "^8.0.2",
+    "husky": "8.0.3",
+    "lint-staged": "13.2.3",
+    "prettier": "2.8.4",
+    "rimraf": "3.0.2",
+    "ts-jest": "29.0.5",
+    "tsup": "8.0.2",
     "typescript": "5"
   },
   "repository": {
