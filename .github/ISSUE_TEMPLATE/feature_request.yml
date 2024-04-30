@@ -1,0 +1,22 @@
+name: Feature Request
+description: Request a feature or enhancement
+title: '[Feature] <title>'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to share your thoughts with us.
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: Describe your request in one or two sentences..
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Solution
+      description: code snippets, gists, or links to the ideal design or API.
+    validations:
+      required: false

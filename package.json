@@ -1,6 +1,6 @@
 {
   "name": "sats-connect",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "main": "dist/index.mjs",
   "files": [
     "dist"
@@ -23,9 +23,9 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.0.7",
     "@sats-connect/make-default-provider-config": "0.0.4",
-    "@sats-connect/ui": "0.0.5-c661c02"
+    "@sats-connect/ui": "0.0.5-c661c02",
+    "@sats-connect/core": "0.0.8"
   },
   "devDependencies": {
     "husky": "8.0.3",
