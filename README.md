@@ -4,7 +4,7 @@ Sats connect is a simple javascript library that connects apps to Bitcoin wallet
 
 Developers building apps on the Bitcoin ecosystem can use Sats connect to interact with users' wallets:
 
-1. Retrieve users' wallet address(es)
+1. Retrieve users' wallet address(es) test
 
 2. Request the signature of arbitrary messages for authentication purposes
 
