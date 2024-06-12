@@ -10,6 +10,8 @@ const NetworkSelector = ({ network, setNetwork }: Props) => {
     const newNetwork =
       network === BitcoinNetworkType.Mainnet
         ? BitcoinNetworkType.Testnet
+        : network === BitcoinNetworkType.Testnet
+        ? BitcoinNetworkType.Signet
         : BitcoinNetworkType.Mainnet;
     setNetwork(newNetwork);
   };
