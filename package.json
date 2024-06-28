@@ -1,6 +1,6 @@
 {
   "name": "sats-connect",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "dist/index.mjs",
   "files": [
     "dist"
@@ -12,7 +12,7 @@
     "dev:example": "cd example && npm start",
     "clean": "rimraf dist",
     "lint": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install || true"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -23,7 +23,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.0.10-294372d",
+    "@sats-connect/core": "0.0.11",
     "@sats-connect/make-default-provider-config": "0.0.5",
     "@sats-connect/ui": "0.0.6"
   },

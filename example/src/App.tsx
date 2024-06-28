@@ -1,12 +1,12 @@
-import Wallet, { Address, BitcoinNetworkType, AddressPurpose } from 'sats-connect';
+import Wallet, { Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
 import './App.css';
 import {
   AddressDisplay,
+  EtchRunes,
+  MintRunes,
   NetworkSelector,
   SendBtc,
   SendStx,
-  MintRunes,
-  EtchRunes,
 } from './components';
 import { useLocalStorage } from './hooks';
 

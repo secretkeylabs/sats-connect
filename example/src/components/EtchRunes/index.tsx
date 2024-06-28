@@ -102,10 +102,12 @@ const EtchRunes = ({ addresses, network }: Props) => {
     }
   };
 
-  const fundTxLink =
-    network === BitcoinNetworkType.Mainnet
-      ? `https://mempool.space/tx/${fundTxId}`
-      : `https://mempool.space/testnet/tx/${fundTxId}`;
+  const networkPath = {
+    [BitcoinNetworkType.Mainnet]: '',
+    [BitcoinNetworkType.Testnet]: '/testnet',
+    [BitcoinNetworkType.Signet]: '/signet',
+  };
+  const fundTxLink = `https://mempool.space${networkPath[network]}/tx/${fundTxId}`;
 
   return (
     <>
