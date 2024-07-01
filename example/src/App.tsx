@@ -12,6 +12,7 @@ import { useLocalStorage } from './hooks';
 import { useCallback, useState } from 'react';
 import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
+import { ConnectButtonsContainer } from './App.styles';
 
 function App() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -22,7 +23,7 @@ function App() {
 
   const isConnected = addressInfo.length > 0;
 
-  const onConnect = async () => {
+  const onConnectLegacy = async () => {
     const response = await Wallet.request('getAccounts', {
       purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
       message: 'Cool app wants to know your addresses!',
@@ -32,7 +33,7 @@ function App() {
     }
   };
 
-  const onConnect2 = useCallback(async () => {
+  const onConnect = useCallback(async () => {
     const res = await Wallet.request('wallet_requestPermissions', undefined);
     if (res.status === 'error') {
       console.error('Error connecting to wallet, details in terminal.');
@@ -76,8 +77,10 @@ function App() {
           <img className="logo" src="/sats-connect.svg" alt="SatsConnect" />
           <NetworkSelector network={network} setNetwork={setNetwork} />
           <p>Click the button to connect your wallet</p>
-          <button onClick={onConnect}>Connect</button>
-          <button onClick={onConnect2}>Connect2</button>
+          <ConnectButtonsContainer>
+            <button onClick={onConnect}>Connect</button>
+            <button onClick={onConnectLegacy}>Connect (Legacy)</button>
+          </ConnectButtonsContainer>
         </header>
       </div>
     );
