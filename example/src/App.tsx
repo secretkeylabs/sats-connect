@@ -34,7 +34,7 @@ function App() {
   const onConnect2 = useCallback(async () => {
     const res = await Wallet.request('wallet_requestPermissions', undefined);
     if (res.status === 'error') {
-      console.error('Error connecting ot wallet, details in terminal.');
+      console.error('Error connecting to wallet, details in terminal.');
       console.error(res);
       return;
     }
