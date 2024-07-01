@@ -1,4 +1,4 @@
-import Wallet, { Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
+import Wallet, { type Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
 import './App.css';
 import {
   AddressDisplay,
@@ -11,6 +11,7 @@ import {
 import { useLocalStorage } from './hooks';
 import { useCallback, useState } from 'react';
 import GetBtcBalance from './components/GetBtcBalance';
+import GetRunesBalance from './components/GetRunesBalance';
 
 function App() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -94,6 +95,7 @@ function App() {
         <GetBtcBalance />
         <MintRunes network={network} addresses={addressInfo} />
         <EtchRunes network={network} addresses={addressInfo} />
+        <GetRunesBalance />
       </div>
     </div>
   );
