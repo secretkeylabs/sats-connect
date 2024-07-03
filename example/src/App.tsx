@@ -20,9 +20,14 @@ function App() {
     'network',
     BitcoinNetworkType.Mainnet
   );
-  const [addressInfo, setAddressInfo] = useLocalStorage<Address[]>('addresses', []);
+  const [btcAddressInfo, setBtcAddressInfo] = useLocalStorage<Address[]>('btc-addresses', []);
+  const [stxAddressInfo, setStxAddressInfo] = useLocalStorage<Address[]>('stx-addresses', []);
+  const [legacyAddressInfo, setLegacyAddressInfo] = useLocalStorage<Address[]>(
+    'legacy-addresses',
+    []
+  );
 
-  const isConnected = addressInfo.length > 0;
+  const isConnected = btcAddressInfo.length + stxAddressInfo.length + legacyAddressInfo.length > 0;
 
   const onConnectLegacy = async () => {
     const response = await Wallet.request('getAccounts', {
@@ -30,7 +35,7 @@ function App() {
       message: 'Cool app wants to know your addresses!',
     });
     if (response.status === 'success') {
-      setAddressInfo(response.result);
+      setLegacyAddressInfo(response.result);
     }
   };
 
@@ -52,7 +57,7 @@ function App() {
       return;
     }
 
-    setAddressInfo((prev) => [...prev, ...res2.result.addresses]);
+    setBtcAddressInfo(res2.result.addresses);
     const res3 = await Wallet.request('stx_getAddresses', null);
 
     if (res3.status === 'error') {
@@ -63,12 +68,13 @@ function App() {
       return;
     }
 
-    setAddressInfo((prev) => [...prev, ...res3.result.addresses]);
-  }, []);
+    setStxAddressInfo(res3.result.addresses);
+  }, [setBtcAddressInfo, setStxAddressInfo]);
 
   const onDisconnect = () => {
     Wallet.disconnect();
-    setAddressInfo([]);
+    setBtcAddressInfo([]);
+    setStxAddressInfo([]);
   };
 
   if (!isConnected) {
@@ -93,12 +99,16 @@ function App() {
         <div>
           <img className="logo" src="/sats-connect.svg" alt="SatsConnect" />
         </div>
-        <AddressDisplay network={network} addresses={addressInfo} onDisconnect={onDisconnect} />
+        <AddressDisplay
+          network={network}
+          addresses={[...btcAddressInfo, ...stxAddressInfo]}
+          onDisconnect={onDisconnect}
+        />
         <SendStx network={network} />
         <SendBtc network={network} />
         <GetBtcBalance />
-        <MintRunes network={network} addresses={addressInfo} />
-        <EtchRunes network={network} addresses={addressInfo} />
+        <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+        <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <GetRunesBalance />
         <GetInscriptions />
       </div>
