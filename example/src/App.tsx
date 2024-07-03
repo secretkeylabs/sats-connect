@@ -9,7 +9,7 @@ import {
   SendStx,
 } from './components';
 import { useLocalStorage } from './hooks';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
 import { ConnectButtonsContainer } from './App.styles';
@@ -20,7 +20,7 @@ function App() {
     'network',
     BitcoinNetworkType.Mainnet
   );
-  const [addressInfo, setAddressInfo] = useState<Address[]>([]);
+  const [addressInfo, setAddressInfo] = useLocalStorage<Address[]>('addresses', []);
 
   const isConnected = addressInfo.length > 0;
 
