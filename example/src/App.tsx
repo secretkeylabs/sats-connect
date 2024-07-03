@@ -13,6 +13,7 @@ import { useCallback, useState } from 'react';
 import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
 import { ConnectButtonsContainer } from './App.styles';
+import GetInscriptions from './components/GetInscriptions';
 
 function App() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -99,6 +100,7 @@ function App() {
         <MintRunes network={network} addresses={addressInfo} />
         <EtchRunes network={network} addresses={addressInfo} />
         <GetRunesBalance />
+        <GetInscriptions />
       </div>
     </div>
   );
