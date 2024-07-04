@@ -62,6 +62,7 @@ For full documentation, visit [docs.xverse.app](https://docs.xverse.app/sats-con
 ```bash
 npm run build
 ```
+
 ### Run example app
 
 ```bash

@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Wallet, { Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
+import { Button, Card, H4, Input, Success } from '../../App.styles';
+import { Container } from './index.styles';
 
-type Props = {
+interface Props {
   network: BitcoinNetworkType;
   addresses: Address[];
-};
+}
 
 const EtchRunes = ({ addresses, network }: Props) => {
   const [totalCost, setTotalCost] = useState<number>();
@@ -22,85 +24,115 @@ const EtchRunes = ({ addresses, network }: Props) => {
   const [inscriptionContent, setInscriptionContent] = useState<string>('');
 
   const ordinalsAddress = useMemo(
-    () => addresses.find((a) => a.purpose === AddressPurpose.Ordinals)?.address || '',
+    () => addresses.find((a) => a.purpose === AddressPurpose.Ordinals)?.address ?? '',
     [addresses]
   );
 
   const paymentAddress = useMemo(
-    () => addresses.find((a) => a.purpose === AddressPurpose.Payment)?.address || '',
+    () => addresses.find((a) => a.purpose === AddressPurpose.Payment)?.address ?? '',
     [addresses]
   );
 
-  const onClickEstimate = async () => {
-    const response = await Wallet.request('runes_estimateEtch', {
-      destinationAddress: ordinalsAddress,
-      feeRate: +feeRate,
-      symbol: symbol || undefined,
-      premine: preMine || undefined,
-      divisibility: +divisibility || undefined,
-      delegateInscriptionId: delegateInscription || undefined,
-      inscriptionDetails:
-        inscriptionContent && inscriptionContentType
-          ? {
-              contentBase64: inscriptionContent,
-              contentType: inscriptionContentType,
-            }
-          : undefined,
-      terms:
-        amount || mintCap
-          ? {
-              amount: amount || undefined,
-              cap: mintCap || undefined,
-            }
-          : undefined,
-      isMintable: true,
-      runeName: runeName,
-      network: network,
-    });
+  const onClickEstimate = useCallback(() => {
+    (async () => {
+      const response = await Wallet.request('runes_estimateEtch', {
+        destinationAddress: ordinalsAddress,
+        feeRate: +feeRate,
+        symbol: symbol || undefined,
+        premine: preMine || undefined,
+        divisibility: +divisibility || undefined,
+        delegateInscriptionId: delegateInscription || undefined,
+        inscriptionDetails:
+          inscriptionContent && inscriptionContentType
+            ? {
+                contentBase64: inscriptionContent,
+                contentType: inscriptionContentType,
+              }
+            : undefined,
+        terms:
+          amount || mintCap
+            ? {
+                amount: amount || undefined,
+                cap: mintCap || undefined,
+              }
+            : undefined,
+        isMintable: true,
+        runeName: runeName,
+        network: network,
+      });
 
-    if (response.status === 'success') {
-      setTotalCost(response.result.totalCost);
-      setTotalSize(response.result.totalSize);
-    } else {
-      console.error(response.error);
-      alert('Error Fetching Estimate. See console for details.');
-    }
-  };
+      if (response.status === 'success') {
+        setTotalCost(response.result.totalCost);
+        setTotalSize(response.result.totalSize);
+      } else {
+        console.error(response.error);
+        alert('Error Fetching Estimate. See console for details.');
+      }
+    })().catch(console.error);
+  }, [
+    amount,
+    delegateInscription,
+    divisibility,
+    feeRate,
+    inscriptionContent,
+    inscriptionContentType,
+    mintCap,
+    network,
+    ordinalsAddress,
+    preMine,
+    runeName,
+    symbol,
+  ]);
 
-  const onClickExecute = async () => {
-    const response = await Wallet.request('runes_etch', {
-      destinationAddress: ordinalsAddress,
-      symbol: symbol || undefined,
-      premine: preMine || undefined,
-      delegateInscriptionId: delegateInscription || undefined,
-      inscriptionDetails:
-        inscriptionContent && inscriptionContentType
-          ? {
-              contentBase64: inscriptionContent,
-              contentType: inscriptionContentType,
-            }
-          : undefined,
-      terms:
-        amount || mintCap
-          ? {
-              amount: amount || undefined,
-              cap: mintCap || undefined,
-            }
-          : undefined,
-      feeRate: +feeRate,
-      isMintable: true,
-      runeName,
-      refundAddress: paymentAddress,
-      network,
-    });
+  const onClickExecute = useCallback(() => {
+    (async () => {
+      const response = await Wallet.request('runes_etch', {
+        destinationAddress: ordinalsAddress,
+        symbol: symbol || undefined,
+        premine: preMine || undefined,
+        delegateInscriptionId: delegateInscription || undefined,
+        inscriptionDetails:
+          inscriptionContent && inscriptionContentType
+            ? {
+                contentBase64: inscriptionContent,
+                contentType: inscriptionContentType,
+              }
+            : undefined,
+        terms:
+          amount || mintCap
+            ? {
+                amount: amount || undefined,
+                cap: mintCap || undefined,
+              }
+            : undefined,
+        feeRate: +feeRate,
+        isMintable: true,
+        runeName,
+        refundAddress: paymentAddress,
+        network,
+      });
 
-    if (response.status === 'success') {
-      setFundTxId(response.result.fundTransactionId);
-    } else {
-      console.error(response.error);
-      alert('Error sending BTC. See console for details.');
-    }
-  };
+      if (response.status === 'success') {
+        setFundTxId(response.result.fundTransactionId);
+      } else {
+        console.error(response.error);
+        alert('Error sending BTC. See console for details.');
+      }
+    })().catch(console.error);
+  }, [
+    amount,
+    delegateInscription,
+    feeRate,
+    inscriptionContent,
+    inscriptionContentType,
+    mintCap,
+    network,
+    ordinalsAddress,
+    paymentAddress,
+    preMine,
+    runeName,
+    symbol,
+  ]);
 
   const networkPath = {
     [BitcoinNetworkType.Mainnet]: '',
@@ -111,44 +143,36 @@ const EtchRunes = ({ addresses, network }: Props) => {
 
   return (
     <>
-      <div className="card">
+      <Card>
         <h3>Etch Runes</h3>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            paddingRight: 100,
-            marginBottom: 20,
-          }}
-        >
+        <Container>
           <div>
-            <h4>Rune Name</h4>
-            <input type="text" value={runeName} onChange={(e) => setRuneName(e.target.value)} />
+            <H4>Rune Name</H4>
+            <Input type="text" value={runeName} onChange={(e) => setRuneName(e.target.value)} />
           </div>
           <div>
-            <h4>Symbol</h4>
-            <input type="text" value={symbol} onChange={(e) => setSymbol(e.target.value)} />
+            <H4>Symbol</H4>
+            <Input type="text" value={symbol} onChange={(e) => setSymbol(e.target.value)} />
           </div>
           <div>
-            <h4>Delegate inscription</h4>
-            <input
+            <H4>Delegate inscription</H4>
+            <Input
               type="text"
               value={delegateInscription}
               onChange={(e) => setDelegateInscription(e.target.value)}
             />
           </div>
           <div>
-            <h4>Inscription Content</h4>
-            <input
+            <H4>Inscription Content</H4>
+            <Input
               type="text"
               value={inscriptionContent}
               onChange={(e) => setInscriptionContent(e.target.value)}
             />
           </div>
           <div>
-            <h4>Inscription Content type</h4>
-            <input
+            <H4>Inscription Content type</H4>
+            <Input
               type="text"
               value={inscriptionContentType}
               onChange={(e) => setInscriptionContentType(e.target.value)}
@@ -156,58 +180,58 @@ const EtchRunes = ({ addresses, network }: Props) => {
           </div>
           <div>
             <h4>Divisibility</h4>
-            <input
+            <Input
               type="number"
               value={divisibility}
               onChange={(e) => setDivisibility(e.target.value)}
             />
           </div>
           <div>
-            <h4>Premine</h4>
-            <input type="number" value={preMine} onChange={(e) => setPreMine(e.target.value)} />
+            <H4>Premine</H4>
+            <Input type="number" value={preMine} onChange={(e) => setPreMine(e.target.value)} />
           </div>
           <div>
-            <h4>Amount</h4>
-            <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            <H4>Amount</H4>
+            <Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
           </div>
           <div>
-            <h4>Mint Cap</h4>
-            <input type="number" value={mintCap} onChange={(e) => setMintCap(e.target.value)} />
+            <H4>Mint Cap</H4>
+            <Input type="number" value={mintCap} onChange={(e) => setMintCap(e.target.value)} />
           </div>
           <div>
-            <h4>feeRate (sats/vb)</h4>
-            <input type="number" value={feeRate} onChange={(e) => setFeeRate(e.target.value)} />
+            <H4>feeRate (sats/vb)</H4>
+            <Input type="number" value={feeRate} onChange={(e) => setFeeRate(e.target.value)} />
           </div>
-        </div>
+        </Container>
 
-        <button onClick={onClickEstimate} disabled={!runeName || !feeRate}>
+        <Button onClick={onClickEstimate} disabled={!runeName || !feeRate}>
           Estimate Etch
-        </button>
-      </div>
+        </Button>
+      </Card>
 
       {totalCost && (
-        <div className="card">
+        <Card>
           <div>
             <h3>Rune Name</h3>
-            <p className="success">{runeName}</p>
+            <Success>{runeName}</Success>
           </div>
           <div>
             <h3>Total Cost (sats) - Total Size</h3>
-            <p className="success">
+            <Success>
               {totalCost} - {totalSize}
-            </p>
+            </Success>
           </div>
-          <button onClick={onClickExecute}>Execute Etch</button>
+          <Button onClick={onClickExecute}>Execute Etch</Button>
           {fundTxId && (
-            <div className="success">
+            <Success>
               Success! Click{' '}
               <a href={fundTxLink} target="_blank" rel="noreferrer">
                 here
               </a>{' '}
               to see your transaction
-            </div>
+            </Success>
           )}
-        </div>
+        </Card>
       )}
     </>
   );

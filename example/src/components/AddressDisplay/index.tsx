@@ -1,26 +1,27 @@
 import { Address, BitcoinNetworkType } from 'sats-connect';
+import { Button, Card, H4 } from '../../App.styles';
 
-type Props = {
+interface Props {
   network: BitcoinNetworkType;
   addresses: Address[];
   onDisconnect: () => void;
-};
+}
 
 const AddressDisplay = ({ network, addresses, onDisconnect }: Props) => {
   return (
-    <div className="card">
+    <Card>
       <h3>Connected Addresses - ({network})</h3>
       {addresses.map((address) => (
         <div key={address.purpose}>
-          <h4>{address.purpose}</h4>
+          <H4>{address.purpose}</H4>
           <div>Address: {address.address}</div>
           <div>Public key: {address.publicKey}</div>
         </div>
       ))}
       <div>
-        <button onClick={onDisconnect}>Disconnect</button>
+        <Button onClick={onDisconnect}>Disconnect</Button>
       </div>
-    </div>
+    </Card>
   );
 };
 

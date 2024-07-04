@@ -1,28 +1,31 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Wallet, { GetRunesBalanceResult } from 'sats-connect';
+import { Button, Card } from '../../App.styles';
 
 const GetRunesBalance = () => {
   const [balances, setBalances] = useState<GetRunesBalanceResult['balances']>([]);
 
-  const getBalance = async () => {
-    try {
-      const response = await Wallet.request('runes_getBalance', null);
-      if (response.status === 'success') {
-        setBalances(response.result.balances);
-      } else {
-        alert('Error getting runes balance. Check console for error logs');
-        console.error(response.error);
+  const getBalance = useCallback(() => {
+    (async () => {
+      try {
+        const response = await Wallet.request('runes_getBalance', null);
+        if (response.status === 'success') {
+          setBalances(response.result.balances);
+        } else {
+          alert('Error getting runes balance. Check console for error logs');
+          console.error(response.error);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    })().catch(console.error);
+  }, []);
 
   return (
-    <div className="card">
+    <Card>
       <h3>Runes Balance</h3>
 
-      <button onClick={getBalance}>Get Runes Balance</button>
+      <Button onClick={getBalance}>Get Runes Balance</Button>
 
       <div>
         {(() => {
@@ -41,7 +44,7 @@ const GetRunesBalance = () => {
           ));
         })()}
       </div>
-    </div>
+    </Card>
   );
 };
 
