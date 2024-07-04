@@ -17,6 +17,9 @@ const EtchRunes = ({ addresses, network }: Props) => {
   const [divisibility, setDivisibility] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
   const [mintCap, setMintCap] = useState<string>('');
+  const [delegateInscription, setDelegateInscription] = useState<string>('');
+  const [inscriptionContentType, setInscriptionContentType] = useState<string>('');
+  const [inscriptionContent, setInscriptionContent] = useState<string>('');
 
   const ordinalsAddress = useMemo(
     () => addresses.find((a) => a.purpose === AddressPurpose.Ordinals)?.address || '',
@@ -35,6 +38,14 @@ const EtchRunes = ({ addresses, network }: Props) => {
       symbol: symbol || undefined,
       premine: preMine || undefined,
       divisibility: +divisibility || undefined,
+      delegateInscriptionId: delegateInscription || undefined,
+      inscriptionDetails:
+        inscriptionContent && inscriptionContentType
+          ? {
+              contentBase64: inscriptionContent,
+              contentType: inscriptionContentType,
+            }
+          : undefined,
       terms:
         amount || mintCap
           ? {
@@ -61,6 +72,14 @@ const EtchRunes = ({ addresses, network }: Props) => {
       destinationAddress: ordinalsAddress,
       symbol: symbol || undefined,
       premine: preMine || undefined,
+      delegateInscriptionId: delegateInscription || undefined,
+      inscriptionDetails:
+        inscriptionContent && inscriptionContentType
+          ? {
+              contentBase64: inscriptionContent,
+              contentType: inscriptionContentType,
+            }
+          : undefined,
       terms:
         amount || mintCap
           ? {
@@ -110,6 +129,30 @@ const EtchRunes = ({ addresses, network }: Props) => {
           <div>
             <h4>Symbol</h4>
             <input type="text" value={symbol} onChange={(e) => setSymbol(e.target.value)} />
+          </div>
+          <div>
+            <h4>Delegate inscription</h4>
+            <input
+              type="text"
+              value={delegateInscription}
+              onChange={(e) => setDelegateInscription(e.target.value)}
+            />
+          </div>
+          <div>
+            <h4>Inscription Content</h4>
+            <input
+              type="text"
+              value={inscriptionContent}
+              onChange={(e) => setInscriptionContent(e.target.value)}
+            />
+          </div>
+          <div>
+            <h4>Inscription Content type</h4>
+            <input
+              type="text"
+              value={inscriptionContentType}
+              onChange={(e) => setInscriptionContentType(e.target.value)}
+            />
           </div>
           <div>
             <h4>Divisibility</h4>
