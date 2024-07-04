@@ -38,7 +38,7 @@ const MintRunes = ({ addresses, network }: Props) => {
       setTotalSize(response.result.totalSize);
     } else {
       console.error(response.error);
-      alert('Error Fetching Estimate. See console for details.');
+      alert(`Error estimating ${runeName} mint. See console for details.`);
     }
   };
 
@@ -56,7 +56,7 @@ const MintRunes = ({ addresses, network }: Props) => {
       setFundTxId(response.result.fundTransactionId);
     } else {
       console.error(response.error);
-      alert('Error sending BTC. See console for details.');
+      alert(`Error executing ${runeName} mint. See console for details.`);
     }
   };
 
