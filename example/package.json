@@ -8,6 +8,12 @@
   },
   "license": "ISC",
   "description": "A cookie cutter for dapps using sats-connect",
+  "scripts": {
+    "prepare": "cd .. && npm i && npm run build && cd example",
+    "start": "GENERATE_SOURCEMAP=false PORT=3001 react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@types/node": "^16.18.87",
     "@types/react": "^18.2.64",
@@ -16,13 +22,8 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "sats-connect": "file:..",
+    "styled-components": "6.1.11",
     "typescript": "^4.9.5"
-  },
-  "scripts": {
-    "prepare": "cd .. && npm i && npm run build && cd example",
-    "start": "GENERATE_SOURCEMAP=false PORT=3001 react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

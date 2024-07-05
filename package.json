@@ -8,6 +8,7 @@
   "scripts": {
     "test": "jest",
     "build": "npm run clean && tsup src/index.ts --format esm --dts",
+    "build:watch": "npm run clean && tsup src/index.ts --format esm --dts --watch",
     "dev:build": "tsup src/index.ts --format esm --dts --watch",
     "dev:example": "cd example && npm start",
     "clean": "rimraf dist",
@@ -23,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.0.15-c57ac78",
+    "@sats-connect/core": "0.0.15",
     "@sats-connect/make-default-provider-config": "0.0.5",
     "@sats-connect/ui": "0.0.6"
   },

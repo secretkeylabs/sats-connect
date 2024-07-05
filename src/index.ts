@@ -52,6 +52,7 @@ class Wallet {
   }
 
   public async disconnect() {
+    await this.request('wallet_renouncePermissions', undefined);
     this.providerId = undefined;
     removeDefaultProvider();
   }

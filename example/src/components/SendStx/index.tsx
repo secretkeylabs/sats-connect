@@ -40,18 +40,18 @@ const SendStx = ({ network }: Props) => {
       <h3>Send STX</h3>
       {!txnId && (
         <>
-          <p>
+          <div>
             <div>Amount (uSTX)</div>
             <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
-          </p>
-          <p>
+          </div>
+          <div>
             <div>Address</div>
             <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-          </p>
-          <p>
+          </div>
+          <div>
             <div>Memo</div>
             <input type="text" value={memo} onChange={(e) => setMemo(e.target.value)} />
-          </p>
+          </div>
           <button onClick={onClick} disabled={!amount || !address}>
             Send
           </button>
