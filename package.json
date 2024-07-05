@@ -1,6 +1,6 @@
 {
   "name": "sats-connect",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "main": "dist/index.mjs",
   "files": [
     "dist"
