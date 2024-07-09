@@ -79,8 +79,9 @@ function App() {
       await Wallet.disconnect();
       setBtcAddressInfo([]);
       setStxAddressInfo([]);
+      setLegacyAddressInfo([]);
     })().catch(console.error);
-  }, [setBtcAddressInfo, setStxAddressInfo]);
+  }, [setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
 
   if (!isConnected) {
     return (
