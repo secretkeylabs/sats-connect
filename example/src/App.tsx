@@ -91,7 +91,7 @@ function App() {
           <NetworkSelector network={network} setNetwork={setNetwork} />
           <p>Click the button to connect your wallet</p>
           <ConnectButtonsContainer>
-            <Button onClick={onConnect}>Connect</Button>
+            <Button onClick={onConnect}>Connect Account</Button>
             <Button onClick={onConnectLegacy}>Connect (Legacy)</Button>
           </ConnectButtonsContainer>
         </Header>
