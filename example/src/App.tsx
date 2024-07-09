@@ -1,5 +1,4 @@
 import Wallet, { type Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
-import './App.css';
 import {
   AddressDisplay,
   EtchRunes,
@@ -12,7 +11,7 @@ import { useLocalStorage } from './hooks';
 import { useCallback } from 'react';
 import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
-import { ConnectButtonsContainer } from './App.styles';
+import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
 import GetInscriptions from './components/GetInscriptions';
 
 function App() {
@@ -29,79 +28,86 @@ function App() {
 
   const isConnected = btcAddressInfo.length + stxAddressInfo.length + legacyAddressInfo.length > 0;
 
-  const onConnectLegacy = async () => {
-    const response = await Wallet.request('getAccounts', {
-      purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
-      message: 'Cool app wants to know your addresses!',
-    });
-    if (response.status === 'success') {
-      setLegacyAddressInfo(response.result);
-    }
-  };
+  const onConnectLegacy = useCallback(() => {
+    (async () => {
+      const response = await Wallet.request('getAccounts', {
+        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        message: 'Cool app wants to know your addresses!',
+      });
+      if (response.status === 'success') {
+        setLegacyAddressInfo(response.result);
+      }
+    })().catch(console.error);
+  }, [setLegacyAddressInfo]);
 
-  const onConnect = useCallback(async () => {
-    const res = await Wallet.request('wallet_requestPermissions', undefined);
-    if (res.status === 'error') {
-      console.error('Error connecting to wallet, details in terminal.');
-      console.error(res);
-      return;
-    }
+  const onConnect = useCallback(() => {
+    (async () => {
+      const res = await Wallet.request('wallet_requestPermissions', undefined);
+      if (res.status === 'error') {
+        console.error('Error connecting to wallet, details in terminal.');
+        console.error(res);
+        return;
+      }
 
-    const res2 = await Wallet.request('getAddresses', {
-      purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
-    });
+      const res2 = await Wallet.request('getAddresses', {
+        purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
+      });
 
-    if (res2.status === 'error') {
-      console.error('Error retrieving bitcoin addresses after having requested permissions.');
-      console.error(res2);
-      return;
-    }
+      if (res2.status === 'error') {
+        console.error('Error retrieving bitcoin addresses after having requested permissions.');
+        console.error(res2);
+        return;
+      }
 
-    setBtcAddressInfo(res2.result.addresses);
-    const res3 = await Wallet.request('stx_getAddresses', null);
+      setBtcAddressInfo(res2.result.addresses);
+      const res3 = await Wallet.request('stx_getAddresses', null);
 
-    if (res3.status === 'error') {
-      alert(
-        'Error retrieving stacks addresses after having requested permissions. Details in terminal.'
-      );
-      console.error(res3);
-      return;
-    }
+      if (res3.status === 'error') {
+        alert(
+          'Error retrieving stacks addresses after having requested permissions. Details in terminal.'
+        );
+        console.error(res3);
+        return;
+      }
 
-    setStxAddressInfo(res3.result.addresses);
+      setStxAddressInfo(res3.result.addresses);
+    })().catch(console.error);
   }, [setBtcAddressInfo, setStxAddressInfo]);
 
-  const onDisconnect = () => {
-    Wallet.disconnect();
-    setBtcAddressInfo([]);
-    setStxAddressInfo([]);
-  };
+  const onDisconnect = useCallback(() => {
+    (async () => {
+      await Wallet.disconnect();
+      setBtcAddressInfo([]);
+      setStxAddressInfo([]);
+      setLegacyAddressInfo([]);
+    })().catch(console.error);
+  }, [setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
 
   if (!isConnected) {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img className="logo" src="/sats-connect.svg" alt="SatsConnect" />
+      <Container>
+        <Header>
+          <Logo src="/sats-connect.svg" alt="SatsConnect" />
           <NetworkSelector network={network} setNetwork={setNetwork} />
           <p>Click the button to connect your wallet</p>
           <ConnectButtonsContainer>
-            <button onClick={onConnect}>Connect</button>
-            <button onClick={onConnectLegacy}>Connect (Legacy)</button>
+            <Button onClick={onConnect}>Connect Account</Button>
+            <Button onClick={onConnectLegacy}>Connect (Legacy)</Button>
           </ConnectButtonsContainer>
-        </header>
-      </div>
+        </Header>
+      </Container>
     );
   }
 
   return (
-    <div className="App">
-      <div className="App-body">
+    <Container>
+      <Body>
         <div>
-          <img className="logo" src="/sats-connect.svg" alt="SatsConnect" />
+          <Logo src="/sats-connect.svg" alt="SatsConnect" />
         </div>
         <AddressDisplay
           network={network}
-          addresses={[...btcAddressInfo, ...stxAddressInfo]}
+          addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
         <SendStx network={network} />
@@ -111,8 +117,8 @@ function App() {
         <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <GetRunesBalance />
         <GetInscriptions />
-      </div>
-    </div>
+      </Body>
+    </Container>
   );
 }
 

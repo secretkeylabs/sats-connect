@@ -1,16 +1,19 @@
-Using sats-connect and Xverse to build a dapp
-=============================================
+# Using sats-connect and Xverse to build a dapp
+
 This is a simple example of how to use the sats-connect library to build a dapp. The dapp is a simple web application that allows users to send and receive btc and stx using the sats-connect library.
 
 The dapp is built in typescript with Create-React-App.
 
 # Installation and running the dapp
+
 To install the node dependencies for the dapp, run the following command:
+
 ```bash
 npm i
 ```
 
 To run the dapp, run the following command:
+
 ```bash
 npm start
 ```
@@ -18,6 +21,7 @@ npm start
 The dapp should now be reachable in your browser on http://localhost:3001
 
 # Using sats-connect
+
 [Sats-connect](https://github.com/secretkeylabs/sats-connect) is an open source library which allows you to interact with the Xverse wallet from your dapp. The library exposes a `request` function which you can use to send requests to the Xverse wallet. The `request` function takes a `method` and `params` as arguments. The `method` is the name of the method you want to call in the Xverse wallet and the `params` is an object with the parameters typed specifically for the method.
 
 If using typescript, the methods are typed and will come up in the intellisense of your IDE. Once you have typed a specific method, the params will be typed according to that method and will also come up in the intellisense.

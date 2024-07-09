@@ -10,7 +10,7 @@
     "build": "npm run clean && tsup src/index.ts --format esm --dts",
     "build:watch": "npm run clean && tsup src/index.ts --format esm --dts --watch",
     "dev:build": "tsup src/index.ts --format esm --dts --watch",
-    "dev:example": "cd example && npm start",
+    "dev:example": "cd example && npm run dev",
     "clean": "rimraf dist",
     "lint": "prettier --write .",
     "prepare": "husky install || true"

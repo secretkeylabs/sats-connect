@@ -1,36 +1,38 @@
-import { useState } from 'react';
-import Wallet, { BitcoinNetworkType, RpcErrorCode } from 'sats-connect';
+import { useCallback, useState } from 'react';
+import Wallet, { BitcoinNetworkType } from 'sats-connect';
+import { Button, Card, Input, Success } from '../../App.styles';
 
-type Props = {
+interface Props {
   network: BitcoinNetworkType;
-};
+}
 
 const SendBtc = ({ network }: Props) => {
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
   const [txnId, setTxnId] = useState('');
 
-  const onClick = async () => {
-    const response = await Wallet.request('sendTransfer', {
-      recipients: [
-        {
-          address: address,
-          amount: +amount,
-        },
-      ],
-    });
+  const onClick = useCallback(() => {
+    (async () => {
+      const response = await Wallet.request('sendTransfer', {
+        recipients: [
+          {
+            address: address,
+            amount: +amount,
+          },
+        ],
+      });
 
-    if (response.status === 'success') {
+      if (response.status === 'error') {
+        console.error(response.error);
+        alert('Error sending BTC. See console for details.');
+        return;
+      }
+
       setTxnId(response.result.txid);
       setAmount('');
       setAddress('');
-    } else if (response.error.code === RpcErrorCode.USER_REJECTION) {
-      alert('User cancelled the request');
-    } else {
-      console.error(response.error);
-      alert('Error sending BTC. See console for details.');
-    }
-  };
+    })().catch(console.error);
+  }, [address, amount]);
 
   const explorerUrl =
     network === BitcoinNetworkType.Mainnet
@@ -38,33 +40,33 @@ const SendBtc = ({ network }: Props) => {
       : `https://mempool.space/testnet/tx/${txnId}`;
 
   return (
-    <div className="card">
+    <Card>
       <h3>Send BTC</h3>
       {!txnId && (
         <>
           <div>
             <div>Amount (sats)</div>
-            <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            <Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
           </div>
           <div>
             <div>Address</div>
-            <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
+            <Input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
           </div>
-          <button onClick={onClick} disabled={!amount || !address}>
+          <Button onClick={onClick} disabled={!amount || !address}>
             Send
-          </button>
+          </Button>
         </>
       )}
       {txnId && (
-        <div className="success">
+        <Success>
           Success! Click{' '}
           <a href={explorerUrl} target="_blank" rel="noreferrer">
             here
           </a>{' '}
           to see your transaction
-        </div>
+        </Success>
       )}
-    </div>
+    </Card>
   );
 };
 
