@@ -13,8 +13,10 @@ import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
 import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
 import GetInscriptions from './components/GetInscriptions';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WalletType } from './components/wallet/WalletType';
 
-function App() {
+function AppWithProviders() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
     'network',
     BitcoinNetworkType.Mainnet
@@ -110,6 +112,7 @@ function App() {
           addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
+        <WalletType />
         <SendStx network={network} />
         <SendBtc network={network} />
         <GetBtcBalance />
@@ -122,4 +125,13 @@ function App() {
   );
 }
 
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppWithProviders />
+    </QueryClientProvider>
+  );
+}
 export default App;
