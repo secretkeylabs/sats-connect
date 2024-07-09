@@ -13,11 +13,12 @@ import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
 import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
 import GetInscriptions from './components/GetInscriptions';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { WalletType } from './components/wallet/WalletType';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
 
 function AppWithProviders() {
+  const queryClient = useQueryClient();
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
     'network',
     BitcoinNetworkType.Mainnet
@@ -83,8 +84,9 @@ function AppWithProviders() {
       setBtcAddressInfo([]);
       setStxAddressInfo([]);
       setLegacyAddressInfo([]);
+      queryClient.clear();
     })().catch(console.error);
-  }, [setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
+  }, [queryClient, setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
 
   if (!isConnected) {
     return (
