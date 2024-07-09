@@ -15,6 +15,7 @@ import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from '
 import GetInscriptions from './components/GetInscriptions';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WalletType } from './components/wallet/WalletType';
+import { GetAccounts } from './components/bitcoin/GetAccounts';
 
 function AppWithProviders() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -112,6 +113,7 @@ function AppWithProviders() {
           addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
+        <GetAccounts />
         <WalletType />
         <SendStx network={network} />
         <SendBtc network={network} />
