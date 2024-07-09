@@ -107,7 +107,7 @@ function App() {
         </div>
         <AddressDisplay
           network={network}
-          addresses={[...btcAddressInfo, ...stxAddressInfo]}
+          addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
         <SendStx network={network} />
