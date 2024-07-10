@@ -13,6 +13,7 @@ import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
 import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
 import GetInscriptions from './components/GetInscriptions';
+import { SignMessage } from './components/SignMessage';
 
 function App() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -110,6 +111,7 @@ function App() {
           addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
+        <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SendStx network={network} />
         <SendBtc network={network} />
         <GetBtcBalance />
