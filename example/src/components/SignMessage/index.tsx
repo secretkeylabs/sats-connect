@@ -21,8 +21,6 @@ export const SignMessage = ({ addresses }: Props) => {
     if (response.status === 'success') {
       alert('Message signed successfully check console for details.');
       console.log(response.result);
-      setMessage('');
-      setAddress('');
     } else if (response.error.code === RpcErrorCode.USER_REJECTION) {
       alert('User cancelled the request');
     } else {
