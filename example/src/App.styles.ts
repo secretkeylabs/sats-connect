@@ -10,7 +10,6 @@ export const Container = styled.div({
   minHeight: '100vh',
   backgroundColor: '#282c34',
   color: '#aeaeae',
-  fontSize: 'calc(10px + 1vmin)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

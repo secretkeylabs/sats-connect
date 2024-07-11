@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { WalletType } from './components/wallet/WalletType';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { SignMessage } from './components/SignMessage';
+import SignTransaction from './components/stacks/signTransaction';
 
 function AppWithProviders() {
   const queryClient = useQueryClient();
@@ -126,6 +127,15 @@ function AppWithProviders() {
         <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <GetRunesBalance />
         <GetInscriptions />
+        {(() => {
+          const publicKey = stxAddressInfo[0]?.publicKey;
+
+          if (!publicKey) {
+            return null;
+          }
+
+          return <SignTransaction network={network} publicKey={publicKey} />;
+        })()}
       </Body>
     </Container>
   );

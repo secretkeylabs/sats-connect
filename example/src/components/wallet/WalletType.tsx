@@ -1,11 +1,7 @@
 import Wallet from 'sats-connect';
 import { Button, Card } from '../../App.styles';
 import { useQuery } from '@tanstack/react-query';
-import styled from 'styled-components';
-
-const ErrorMessage = styled.div({
-  color: 'red',
-});
+import { ErrorMessage } from '../common/Error';
 
 export function WalletType() {
   const { refetch, error, data, isFetching, isError, isSuccess } = useQuery({

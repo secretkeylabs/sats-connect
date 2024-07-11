@@ -16,6 +16,8 @@
     "prepare": "cd .. && npm i && npm run build && cd example"
   },
   "dependencies": {
+    "@stacks/common": "^6.16.0",
+    "@stacks/transactions": "^6.16.1",
     "@tanstack/react-query": "^5.50.1",
     "bip322-js": "^2.0.0",
     "bitcoinjs-message": "^2.2.0",
