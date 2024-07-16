@@ -83,6 +83,11 @@ export const Button = styled.button({
     backgroundColor: '#ff4d00',
     cursor: 'not-allowed',
   },
+  '&.secondary': {
+    backgroundColor: 'transparent',
+    border: '1px solid #ff4d00',
+    color: '#ff4d00',
+  },
 });
 
 export const Input = styled.input({
