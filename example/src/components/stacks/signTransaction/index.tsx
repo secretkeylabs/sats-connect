@@ -37,6 +37,7 @@ function SignTransaction(props: Props) {
 
       const response = await request('stx_signTransaction', {
         transaction: bytesToHex(transaction.serialize()),
+        broadcast,
       });
 
       if (response.status === 'error') {
@@ -60,6 +61,7 @@ function SignTransaction(props: Props) {
 
       const response = await request('stx_signTransaction', {
         transaction: bytesToHex(transaction.serialize()),
+        broadcast,
       });
 
       if (response.status === 'error') {
@@ -83,6 +85,7 @@ function SignTransaction(props: Props) {
 
       const response = await request('stx_signTransaction', {
         transaction: bytesToHex(transaction.serialize()),
+        broadcast,
       });
 
       if (response.status === 'error') {
@@ -127,7 +130,7 @@ function SignTransaction(props: Props) {
               }
 
               if (contractCallMutation.isSuccess) {
-                console.log(contractCallMutation.data);
+                console.log('Signed transaction:', contractCallMutation.data);
                 return <p>Transaction signed successfully. Check console for details.</p>;
               }
             })()}

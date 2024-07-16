@@ -64,10 +64,9 @@ function AppWithProviders() {
         console.error(res2);
         return;
       }
-
       setBtcAddressInfo(res2.result.addresses);
-      const res3 = await Wallet.request('stx_getAddresses', null);
 
+      const res3 = await Wallet.request('stx_getAddresses', null);
       if (res3.status === 'error') {
         alert(
           'Error retrieving stacks addresses after having requested permissions. Details in terminal.'
@@ -75,7 +74,6 @@ function AppWithProviders() {
         console.error(res3);
         return;
       }
-
       setStxAddressInfo(res3.result.addresses);
     })().catch(console.error);
   }, [setBtcAddressInfo, setStxAddressInfo]);
