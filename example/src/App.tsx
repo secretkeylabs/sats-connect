@@ -1,4 +1,6 @@
+import { useCallback } from 'react';
 import Wallet, { type Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
+import { Body, Button, ConnectButtonsContainer, Container, Header, Logo } from './App.styles';
 import {
   AddressDisplay,
   EtchRunes,
@@ -7,12 +9,12 @@ import {
   SendBtc,
   SendStx,
 } from './components';
-import { useLocalStorage } from './hooks';
-import { useCallback } from 'react';
 import GetBtcBalance from './components/GetBtcBalance';
-import GetRunesBalance from './components/GetRunesBalance';
-import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
 import GetInscriptions from './components/GetInscriptions';
+import GetRunesBalance from './components/GetRunesBalance';
+import SendAllAssets from './components/SendAllAssets';
+import SignPsbt from './components/Sign';
+import { useLocalStorage } from './hooks';
 
 function App() {
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -110,6 +112,8 @@ function App() {
           addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
+        <SendAllAssets network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+        <SignPsbt network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SendStx network={network} />
         <SendBtc network={network} />
         <GetBtcBalance />
