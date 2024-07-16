@@ -13,9 +13,13 @@ import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
 import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
 import GetInscriptions from './components/GetInscriptions';
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
+import { WalletType } from './components/wallet/WalletType';
+import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { SignMessage } from './components/SignMessage';
 
-function App() {
+function AppWithProviders() {
+  const queryClient = useQueryClient();
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
     'network',
     BitcoinNetworkType.Mainnet
@@ -81,8 +85,9 @@ function App() {
       setBtcAddressInfo([]);
       setStxAddressInfo([]);
       setLegacyAddressInfo([]);
+      queryClient.clear();
     })().catch(console.error);
-  }, [setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
+  }, [queryClient, setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
 
   if (!isConnected) {
     return (
@@ -111,6 +116,8 @@ function App() {
           addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
+        <GetAccounts />
+        <WalletType />
         <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SendStx network={network} />
         <SendBtc network={network} />
@@ -124,4 +131,13 @@ function App() {
   );
 }
 
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppWithProviders />
+    </QueryClientProvider>
+  );
+}
 export default App;
