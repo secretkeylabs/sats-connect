@@ -16,6 +16,7 @@ import GetInscriptions from './components/GetInscriptions';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { WalletType } from './components/wallet/WalletType';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
+import { SignMessage } from './components/SignMessage';
 
 function AppWithProviders() {
   const queryClient = useQueryClient();
@@ -117,6 +118,7 @@ function AppWithProviders() {
         />
         <GetAccounts />
         <WalletType />
+        <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SendStx network={network} />
         <SendBtc network={network} />
         <GetBtcBalance />
