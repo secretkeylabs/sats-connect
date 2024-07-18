@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import Wallet, { type Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
 import { Body, Button, ConnectButtonsContainer, Container, Header, Logo } from './App.styles';
@@ -9,14 +10,18 @@ import {
   SendBtc,
   SendStx,
 } from './components';
+import { GetAccounts } from './components/bitcoin/GetAccounts';
 import GetBtcBalance from './components/GetBtcBalance';
 import GetInscriptions from './components/GetInscriptions';
 import GetRunesBalance from './components/GetRunesBalance';
 import SendAllAssets from './components/SendAllAssets';
 import SignPsbt from './components/Sign';
+import { SignMessage } from './components/SignMessage';
+import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 
-function App() {
+function AppWithProviders() {
+  const queryClient = useQueryClient();
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
     'network',
     BitcoinNetworkType.Mainnet
@@ -82,8 +87,9 @@ function App() {
       setBtcAddressInfo([]);
       setStxAddressInfo([]);
       setLegacyAddressInfo([]);
+      queryClient.clear();
     })().catch(console.error);
-  }, [setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
+  }, [queryClient, setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
 
   if (!isConnected) {
     return (
@@ -112,8 +118,11 @@ function App() {
           addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
+        <WalletType />
         <SendAllAssets network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SignPsbt network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+        <GetAccounts />
+        <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SendStx network={network} />
         <SendBtc network={network} />
         <GetBtcBalance />
@@ -126,4 +135,13 @@ function App() {
   );
 }
 
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppWithProviders />
+    </QueryClientProvider>
+  );
+}
 export default App;

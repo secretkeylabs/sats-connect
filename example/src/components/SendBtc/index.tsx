@@ -6,20 +6,39 @@ interface Props {
   network: BitcoinNetworkType;
 }
 
+interface Recipient {
+  address: string;
+  amount: string;
+}
+
 const SendBtc = ({ network }: Props) => {
-  const [amount, setAmount] = useState('');
-  const [address, setAddress] = useState('');
+  const [recipients, setRecipients] = useState<Recipient[]>([{ address: '', amount: '' }]);
   const [txnId, setTxnId] = useState('');
+
+  const addRecipient = () => {
+    setRecipients([...recipients, { address: '', amount: '' }]);
+  };
+
+  const updateRecipient = (index: number, field: keyof Recipient, value: string) => {
+    const updatedRecipients = [...recipients];
+    updatedRecipients[index][field] = value;
+    setRecipients(updatedRecipients);
+  };
+
+  const removeRecipient = (index: number) => {
+    if (recipients.length > 1) {
+      const updatedRecipients = recipients.filter((_, i) => i !== index);
+      setRecipients(updatedRecipients);
+    }
+  };
 
   const onClick = useCallback(() => {
     (async () => {
       const response = await Wallet.request('sendTransfer', {
-        recipients: [
-          {
-            address: address,
-            amount: +amount,
-          },
-        ],
+        recipients: recipients.map((r) => ({
+          address: r.address,
+          amount: +r.amount,
+        })),
       });
 
       if (response.status === 'error') {
@@ -29,10 +48,9 @@ const SendBtc = ({ network }: Props) => {
       }
 
       setTxnId(response.result.txid);
-      setAmount('');
-      setAddress('');
+      setRecipients([{ address: '', amount: '' }]);
     })().catch(console.error);
-  }, [address, amount]);
+  }, [recipients]);
 
   const explorerUrl =
     network === BitcoinNetworkType.Mainnet
@@ -44,15 +62,46 @@ const SendBtc = ({ network }: Props) => {
       <h3>Send BTC</h3>
       {!txnId && (
         <>
-          <div>
-            <div>Amount (sats)</div>
-            <Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
+          {recipients.map((recipient, index) => (
+            <div key={index}>
+              {index > 0 && <hr />}
+              <h4>Recipient {index + 1}</h4>
+              <div>
+                <div>Amount (sats)</div>
+                <Input
+                  type="number"
+                  value={recipient.amount}
+                  onChange={(e) => updateRecipient(index, 'amount', e.target.value)}
+                />
+              </div>
+              <div>
+                <div>Address</div>
+                <Input
+                  type="text"
+                  value={recipient.address}
+                  onChange={(e) => updateRecipient(index, 'address', e.target.value)}
+                />
+              </div>
+            </div>
+          ))}
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              marginTop: 16,
+              marginBottom: 16,
+            }}
+          >
+            <Button onClick={addRecipient} className="secondary">
+              Add Recipient
+            </Button>
+            {recipients.length > 1 && (
+              <Button onClick={() => removeRecipient(recipients.length - 1)} className="secondary">
+                Remove Recipient
+              </Button>
+            )}
           </div>
-          <div>
-            <div>Address</div>
-            <Input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-          </div>
-          <Button onClick={onClick} disabled={!amount || !address}>
+          <Button onClick={onClick} disabled={recipients.some((r) => !r.amount || !r.address)}>
             Send
           </Button>
         </>
