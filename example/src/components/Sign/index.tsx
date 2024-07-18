@@ -26,7 +26,7 @@ const SignPsbt = ({ addresses }: Props) => {
 
     if (response.status === 'error') {
       console.error(response.error);
-      alert('Error sending BTC. See console for details.');
+      alert('Error. See console for details.');
       return;
     }
 
