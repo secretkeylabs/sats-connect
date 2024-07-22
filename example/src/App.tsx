@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { WalletType } from './components/wallet/WalletType';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { SignMessage } from './components/SignMessage';
+import SendInscription from './components/sendInscriptions';
 
 function AppWithProviders() {
   const queryClient = useQueryClient();
@@ -121,6 +122,7 @@ function AppWithProviders() {
         <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SendStx network={network} />
         <SendBtc network={network} />
+        <SendInscription network={network} />
         <GetBtcBalance />
         <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
