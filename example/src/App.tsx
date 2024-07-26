@@ -18,6 +18,7 @@ import { WalletType } from './components/wallet/WalletType';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { SignMessage } from './components/SignMessage';
 import SendInscription from './components/sendInscriptions';
+import TransferRunes from './components/transferRunes';
 
 function AppWithProviders() {
   const queryClient = useQueryClient();
@@ -120,14 +121,15 @@ function AppWithProviders() {
         <GetAccounts />
         <WalletType />
         <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+        <GetBtcBalance />
+        <GetRunesBalance />
+        <GetInscriptions />
         <SendStx network={network} />
         <SendBtc network={network} />
         <SendInscription network={network} />
-        <GetBtcBalance />
+        <TransferRunes network={network} />
         <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
-        <GetRunesBalance />
-        <GetInscriptions />
       </Body>
     </Container>
   );
