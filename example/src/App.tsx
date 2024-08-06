@@ -1,7 +1,15 @@
 import { Container, createTheme, MantineProvider, Stack } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Link,
+  Outlet,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
 import Wallet, { AddressPurpose, BitcoinNetworkType, type Address } from 'sats-connect';
 import { Button, ConnectButtonsContainer, Header, Logo } from './App.styles';
 import { AddressDisplay } from './components/AddressDisplay';
@@ -21,8 +29,6 @@ import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
 
-import { createContext, useContext } from 'react';
-
 const ConnectionContext = createContext<{
   network: BitcoinNetworkType;
   legacyAddressInfo: Address[];
@@ -39,12 +45,7 @@ const ConnectionContext = createContext<{
   },
 });
 
-export const useConnectionContext = () => {
-  if (!ConnectionContext) {
-    throw new Error('useConnectionContext must be used within a ConnectionContext.Provider');
-  }
-  return useContext(ConnectionContext);
-};
+const useConnectionContext = () => useContext(ConnectionContext);
 
 function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   const queryClient = useQueryClient();
@@ -213,15 +214,6 @@ const NoMatch = () => (
     </p>
   </div>
 );
-
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Link,
-  Outlet,
-  Route,
-  RouterProvider,
-} from 'react-router-dom';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
