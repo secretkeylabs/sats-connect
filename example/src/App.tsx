@@ -1,4 +1,4 @@
-import { Container, MantineProvider } from '@mantine/core';
+import { Container, createTheme, MantineProvider, Stack } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
@@ -140,7 +140,7 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
 
   return (
     <ConnectionContext.Provider value={connectionContextValue}>
-      <Container>{children}</Container>
+      <Stack>{children}</Stack>
     </ConnectionContext.Provider>
   );
 }
@@ -192,7 +192,7 @@ const StacksMethods = () => {
         onDisconnect={onDisconnect}
       />
       <SendStx network={network} />
-      <SendSip10 network={network} />
+      <SendSip10 network={network} stxAddressInfo={stxAddressInfo} />
     </>
   );
 };
@@ -236,10 +236,14 @@ const router = createBrowserRouter(
 
 const queryClient = new QueryClient();
 
+const theme = createTheme({
+  primaryColor: 'orange',
+});
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <MantineProvider defaultColorScheme="dark">
+      <MantineProvider theme={theme} defaultColorScheme="dark">
         <RouterProvider router={router} />
       </MantineProvider>
     </QueryClientProvider>

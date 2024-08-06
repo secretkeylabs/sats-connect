@@ -1,8 +1,8 @@
+import { Button, Card, Input, NativeSelect } from '@mantine/core';
 import { Verifier } from 'bip322-js';
 import { verify } from 'bitcoinjs-message';
 import { useState } from 'react';
 import Wallet, { Address, MessageSigningProtocols, RpcErrorCode } from 'sats-connect';
-import { Button, Card } from '../../../App.styles';
 
 interface Props {
   addresses: Address[];
@@ -52,24 +52,24 @@ export const SignMessage = ({ addresses }: Props) => {
       <>
         <div>
           <div>Message</div>
-          <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
+          <Input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
         </div>
         <div style={{ marginTop: 15 }}>
           <div>Address</div>
-          <select defaultValue={address} onChange={(e) => setAddress(e.target.value)}>
+          <NativeSelect defaultValue={address} onChange={(e) => setAddress(e.target.value)}>
             <option value={addresses[0]?.address}>{addresses[0]?.address}</option>
             <option value={addresses[1]?.address}>{addresses[1]?.address}</option>
-          </select>
+          </NativeSelect>
         </div>
         <div style={{ marginTop: 15 }}>
           <div>Protocol</div>
-          <select
+          <NativeSelect
             defaultValue={protocol}
             onChange={(e) => setProtocol(e.target.value as MessageSigningProtocols)}
           >
             <option value={MessageSigningProtocols.ECDSA}>{MessageSigningProtocols.ECDSA}</option>
             <option value={MessageSigningProtocols.BIP322}>{MessageSigningProtocols.BIP322}</option>
-          </select>
+          </NativeSelect>
         </div>
         <Button onClick={onClick} disabled={!message} style={{ marginTop: 15 }}>
           Sign Message
