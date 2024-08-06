@@ -38,7 +38,8 @@ export const Header = styled.header({
 });
 
 export const Logo = styled.img({
-  marginBottom: '20px',
+  width: '200px',
+  padding: 10,
 });
 
 export const Action = styled.span({

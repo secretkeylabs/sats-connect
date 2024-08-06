@@ -7,7 +7,7 @@ interface Props {
   onDisconnect: () => void;
 }
 
-const AddressDisplay = ({ network, addresses, onDisconnect }: Props) => {
+export const AddressDisplay = ({ network, addresses, onDisconnect }: Props) => {
   return (
     <Card>
       <h3>Connected Addresses - ({network})</h3>

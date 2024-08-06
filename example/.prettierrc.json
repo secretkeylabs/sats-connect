@@ -5,11 +5,11 @@
   "bracketSpacing": true,
   "jsxBracketSameLine": false,
   "jsxSingleQuote": false,
-  "printWidth": 100,
   "quoteProps": "as-needed",
-  "semi": true,
   "singleQuote": true,
+  "semi": true,
+  "printWidth": 100,
+  "useTabs": false,
   "tabWidth": 2,
-  "trailingComma": "es5",
-  "useTabs": false
+  "trailingComma": "all"
 }

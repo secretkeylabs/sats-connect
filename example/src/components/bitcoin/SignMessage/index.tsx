@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import Wallet, { Address, MessageSigningProtocols, RpcErrorCode } from 'sats-connect';
 import { Verifier } from 'bip322-js';
 import { verify } from 'bitcoinjs-message';
-import { Card, Button } from '../../App.styles';
+import { useState } from 'react';
+import Wallet, { Address, MessageSigningProtocols, RpcErrorCode } from 'sats-connect';
+import { Button, Card } from '../../../App.styles';
 
 interface Props {
   addresses: Address[];
@@ -10,7 +10,7 @@ interface Props {
 
 export const SignMessage = ({ addresses }: Props) => {
   const [message, setMessage] = useState('');
-  const [address, setAddress] = useState(addresses[0].address);
+  const [address, setAddress] = useState(addresses[0]?.address);
   const [protocol, setProtocol] = useState(MessageSigningProtocols.ECDSA);
 
   const onClick = async () => {
@@ -57,8 +57,8 @@ export const SignMessage = ({ addresses }: Props) => {
         <div style={{ marginTop: 15 }}>
           <div>Address</div>
           <select defaultValue={address} onChange={(e) => setAddress(e.target.value)}>
-            <option value={addresses[0].address}>{addresses[0].address}</option>
-            <option value={addresses[1].address}>{addresses[1].address}</option>
+            <option value={addresses[0]?.address}>{addresses[0]?.address}</option>
+            <option value={addresses[1]?.address}>{addresses[1]?.address}</option>
           </select>
         </div>
         <div style={{ marginTop: 15 }}>

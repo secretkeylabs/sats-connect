@@ -1,35 +1,62 @@
-import Wallet, { type Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
-import {
-  AddressDisplay,
-  EtchRunes,
-  MintRunes,
-  NetworkSelector,
-  SendBtc,
-  SendStx,
-} from './components';
-import { useLocalStorage } from './hooks';
-import { useCallback } from 'react';
-import GetBtcBalance from './components/GetBtcBalance';
-import GetRunesBalance from './components/GetRunesBalance';
-import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
-import GetInscriptions from './components/GetInscriptions';
+import { Container, MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { WalletType } from './components/wallet/WalletType';
+import { useCallback, useMemo } from 'react';
+import Wallet, { AddressPurpose, BitcoinNetworkType, type Address } from 'sats-connect';
+import { Button, ConnectButtonsContainer, Header, Logo } from './App.styles';
+import { AddressDisplay } from './components/AddressDisplay';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
-import { SignMessage } from './components/SignMessage';
-import SendInscription from './components/sendInscriptions';
+import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
+import { SendBtc } from './components/bitcoin/SendBtc';
+import { SignMessage } from './components/bitcoin/SignMessage';
+import { EtchRunes } from './components/EtchRunes';
+import { GetInscriptions } from './components/GetInscriptions';
+import { GetRunesBalance } from './components/GetRunesBalance';
+import { MintRunes } from './components/MintRunes';
+import { NetworkSelector } from './components/NetworkSelector';
+import { SendInscription } from './components/sendInscriptions';
+import { SendSip10 } from './components/stacks/SendSip10';
+import { SendStx } from './components/stacks/SendStx';
+import { WalletType } from './components/wallet/WalletType';
+import { useLocalStorage } from './hooks';
+import { CollapseDesktop } from './layouts/CollapseDesktop';
 
-function AppWithProviders() {
+import { createContext, useContext } from 'react';
+
+const ConnectionContext = createContext<{
+  network: BitcoinNetworkType;
+  legacyAddressInfo: Address[];
+  btcAddressInfo: Address[];
+  stxAddressInfo: Address[];
+  onDisconnect: () => void;
+}>({
+  network: BitcoinNetworkType.Mainnet,
+  legacyAddressInfo: [],
+  btcAddressInfo: [],
+  stxAddressInfo: [],
+  onDisconnect: () => {
+    console.log('onDisconnect not implemented');
+  },
+});
+
+export const useConnectionContext = () => {
+  if (!ConnectionContext) {
+    throw new Error('useConnectionContext must be used within a ConnectionContext.Provider');
+  }
+  return useContext(ConnectionContext);
+};
+
+function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   const queryClient = useQueryClient();
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
     'network',
-    BitcoinNetworkType.Mainnet
+    BitcoinNetworkType.Mainnet,
   );
   const [btcAddressInfo, setBtcAddressInfo] = useLocalStorage<Address[]>('btc-addresses', []);
   const [stxAddressInfo, setStxAddressInfo] = useLocalStorage<Address[]>('stx-addresses', []);
   const [legacyAddressInfo, setLegacyAddressInfo] = useLocalStorage<Address[]>(
     'legacy-addresses',
-    []
+    [],
   );
 
   const isConnected = btcAddressInfo.length + stxAddressInfo.length + legacyAddressInfo.length > 0;
@@ -70,7 +97,7 @@ function AppWithProviders() {
 
       if (res3.status === 'error') {
         alert(
-          'Error retrieving stacks addresses after having requested permissions. Details in terminal.'
+          'Error retrieving stacks addresses after having requested permissions. Details in terminal.',
         );
         console.error(res3);
         return;
@@ -90,6 +117,11 @@ function AppWithProviders() {
     })().catch(console.error);
   }, [queryClient, setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
 
+  const connectionContextValue = useMemo(
+    () => ({ network, legacyAddressInfo, btcAddressInfo, stxAddressInfo, onDisconnect }),
+    [network, legacyAddressInfo, btcAddressInfo, stxAddressInfo, onDisconnect],
+  );
+
   if (!isConnected) {
     return (
       <Container>
@@ -107,39 +139,109 @@ function AppWithProviders() {
   }
 
   return (
-    <Container>
-      <Body>
-        <div>
-          <Logo src="/sats-connect.svg" alt="SatsConnect" />
-        </div>
-        <AddressDisplay
-          network={network}
-          addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
-          onDisconnect={onDisconnect}
-        />
-        <GetAccounts />
-        <WalletType />
-        <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
-        <SendStx network={network} />
-        <SendBtc network={network} />
-        <SendInscription network={network} />
-        <GetBtcBalance />
-        <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
-        <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
-        <GetRunesBalance />
-        <GetInscriptions />
-      </Body>
-    </Container>
+    <ConnectionContext.Provider value={connectionContextValue}>
+      <Container>{children}</Container>
+    </ConnectionContext.Provider>
   );
 }
+
+const WalletMethods = () => {
+  const { network, btcAddressInfo, legacyAddressInfo, stxAddressInfo, onDisconnect } =
+    useConnectionContext();
+  return (
+    <>
+      <AddressDisplay
+        network={network}
+        addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
+        onDisconnect={onDisconnect}
+      />
+      <GetAccounts />
+      <WalletType />
+    </>
+  );
+};
+
+const BitcoinMethods = () => {
+  const { network, btcAddressInfo, legacyAddressInfo, onDisconnect } = useConnectionContext();
+  return (
+    <>
+      <AddressDisplay
+        network={network}
+        addresses={[...legacyAddressInfo, ...btcAddressInfo]}
+        onDisconnect={onDisconnect}
+      />
+      <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+      <SendBtc network={network} />
+      <SendInscription network={network} />
+      <GetBtcBalance />
+      <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+      <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+      <GetRunesBalance />
+      <GetInscriptions />
+    </>
+  );
+};
+
+const StacksMethods = () => {
+  const { network, stxAddressInfo, onDisconnect } = useConnectionContext();
+  return (
+    <>
+      <AddressDisplay
+        network={network}
+        addresses={[...stxAddressInfo]}
+        onDisconnect={onDisconnect}
+      />
+      <SendStx network={network} />
+      <SendSip10 network={network} />
+    </>
+  );
+};
+
+const Layout = () => (
+  <CollapseDesktop>
+    <AppWithProviders>
+      <Outlet />
+    </AppWithProviders>
+  </CollapseDesktop>
+);
+
+const NoMatch = () => (
+  <div>
+    <h2>Nothing to see here!</h2>
+    <p>
+      <Link to="/">Go to the home page</Link>
+    </p>
+  </div>
+);
+
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Link,
+  Outlet,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route index element={<WalletMethods />} />
+      <Route path="bitcoin-methods" element={<BitcoinMethods />} />
+      <Route path="stacks-methods" element={<StacksMethods />} />
+      <Route path="*" element={<NoMatch />} />
+    </Route>,
+  ),
+);
 
 const queryClient = new QueryClient();
 
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppWithProviders />
+      <MantineProvider defaultColorScheme="dark">
+        <RouterProvider router={router} />
+      </MantineProvider>
     </QueryClientProvider>
   );
 }
-export default App;
