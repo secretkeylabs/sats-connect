@@ -15,6 +15,7 @@ import GetBtcBalance from './components/GetBtcBalance';
 import GetInscriptions from './components/GetInscriptions';
 import GetRunesBalance from './components/GetRunesBalance';
 import SendAllAssets from './components/SendAllAssets';
+import SendInscription from './components/sendInscriptions';
 import SignPsbt from './components/Sign';
 import { SignMessage } from './components/SignMessage';
 import { WalletType } from './components/wallet/WalletType';
@@ -125,6 +126,7 @@ function AppWithProviders() {
         <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <SendStx network={network} />
         <SendBtc network={network} />
+        <SendInscription network={network} />
         <GetBtcBalance />
         <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
         <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
