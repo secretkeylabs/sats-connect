@@ -25,6 +25,7 @@ import { NetworkSelector } from './components/NetworkSelector';
 import { SendInscription } from './components/sendInscriptions';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
+import { SignTransaction } from './components/stacks/SignTransaction';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
@@ -146,6 +147,7 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   );
 }
 
+// TODO move to pages or routes.tsx
 const WalletMethods = () => {
   const { network, btcAddressInfo, legacyAddressInfo, stxAddressInfo, onDisconnect } =
     useConnectionContext();
@@ -194,6 +196,7 @@ const StacksMethods = () => {
       />
       <SendStx network={network} />
       <SendSip10 network={network} stxAddressInfo={stxAddressInfo} />
+      <SignTransaction stxAddressInfo={stxAddressInfo} />
     </>
   );
 };
