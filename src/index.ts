@@ -110,6 +110,11 @@ class Wallet {
   }
 
   public addListener: AddListener = (event, cb) => {
+    const defaultProvider = getDefaultProvider();
+    if (!this.isProviderSet() && defaultProvider) {
+      this.providerId = defaultProvider;
+    }
+
     if (!this.isProviderSet()) {
       throw new Error(
         'No wallet provider selected. The user must first select a wallet before adding listeners to wallet events.'
