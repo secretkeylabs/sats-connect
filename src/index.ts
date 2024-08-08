@@ -11,6 +11,7 @@ import {
   removeDefaultProvider,
   RpcErrorCode,
   BaseAdapter,
+  type AddListener,
 } from '@sats-connect/core';
 import {
   Config,
@@ -107,6 +108,17 @@ class Wallet {
     }
     return response;
   }
+
+  public addListener: AddListener = (event, cb) => {
+    if (!this.isProviderSet()) {
+      throw new Error(
+        'No wallet provider selected. The user must first select a wallet before adding listeners to wallet events.'
+      );
+    }
+
+    const adapter = this.defaultAdapters[this.providerId as string];
+    return new adapter().addListener(event, cb);
+  };
 }
 
 export * from '@sats-connect/core';

@@ -8,7 +8,7 @@ import {
   SendStx,
 } from './components';
 import { useLocalStorage } from './hooks';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import GetBtcBalance from './components/GetBtcBalance';
 import GetRunesBalance from './components/GetRunesBalance';
 import { Container, ConnectButtonsContainer, Header, Logo, Body, Button } from './App.styles';
@@ -31,6 +31,15 @@ function AppWithProviders() {
 
   const isConnected = btcAddressInfo.length + stxAddressInfo.length > 0;
 
+  useEffect(() => {
+    if (btcAddressInfo.length < 1) return;
+
+    const removeListener = Wallet.addListener('accountChange', (ev) => {
+      console.log('The account has changed.', ev);
+    });
+
+    return removeListener;
+  });
   const onConnectLegacy = useCallback(() => {
     (async () => {
       const response = await Wallet.request('getAccounts', {
