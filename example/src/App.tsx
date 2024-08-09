@@ -18,6 +18,7 @@ import { WalletType } from './components/wallet/WalletType';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { SignMessage } from './components/SignMessage';
 import SendInscription from './components/sendInscriptions';
+import SignTransaction from './components/signTransaction';
 
 function AppWithProviders() {
   const queryClient = useQueryClient();
@@ -27,12 +28,8 @@ function AppWithProviders() {
   );
   const [btcAddressInfo, setBtcAddressInfo] = useLocalStorage<Address[]>('btc-addresses', []);
   const [stxAddressInfo, setStxAddressInfo] = useLocalStorage<Address[]>('stx-addresses', []);
-  const [legacyAddressInfo, setLegacyAddressInfo] = useLocalStorage<Address[]>(
-    'legacy-addresses',
-    []
-  );
 
-  const isConnected = btcAddressInfo.length + stxAddressInfo.length + legacyAddressInfo.length > 0;
+  const isConnected = btcAddressInfo.length + stxAddressInfo.length > 0;
 
   const onConnectLegacy = useCallback(() => {
     (async () => {
@@ -41,10 +38,11 @@ function AppWithProviders() {
         message: 'Cool app wants to know your addresses!',
       });
       if (response.status === 'success') {
-        setLegacyAddressInfo(response.result);
+        setBtcAddressInfo([response.result[0], response.result[1]]);
+        if (response.result[2]) setStxAddressInfo([response.result[2]]);
       }
     })().catch(console.error);
-  }, [setLegacyAddressInfo]);
+  }, [setBtcAddressInfo, setStxAddressInfo]);
 
   const onConnect = useCallback(() => {
     (async () => {
@@ -85,10 +83,9 @@ function AppWithProviders() {
       await Wallet.disconnect();
       setBtcAddressInfo([]);
       setStxAddressInfo([]);
-      setLegacyAddressInfo([]);
       queryClient.clear();
     })().catch(console.error);
-  }, [queryClient, setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
+  }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
 
   if (!isConnected) {
     return (
@@ -114,18 +111,21 @@ function AppWithProviders() {
         </div>
         <AddressDisplay
           network={network}
-          addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
+          addresses={[...btcAddressInfo, ...stxAddressInfo]}
           onDisconnect={onDisconnect}
         />
         <GetAccounts />
         <WalletType />
-        <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+        <SignMessage addresses={btcAddressInfo} />
         <SendStx network={network} />
+        {stxAddressInfo?.[0]?.publicKey ? (
+          <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
+        ) : null}
         <SendBtc network={network} />
         <SendInscription network={network} />
         <GetBtcBalance />
-        <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
-        <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+        <MintRunes network={network} addresses={btcAddressInfo} />
+        <EtchRunes network={network} addresses={btcAddressInfo} />
         <GetRunesBalance />
         <GetInscriptions />
       </Body>
