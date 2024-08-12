@@ -122,6 +122,18 @@ class Wallet {
     }
 
     const adapter = this.defaultAdapters[this.providerId as string];
+
+    // Clients may have be using the latest version of sats-connect without
+    // their wallets having been updated. Until we have API versioning for the
+    // wallet, we can avoid having apps crash by checking whether the adapter
+    // actually supports `addListener`.
+    if (!new adapter().addListener) {
+      console.error(
+        `The wallet provider you are using does not support the addListener method. Please update your wallet provider.`
+      );
+      return () => {};
+    }
+
     return new adapter().addListener(event, cb);
   };
 }
