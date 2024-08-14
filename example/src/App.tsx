@@ -18,7 +18,6 @@ import { SignMessage } from './components/bitcoin/SignMessage';
 import { GetInscriptions } from './components/GetInscriptions';
 import { GetRunesBalance } from './components/GetRunesBalance';
 import { SendInscription } from './components/sendInscriptions';
-import SignTransaction from './components/signTransaction';
 
 import AddressDisplay from './components/AddressDisplay';
 import { SendBtc } from './components/bitcoin/SendBtc';
@@ -27,6 +26,7 @@ import MintRunes from './components/MintRunes';
 import { NetworkSelector } from './components/NetworkSelector';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
+import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';

@@ -1,4 +1,5 @@
 import { Button, Card, Stack, Switch } from '@mantine/core';
+import { BitcoinNetworkType } from '@sats-connect/core';
 import {
   PostConditionMode,
   makeUnsignedContractCall,
@@ -7,7 +8,7 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { useState } from 'react';
-import { Address, request } from 'sats-connect';
+import { request } from 'sats-connect';
 
 const codeBody = `
 (define-data-var greeting (string-ascii 100) "Hello, World!")
@@ -29,13 +30,16 @@ function uint8ArrayToHex(uint8Array: Uint8Array) {
 
 const errorMessage = 'Error signing transaction. Check console for error logs.';
 
-export function SignTransaction({ stxAddressInfo }: { stxAddressInfo: Address[] }) {
+interface Props {
+  network: BitcoinNetworkType; // TODO handle networks
+  publicKey: string;
+}
+
+export function SignTransaction({ publicKey }: Props) {
   const [broadcast, setBroadcast] = useState(false);
   const [postConditionMode, setPostConditionMode] = useState<PostConditionMode>(
     PostConditionMode.Deny,
   );
-
-  const publicKey = stxAddressInfo[0].publicKey;
 
   const requestSignTransaction = async (transaction: any) => {
     try {
@@ -56,7 +60,6 @@ export function SignTransaction({ stxAddressInfo }: { stxAddressInfo: Address[] 
     }
   };
 
-  // TODO handle networks
   const handleSignTransactionContractCallClick = async () => {
     const transaction = await makeUnsignedContractCall({
       fee: 3000,
