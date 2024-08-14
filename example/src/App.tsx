@@ -1,7 +1,7 @@
 import { Container, createTheme, MantineProvider, Stack } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { createContext, useCallback, useContext, useMemo } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -12,20 +12,22 @@ import {
 } from 'react-router-dom';
 import Wallet, { AddressPurpose, BitcoinNetworkType, type Address } from 'sats-connect';
 import { Button, ConnectButtonsContainer, Header, Logo } from './App.styles';
-import { AddressDisplay } from './components/AddressDisplay';
+import {
+  AddressDisplay,
+  EtchRunes,
+  MintRunes,
+  NetworkSelector,
+  SendBtc,
+  SendStx,
+} from './components';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
-import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
-import { SendBtc } from './components/bitcoin/SendBtc';
-import { SignMessage } from './components/bitcoin/SignMessage';
-import { EtchRunes } from './components/EtchRunes';
-import { GetInscriptions } from './components/GetInscriptions';
-import { GetRunesBalance } from './components/GetRunesBalance';
-import { MintRunes } from './components/MintRunes';
-import { NetworkSelector } from './components/NetworkSelector';
-import { SendInscription } from './components/sendInscriptions';
-import { SendSip10 } from './components/stacks/SendSip10';
-import { SendStx } from './components/stacks/SendStx';
-import { SignTransaction } from './components/stacks/SignTransaction';
+import GetBtcBalance from './components/GetBtcBalance';
+import GetInscriptions from './components/GetInscriptions';
+import GetRunesBalance from './components/GetRunesBalance';
+import SendInscription from './components/sendInscriptions';
+import { SignMessage } from './components/SignMessage';
+import SignTransaction from './components/signTransaction';
+
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
@@ -63,6 +65,16 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
 
   const isConnected = btcAddressInfo.length + stxAddressInfo.length + legacyAddressInfo.length > 0;
 
+  useEffect(() => {
+    if (btcAddressInfo.length < 1) return;
+
+    const removeListener = Wallet.addListener('accountChange', (ev) => {
+      console.log('The account has changed.', ev);
+    });
+
+    return removeListener;
+  });
+
   const onConnectLegacy = useCallback(() => {
     (async () => {
       const response = await Wallet.request('getAccounts', {
@@ -70,10 +82,11 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
         message: 'Cool app wants to know your addresses!',
       });
       if (response.status === 'success') {
-        setLegacyAddressInfo(response.result);
+        setBtcAddressInfo([response.result[0], response.result[1]]);
+        if (response.result[2]) setStxAddressInfo([response.result[2]]);
       }
     })().catch(console.error);
-  }, [setLegacyAddressInfo]);
+  }, [setBtcAddressInfo, setStxAddressInfo]);
 
   const onConnect = useCallback(() => {
     (async () => {
@@ -114,10 +127,9 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
       await Wallet.disconnect();
       setBtcAddressInfo([]);
       setStxAddressInfo([]);
-      setLegacyAddressInfo([]);
       queryClient.clear();
     })().catch(console.error);
-  }, [queryClient, setBtcAddressInfo, setLegacyAddressInfo, setStxAddressInfo]);
+  }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
 
   const connectionContextValue = useMemo(
     () => ({ network, legacyAddressInfo, btcAddressInfo, stxAddressInfo, onDisconnect }),
@@ -153,6 +165,9 @@ const WalletMethods = () => {
     useConnectionContext();
   return (
     <>
+      <div>
+        <Logo src="/sats-connect.svg" alt="SatsConnect" />
+      </div>
       <AddressDisplay
         network={network}
         addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
@@ -196,7 +211,9 @@ const StacksMethods = () => {
       />
       <SendStx network={network} />
       <SendSip10 network={network} stxAddressInfo={stxAddressInfo} />
-      <SignTransaction stxAddressInfo={stxAddressInfo} />
+      {stxAddressInfo?.[0]?.publicKey ? (
+        <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
+      ) : null}
     </>
   );
 };
