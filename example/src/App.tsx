@@ -33,13 +33,11 @@ import { CollapseDesktop } from './layouts/CollapseDesktop';
 
 const ConnectionContext = createContext<{
   network: BitcoinNetworkType;
-  legacyAddressInfo: Address[];
   btcAddressInfo: Address[];
   stxAddressInfo: Address[];
   onDisconnect: () => void;
 }>({
   network: BitcoinNetworkType.Mainnet,
-  legacyAddressInfo: [],
   btcAddressInfo: [],
   stxAddressInfo: [],
   onDisconnect: () => {
@@ -57,12 +55,8 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   );
   const [btcAddressInfo, setBtcAddressInfo] = useLocalStorage<Address[]>('btc-addresses', []);
   const [stxAddressInfo, setStxAddressInfo] = useLocalStorage<Address[]>('stx-addresses', []);
-  const [legacyAddressInfo, setLegacyAddressInfo] = useLocalStorage<Address[]>(
-    'legacy-addresses',
-    [],
-  );
 
-  const isConnected = btcAddressInfo.length + stxAddressInfo.length + legacyAddressInfo.length > 0;
+  const isConnected = btcAddressInfo.length + stxAddressInfo.length > 0;
 
   useEffect(() => {
     if (btcAddressInfo.length < 1) return;
@@ -81,10 +75,11 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
         message: 'Cool app wants to know your addresses!',
       });
       if (response.status === 'success') {
-        setLegacyAddressInfo(response.result);
+        setBtcAddressInfo([response.result[0], response.result[1]]);
+        if (response.result[2]) setStxAddressInfo([response.result[2]]);
       }
     })().catch(console.error);
-  }, [setLegacyAddressInfo]);
+  }, [setBtcAddressInfo, setStxAddressInfo]);
 
   const onConnect = useCallback(() => {
     (async () => {
@@ -94,20 +89,16 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
         console.error(res);
         return;
       }
-
       const res2 = await Wallet.request('getAddresses', {
         purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
       });
-
       if (res2.status === 'error') {
         console.error('Error retrieving bitcoin addresses after having requested permissions.');
         console.error(res2);
         return;
       }
-
       setBtcAddressInfo(res2.result.addresses);
       const res3 = await Wallet.request('stx_getAddresses', null);
-
       if (res3.status === 'error') {
         alert(
           'Error retrieving stacks addresses after having requested permissions. Details in terminal.',
@@ -115,7 +106,6 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
         console.error(res3);
         return;
       }
-
       setStxAddressInfo(res3.result.addresses);
     })().catch(console.error);
   }, [setBtcAddressInfo, setStxAddressInfo]);
@@ -130,8 +120,8 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
 
   const connectionContextValue = useMemo(
-    () => ({ network, legacyAddressInfo, btcAddressInfo, stxAddressInfo, onDisconnect }),
-    [network, legacyAddressInfo, btcAddressInfo, stxAddressInfo, onDisconnect],
+    () => ({ network, btcAddressInfo, stxAddressInfo, onDisconnect }),
+    [network, btcAddressInfo, stxAddressInfo, onDisconnect],
   );
 
   if (!isConnected) {
