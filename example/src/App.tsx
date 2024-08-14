@@ -12,22 +12,21 @@ import {
 } from 'react-router-dom';
 import Wallet, { AddressPurpose, BitcoinNetworkType, type Address } from 'sats-connect';
 import { Button, ConnectButtonsContainer, Header, Logo } from './App.styles';
-import {
-  AddressDisplay,
-  EtchRunes,
-  MintRunes,
-  NetworkSelector,
-  SendBtc,
-  SendStx,
-} from './components';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
-import GetBtcBalance from './components/GetBtcBalance';
-import GetInscriptions from './components/GetInscriptions';
-import GetRunesBalance from './components/GetRunesBalance';
-import SendInscription from './components/sendInscriptions';
-import { SignMessage } from './components/SignMessage';
+import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
+import { SignMessage } from './components/bitcoin/SignMessage';
+import { GetInscriptions } from './components/GetInscriptions';
+import { GetRunesBalance } from './components/GetRunesBalance';
+import { SendInscription } from './components/sendInscriptions';
 import SignTransaction from './components/signTransaction';
 
+import AddressDisplay from './components/AddressDisplay';
+import { SendBtc } from './components/bitcoin/SendBtc';
+import EtchRunes from './components/EtchRunes';
+import MintRunes from './components/MintRunes';
+import { NetworkSelector } from './components/NetworkSelector';
+import { SendSip10 } from './components/stacks/SendSip10';
+import { SendStx } from './components/stacks/SendStx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
@@ -82,11 +81,10 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
         message: 'Cool app wants to know your addresses!',
       });
       if (response.status === 'success') {
-        setBtcAddressInfo([response.result[0], response.result[1]]);
-        if (response.result[2]) setStxAddressInfo([response.result[2]]);
+        setLegacyAddressInfo(response.result);
       }
     })().catch(console.error);
-  }, [setBtcAddressInfo, setStxAddressInfo]);
+  }, [setLegacyAddressInfo]);
 
   const onConnect = useCallback(() => {
     (async () => {
