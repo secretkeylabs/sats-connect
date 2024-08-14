@@ -149,8 +149,7 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
 
 // TODO move to pages or routes.tsx
 const WalletMethods = () => {
-  const { network, btcAddressInfo, legacyAddressInfo, stxAddressInfo, onDisconnect } =
-    useConnectionContext();
+  const { network, btcAddressInfo, stxAddressInfo, onDisconnect } = useConnectionContext();
   return (
     <>
       <div>
@@ -158,7 +157,7 @@ const WalletMethods = () => {
       </div>
       <AddressDisplay
         network={network}
-        addresses={[...legacyAddressInfo, ...btcAddressInfo, ...stxAddressInfo]}
+        addresses={[...btcAddressInfo, ...stxAddressInfo]}
         onDisconnect={onDisconnect}
       />
       <GetAccounts />
@@ -168,20 +167,20 @@ const WalletMethods = () => {
 };
 
 const BitcoinMethods = () => {
-  const { network, btcAddressInfo, legacyAddressInfo, onDisconnect } = useConnectionContext();
+  const { network, btcAddressInfo, onDisconnect } = useConnectionContext();
   return (
     <>
       <AddressDisplay
         network={network}
-        addresses={[...legacyAddressInfo, ...btcAddressInfo]}
+        addresses={[...btcAddressInfo]}
         onDisconnect={onDisconnect}
       />
-      <SignMessage addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+      <SignMessage addresses={[...btcAddressInfo]} />
       <SendBtc network={network} />
       <SendInscription network={network} />
       <GetBtcBalance />
-      <MintRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
-      <EtchRunes network={network} addresses={[...btcAddressInfo, ...legacyAddressInfo]} />
+      <MintRunes network={network} addresses={[...btcAddressInfo]} />
+      <EtchRunes network={network} addresses={[...btcAddressInfo]} />
       <GetRunesBalance />
       <GetInscriptions />
     </>
