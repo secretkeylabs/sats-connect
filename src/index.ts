@@ -1,27 +1,27 @@
 import {
+  BaseAdapter,
   Params,
   Requests,
+  RpcErrorCode,
   RpcResult,
+  SatsConnectAdapter,
   SupportedWallet,
   defaultAdapters,
-  getSupportedWallets,
-  SatsConnectAdapter,
-  setDefaultProvider,
   getDefaultProvider,
+  getSupportedWallets,
   removeDefaultProvider,
-  RpcErrorCode,
-  BaseAdapter,
+  setDefaultProvider,
   type AddListener,
 } from '@sats-connect/core';
+import { makeDefaultConfig } from '@sats-connect/make-default-provider-config';
 import {
   Config,
+  close,
   loadSelector,
   selectWalletProvider,
-  close,
-  walletOpen,
   walletClose,
+  walletOpen,
 } from '@sats-connect/ui';
-import { makeDefaultConfig } from '@sats-connect/make-default-provider-config';
 
 class Wallet {
   private providerId: string | undefined;

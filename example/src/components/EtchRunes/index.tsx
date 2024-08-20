@@ -8,7 +8,7 @@ interface Props {
   addresses: Address[];
 }
 
-const EtchRunes = ({ addresses, network }: Props) => {
+export const EtchRunes = ({ addresses, network }: Props) => {
   const [totalCost, setTotalCost] = useState<number>();
   const [totalSize, setTotalSize] = useState<number>();
   const [fundTxId, setFundTxId] = useState<string>('');
@@ -25,12 +25,12 @@ const EtchRunes = ({ addresses, network }: Props) => {
 
   const ordinalsAddress = useMemo(
     () => addresses.find((a) => a.purpose === AddressPurpose.Ordinals)?.address ?? '',
-    [addresses]
+    [addresses],
   );
 
   const paymentAddress = useMemo(
     () => addresses.find((a) => a.purpose === AddressPurpose.Payment)?.address ?? '',
-    [addresses]
+    [addresses],
   );
 
   const onClickEstimate = useCallback(() => {

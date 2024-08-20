@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'react';
 import Wallet, { BitcoinNetworkType } from 'sats-connect';
-import { Button, Card, Input, Success } from '../../App.styles';
+import { Button, Card, Input, Success } from '../../../App.styles';
 
 interface Props {
   network: BitcoinNetworkType;
 }
 
-const SendStx = ({ network }: Props) => {
+export const SendStx = ({ network }: Props) => {
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
   const [memo, setMemo] = useState('');
@@ -71,5 +71,3 @@ const SendStx = ({ network }: Props) => {
     </Card>
   );
 };
-
-export default SendStx;

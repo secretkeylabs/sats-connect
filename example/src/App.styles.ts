@@ -1,4 +1,6 @@
+import { Button, Card, Input, NativeSelect } from '@mantine/core';
 import styled from 'styled-components';
+export { Button, Card, Input, NativeSelect };
 
 export const ConnectButtonsContainer = styled.div({
   display: 'flex',
@@ -38,7 +40,8 @@ export const Header = styled.header({
 });
 
 export const Logo = styled.img({
-  marginBottom: '20px',
+  width: '200px',
+  padding: 10,
 });
 
 export const Action = styled.span({
@@ -50,55 +53,8 @@ export const NetworkSelectionButton = styled.button({
   marginBottom: '20px',
 });
 
-export const Card = styled.div({
-  backgroundColor: 'white',
-  color: '#282c34',
-  padding: '0 20px 20px 20px',
-  marginBottom: '30px',
-  borderRadius: '20px',
-});
-
 export const Success = styled.div({
   color: 'green',
-});
-
-export const Button = styled.button({
-  opacity: 0.9,
-  padding: '10px 20px',
-  minWidth: '130px',
-  backgroundColor: '#ff4d00',
-  color: 'white',
-  fontWeight: 'bold',
-  border: 'none',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  ':hover': {
-    opacity: 1,
-  },
-  ':active': {
-    backgroundColor: '#ff6a00',
-  },
-  ':disabled': {
-    opacity: 0.5,
-    backgroundColor: '#ff4d00',
-    cursor: 'not-allowed',
-  },
-  '&.secondary': {
-    backgroundColor: 'transparent',
-    border: '1px solid #ff4d00',
-    color: '#ff4d00',
-  },
-});
-
-export const Input = styled.input({
-  marginTop: '5px',
-  width: '300px',
-  padding: '10px',
-  fontWeight: 'bold',
-  fontSize: '1rem',
-  ':focus-visible': {
-    outline: '#ff4d00 auto 1px',
-  },
 });
 
 export const H4 = styled.h4({

@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import Wallet from 'sats-connect';
-import { Button, Card } from '../../App.styles';
+import { Button, Card } from '../../../App.styles';
 
-const GetBtcBalance = () => {
+export const GetBtcBalance = () => {
   const [confirmed, setConfirmed] = useState('');
   const [unconfirmed, setUnconfirmed] = useState('');
   const [total, setTotal] = useState('');
@@ -37,5 +37,3 @@ const GetBtcBalance = () => {
     </Card>
   );
 };
-
-export default GetBtcBalance;
