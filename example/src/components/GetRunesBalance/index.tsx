@@ -2,13 +2,14 @@ import { useCallback, useState } from 'react';
 import Wallet, { GetRunesBalanceResult } from 'sats-connect';
 import { Button, Card } from '../../App.styles';
 
-const GetRunesBalance = () => {
+export const GetRunesBalance = () => {
   const [balances, setBalances] = useState<GetRunesBalanceResult['balances']>([]);
 
   const getBalance = useCallback(() => {
     (async () => {
       try {
         const response = await Wallet.request('runes_getBalance', null);
+        console.log('🚀 ~ response:', response);
         if (response.status === 'success') {
           setBalances(response.result.balances);
         } else {
@@ -47,5 +48,3 @@ const GetRunesBalance = () => {
     </Card>
   );
 };
-
-export default GetRunesBalance;

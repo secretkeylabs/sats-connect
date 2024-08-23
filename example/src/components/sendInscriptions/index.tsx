@@ -11,7 +11,7 @@ interface Recipient {
   inscriptionId: string;
 }
 
-const SendInscription = ({ network }: Props) => {
+export const SendInscription = ({ network }: Props) => {
   const [recipients, setRecipients] = useState<Recipient[]>([{ address: '', inscriptionId: '' }]);
   const [txnId, setTxnId] = useState('');
 
@@ -57,7 +57,7 @@ const SendInscription = ({ network }: Props) => {
       network === BitcoinNetworkType.Mainnet
         ? `https://mempool.space/tx/${txnId}`
         : `https://mempool.space/testnet/tx/${txnId}`,
-    [network, txnId]
+    [network, txnId],
   );
 
   return (
@@ -124,5 +124,3 @@ const SendInscription = ({ network }: Props) => {
     </Card>
   );
 };
-
-export default SendInscription;

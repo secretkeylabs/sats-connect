@@ -1,8 +1,8 @@
+import { useCallback } from 'react';
 import Wallet from 'sats-connect';
 import { Button, Card } from '../../App.styles';
-import { useCallback } from 'react';
 
-const GetInscriptions = () => {
+export const GetInscriptions = () => {
   const onClick = useCallback(() => {
     (async () => {
       const response = await Wallet.request('ord_getInscriptions', {
@@ -29,5 +29,3 @@ const GetInscriptions = () => {
     </Card>
   );
 };
-
-export default GetInscriptions;
