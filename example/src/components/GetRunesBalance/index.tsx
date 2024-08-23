@@ -9,7 +9,6 @@ export const GetRunesBalance = () => {
     (async () => {
       try {
         const response = await Wallet.request('runes_getBalance', null);
-        console.log('🚀 ~ response:', response);
         if (response.status === 'success') {
           setBalances(response.result.balances);
         } else {
