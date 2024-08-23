@@ -27,6 +27,7 @@ import { NetworkSelector } from './components/NetworkSelector';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
+import TransferRunes from './components/transferRunes/index.tsx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
@@ -178,11 +179,12 @@ const BitcoinMethods = () => {
       <SignMessage addresses={[...btcAddressInfo]} />
       <SendBtc network={network} />
       <SendInscription network={network} />
+      <TransferRunes network={network} />
       <GetBtcBalance />
-      <MintRunes network={network} addresses={[...btcAddressInfo]} />
-      <EtchRunes network={network} addresses={[...btcAddressInfo]} />
       <GetRunesBalance />
       <GetInscriptions />
+      <MintRunes network={network} addresses={[...btcAddressInfo]} />
+      <EtchRunes network={network} addresses={[...btcAddressInfo]} />
     </>
   );
 };
