@@ -1,7 +1,7 @@
-import Wallet from 'sats-connect';
-import { Button, Card } from '../../App.styles';
 import { useQuery } from '@tanstack/react-query';
+import Wallet from 'sats-connect';
 import styled from 'styled-components';
+import { Button, Card } from '../../App.styles';
 
 const ErrorMessage = styled.div({
   color: 'red',
@@ -39,6 +39,7 @@ export function WalletType() {
 
         if (isError) {
           console.error(error);
+          console.error(error.cause);
           return <ErrorMessage>Error. Check console for details.</ErrorMessage>;
         }
 

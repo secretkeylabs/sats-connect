@@ -7,11 +7,11 @@ const ErrorMessage = styled.div({
   color: 'red',
 });
 
-export function GetAccounts() {
+export function GetAddresses() {
   const { refetch, error, data, isFetching, isError, isSuccess } = useQuery({
-    queryKey: ['getAccounts'],
+    queryKey: ['getAddresses'],
     queryFn: async () => {
-      const res = await Wallet.request('getAccounts', {
+      const res = await Wallet.request('getAddresses', {
         purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
       });
       if (res.status === 'error') {
@@ -24,14 +24,14 @@ export function GetAccounts() {
 
   return (
     <Card>
-      <h3>[Legacy] Get accounts</h3>
+      <h3>Get addresses</h3>
 
       <Button
         onClick={() => {
           refetch().catch(console.error);
         }}
       >
-        Get accounts
+        Get addresses
       </Button>
 
       {(() => {
@@ -41,6 +41,7 @@ export function GetAccounts() {
 
         if (isError) {
           console.error(error);
+          console.error(error.cause);
           return <ErrorMessage>Error. Check console for details.</ErrorMessage>;
         }
 

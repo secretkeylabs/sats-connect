@@ -20,6 +20,7 @@ import { GetRunesBalance } from './components/GetRunesBalance';
 import { SendInscription } from './components/sendInscriptions';
 
 import AddressDisplay from './components/AddressDisplay';
+import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
 import EtchRunes from './components/EtchRunes';
 import MintRunes from './components/MintRunes';
@@ -161,8 +162,9 @@ const WalletMethods = () => {
         addresses={[...btcAddressInfo, ...stxAddressInfo]}
         onDisconnect={onDisconnect}
       />
-      <GetAccounts />
+      <GetAddresses />
       <WalletType />
+      <GetAccounts />
     </>
   );
 };
@@ -235,7 +237,13 @@ const router = createBrowserRouter(
   ),
 );
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 const theme = createTheme({
   primaryColor: 'orange',
