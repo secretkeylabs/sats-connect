@@ -60,6 +60,19 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
 
   const isConnected = btcAddressInfo.length + stxAddressInfo.length > 0;
 
+  const clearAppData = useCallback(() => {
+    setBtcAddressInfo([]);
+    setStxAddressInfo([]);
+    queryClient.clear();
+  }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
+
+  const onDisconnect = useCallback(() => {
+    (async () => {
+      await Wallet.disconnect();
+      clearAppData();
+    })().catch(console.error);
+  }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
+
   useEffect(() => {
     if (btcAddressInfo.length < 1) return;
 
@@ -68,7 +81,8 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
     });
 
     const removeListenerDisconnect = Wallet.addListener('disconnect', (ev) => {
-      console.log('The wallet has disconnected.', ev);
+      console.log('The wallet has been disconnected. Event:', ev);
+      clearAppData();
     });
 
     return () => {
@@ -118,15 +132,6 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
       setStxAddressInfo(res3.result.addresses);
     })().catch(console.error);
   }, [setBtcAddressInfo, setStxAddressInfo]);
-
-  const onDisconnect = useCallback(() => {
-    (async () => {
-      await Wallet.disconnect();
-      setBtcAddressInfo([]);
-      setStxAddressInfo([]);
-      queryClient.clear();
-    })().catch(console.error);
-  }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
 
   const connectionContextValue = useMemo(
     () => ({ network, btcAddressInfo, stxAddressInfo, onDisconnect }),
