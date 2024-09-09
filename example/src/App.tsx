@@ -63,12 +63,19 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   useEffect(() => {
     if (btcAddressInfo.length < 1) return;
 
-    const removeListener = Wallet.addListener('accountChange', (ev) => {
+    const removeListenerAccountChange = Wallet.addListener('accountChange', (ev) => {
       console.log('The account has changed.', ev);
     });
 
-    return removeListener;
-  });
+    const removeListenerDisconnect = Wallet.addListener('disconnect', (ev) => {
+      console.log('The wallet has disconnected.', ev);
+    });
+
+    return () => {
+      removeListenerAccountChange();
+      removeListenerDisconnect();
+    };
+  }, [btcAddressInfo]);
 
   const onConnectLegacy = useCallback(() => {
     (async () => {
