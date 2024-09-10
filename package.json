@@ -24,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.3.0-580becb",
+    "@sats-connect/core": "file:../sats-connect-core",
     "@sats-connect/make-default-provider-config": "0.0.5",
     "@sats-connect/ui": "0.0.6"
   },
