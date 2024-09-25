@@ -29,6 +29,7 @@ import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
+import { GetPermissions } from './components/wallet/GetPermissions.tsx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
@@ -176,6 +177,7 @@ const WalletMethods = () => {
       />
       <GetAddresses />
       <WalletType />
+      <GetPermissions />
       <GetAccounts />
     </>
   );
