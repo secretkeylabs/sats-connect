@@ -127,7 +127,7 @@ class Wallet {
     // their wallets having been updated. Until we have API versioning for the
     // wallet, we can avoid having apps crash by checking whether the adapter
     // actually supports `addListener`.
-    if (!new adapter().addListener) {
+    if (!adapter || !new adapter().addListener) {
       console.error(
         `The wallet provider you are using does not support the addListener method. Please update your wallet provider.`
       );
