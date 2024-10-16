@@ -24,6 +24,7 @@ import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
 import EtchRunes from './components/EtchRunes';
 import MintRunes from './components/MintRunes';
+import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
 import { NetworkSelector } from './components/NetworkSelector';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
@@ -177,6 +178,7 @@ const WalletMethods = () => {
       <GetAddresses />
       <WalletType />
       <GetAccounts />
+      <MobileUniversalLink />
     </>
   );
 };
