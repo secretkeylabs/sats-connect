@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Button, Card, Input } from '../../App.styles';
 
 export function MobileUniversalLink() {
-  const [url, setUrl] = useState(
-    'https://connect.xverse.app/browser?url=wallet.xverse.app/explore',
-  );
+  const [url, setUrl] = useState('wallet.xverse.app/explore');
+
+  const link = `https://connect.xverse.app/browser?url=${url}`;
 
   const handleClick = () => {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(link, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -18,10 +18,14 @@ export function MobileUniversalLink() {
       </div>
       <div>If Xverse app is not installed, it will prompt the user to install the app</div>
       <div style={{ marginTop: 15, marginBottom: 15 }}>
-        <div>url param</div>
+        <div>Url param</div>
         <Input type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
       </div>
-      <Button onClick={handleClick}>Navigate to Xverse Explore</Button>
+      <div style={{ marginTop: 15, marginBottom: 15 }}>
+        <div>Full link</div>
+        <div>{link}</div>
+      </div>
+      <Button onClick={handleClick}>Use Universal Link</Button>
     </Card>
   );
 }
