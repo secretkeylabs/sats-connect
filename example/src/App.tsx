@@ -50,6 +50,8 @@ const ConnectionContext = createContext<{
 
 const useConnectionContext = () => useContext(ConnectionContext);
 
+const whiteListedPaths = ['/mobile-universal-link'];
+
 function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   const queryClient = useQueryClient();
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
@@ -60,6 +62,8 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
   const [stxAddressInfo, setStxAddressInfo] = useLocalStorage<Address[]>('stx-addresses', []);
 
   const isConnected = btcAddressInfo.length + stxAddressInfo.length > 0;
+
+  const isWhiteListedPath = whiteListedPaths.includes(window.location.pathname);
 
   const clearAppData = useCallback(() => {
     setBtcAddressInfo([]);
@@ -139,7 +143,7 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
     [network, btcAddressInfo, stxAddressInfo, onDisconnect],
   );
 
-  if (!isConnected) {
+  if (!isConnected && !isWhiteListedPath) {
     return (
       <Container>
         <Header>
@@ -178,7 +182,6 @@ const WalletMethods = () => {
       <GetAddresses />
       <WalletType />
       <GetAccounts />
-      <MobileUniversalLink />
     </>
   );
 };
@@ -246,6 +249,7 @@ const router = createBrowserRouter(
       <Route index element={<WalletMethods />} />
       <Route path="bitcoin-methods" element={<BitcoinMethods />} />
       <Route path="stacks-methods" element={<StacksMethods />} />
+      <Route path="mobile-universal-link" element={<MobileUniversalLink />} />
       <Route path="*" element={<NoMatch />} />
     </Route>,
   ),

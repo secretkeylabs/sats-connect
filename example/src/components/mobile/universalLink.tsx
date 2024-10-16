@@ -1,4 +1,4 @@
-import { Button, Card, H4 } from '../../App.styles';
+import { Button, Card } from '../../App.styles';
 
 export function MobileUniversalLink() {
   const handleClick = () => {
