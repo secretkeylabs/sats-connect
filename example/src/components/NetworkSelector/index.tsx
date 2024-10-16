@@ -6,7 +6,7 @@ interface Props {
   setNetwork: (newNetwork: BitcoinNetworkType) => void;
 }
 
-const NetworkSelector = ({ network, setNetwork }: Props) => {
+export const NetworkSelector = ({ network, setNetwork }: Props) => {
   const onNetworkChange = () => {
     const newNetwork =
       network === BitcoinNetworkType.Mainnet
@@ -28,5 +28,3 @@ const NetworkSelector = ({ network, setNetwork }: Props) => {
     </>
   );
 };
-
-export default NetworkSelector;

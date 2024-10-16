@@ -16,9 +16,17 @@
     "prepare": "cd .. && npm i && npm run build && cd example"
   },
   "dependencies": {
+    "@mantine/core": "^7.11.2",
+    "@mantine/hooks": "^7.11.2",
+    "@stacks/common": "^6.16.0",
+    "@stacks/transactions": "^6.16.1",
+    "@tanstack/react-query": "^5.50.1",
+    "bip322-js": "^2.0.0",
+    "bitcoinjs-message": "^2.2.0",
     "eslint-plugin-react": "^7.34.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
     "sats-connect": "file:..",
     "styled-components": "6.1.11"
   },
@@ -31,7 +39,13 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "postcss": "^8.4.40",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.0.0",
     "typescript": "^5.2.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vite-plugin-node-polyfills": "0.17.0"
   }
 }
