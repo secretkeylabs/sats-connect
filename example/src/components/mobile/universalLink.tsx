@@ -3,7 +3,7 @@ import { Button, Card } from '../../App.styles';
 export function MobileUniversalLink() {
   const handleClick = () => {
     window.open(
-      'https://connect.xverse.app/browser?url=https://wallet.xverse.app/explore',
+      'https://connect.xverse.app/browser?url=wallet.xverse.app/explore',
       '_blank',
       'noopener,noreferrer',
     );
