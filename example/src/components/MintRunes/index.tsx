@@ -53,6 +53,8 @@ export const MintRunes = ({ addresses, network }: Props) => {
         repeats: +repeats,
         runeName,
         refundAddress: paymentAddress,
+        appServiceFee: 10,
+        appServiceFeeAddress: paymentAddress,
         network,
       });
 
