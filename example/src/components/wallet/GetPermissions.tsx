@@ -9,27 +9,28 @@ const ErrorMessage = styled.div({
 
 export function GetPermissions() {
   const { refetch, error, data, isFetching, isError, isSuccess } = useQuery({
-    queryKey: ['wallet_getPermissions'],
+    queryKey: ['wallet_getCurrentPermissions'],
     queryFn: async () => {
-      const res = await Wallet.request('wallet_getPermissions', undefined);
+      const res = await Wallet.request('wallet_getCurrentPermissions', undefined);
       if (res.status === 'error') {
         throw new Error('Error getting permissions.', { cause: res.error });
       }
       return res.result;
     },
+    retry: false,
     enabled: false,
   });
 
   return (
     <Card>
-      <h3>Get permissions</h3>
+      <h3>Get current permissions</h3>
 
       <Button
         onClick={() => {
           refetch().catch(console.error);
         }}
       >
-        Get permissions
+        Get current permissions
       </Button>
 
       {(() => {

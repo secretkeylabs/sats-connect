@@ -1,7 +1,7 @@
 import { Container, createTheme, MantineProvider, Stack } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -9,8 +9,14 @@ import {
   Outlet,
   Route,
   RouterProvider,
+  useNavigate,
 } from 'react-router-dom';
-import Wallet, { AddressPurpose, BitcoinNetworkType, type Address } from 'sats-connect';
+import Wallet, {
+  AddressPurpose,
+  BitcoinNetworkType,
+  RpcErrorCode,
+  type Address,
+} from 'sats-connect';
 import { Button, ConnectButtonsContainer, Header, Logo } from './App.styles';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
@@ -36,11 +42,13 @@ import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
 
 const ConnectionContext = createContext<{
+  accountId: string | null;
   network: BitcoinNetworkType;
   btcAddressInfo: Address[];
   stxAddressInfo: Address[];
   onDisconnect: () => void;
 }>({
+  accountId: null,
   network: BitcoinNetworkType.Mainnet,
   btcAddressInfo: [],
   stxAddressInfo: [],
@@ -53,37 +61,66 @@ const useConnectionContext = () => useContext(ConnectionContext);
 
 const whiteListedPaths = ['/mobile-universal-link'];
 
-function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
+function AppWithProviders({ children }: React.PropsWithChildren) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
     'network',
     BitcoinNetworkType.Mainnet,
   );
-  const [btcAddressInfo, setBtcAddressInfo] = useLocalStorage<Address[]>('btc-addresses', []);
-  const [stxAddressInfo, setStxAddressInfo] = useLocalStorage<Address[]>('stx-addresses', []);
+  const [accountId, setAccountId] = useState<string | null>(null);
+  const [btcAddressInfo, setBtcAddressInfo] = useState<Address[]>([]);
+  const [stxAddressInfo, setStxAddressInfo] = useState<Address[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const isConnected = btcAddressInfo.length + stxAddressInfo.length > 0;
 
   const isWhiteListedPath = whiteListedPaths.includes(window.location.pathname);
 
   const clearAppData = useCallback(() => {
+    setAccountId(null);
     setBtcAddressInfo([]);
     setStxAddressInfo([]);
     queryClient.clear();
-  }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
+  }, [queryClient, setBtcAddressInfo, setStxAddressInfo, setAccountId]);
 
   const onDisconnect = useCallback(() => {
     (async () => {
       await Wallet.disconnect();
       clearAppData();
     })().catch(console.error);
-  }, [queryClient, setBtcAddressInfo, setStxAddressInfo]);
+  }, [clearAppData]);
 
   useEffect(() => {
-    if (btcAddressInfo.length < 1) return;
-
     const removeListenerAccountChange = Wallet.addListener('accountChange', (ev) => {
       console.log('The account has changed.', ev);
+
+      // Attempt to get the new account details.
+      (async () => {
+        const res = await Wallet.request('wallet_getAccount', undefined);
+
+        if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
+          // The app doesn't have permission to read from this account. Clear
+          // state and redirect to home page, where the user is prompted to
+          // connect.
+          clearAppData();
+          navigate('/');
+          return;
+        }
+
+        if (res.status === 'error') {
+          console.error('Received unexpected error while getting account details.');
+          console.error(res);
+          return;
+        }
+
+        const btcAddresses = res.result.addresses.filter((a) =>
+          [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
+        );
+        setBtcAddressInfo(btcAddresses);
+        setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
+        setAccountId(res.result.id);
+      })().catch(console.error);
     });
 
     const removeListenerDisconnect = Wallet.addListener('disconnect', (ev) => {
@@ -95,7 +132,41 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
       removeListenerAccountChange();
       removeListenerDisconnect();
     };
-  }, [btcAddressInfo]);
+  }, [clearAppData, navigate]);
+
+  // On initial load, check if the app has the perms it needs and load necessary
+  // data.
+  useEffect(() => {
+    (async function () {
+      const res = await Wallet.request('wallet_getAccount', undefined);
+
+      if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
+        // The app doesn't have permission to read from this account. Clear
+        // state and redirect to home page, where the user is prompted to
+        // connect.
+        clearAppData();
+        navigate('/');
+        setIsLoading(false);
+        return;
+      }
+
+      if (res.status === 'error') {
+        console.error('Received unexpected error while getting account details.');
+        console.error(res);
+        setIsLoading(false);
+        return;
+      }
+
+      const btcAddresses = res.result.addresses.filter((a) =>
+        [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
+      );
+      setBtcAddressInfo(btcAddresses);
+      setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
+      setAccountId(res.result.id);
+
+      setIsLoading(false);
+    })().catch(console.error);
+  }, [clearAppData, navigate]);
 
   const handleLegacyConnectWithGetAccounts = useCallback(() => {
     (async () => {
@@ -151,15 +222,17 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
         [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
       );
       setBtcAddressInfo(btcAddresses);
-
       setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
+      setAccountId(res.result.id);
     })().catch(console.error);
   }, [setBtcAddressInfo, setStxAddressInfo]);
 
   const connectionContextValue = useMemo(
-    () => ({ network, btcAddressInfo, stxAddressInfo, onDisconnect }),
-    [network, btcAddressInfo, stxAddressInfo, onDisconnect],
+    () => ({ network, btcAddressInfo, stxAddressInfo, onDisconnect, accountId }),
+    [network, btcAddressInfo, stxAddressInfo, onDisconnect, accountId],
   );
+
+  if (isLoading) return <div>Loading...</div>;
 
   if (!isConnected && !isWhiteListedPath) {
     return (
@@ -191,13 +264,18 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
 
 // TODO move to pages or routes.tsx
 const WalletMethods = () => {
-  const { network, btcAddressInfo, stxAddressInfo, onDisconnect } = useConnectionContext();
+  const { network, btcAddressInfo, stxAddressInfo, onDisconnect, accountId } =
+    useConnectionContext();
+
+  if (!accountId) return <div>Error: no account ID set.</div>;
+
   return (
     <>
       <div>
         <Logo src="/sats-connect.svg" alt="SatsConnect" />
       </div>
       <AddressDisplay
+        accountId={accountId}
         network={network}
         addresses={[...btcAddressInfo, ...stxAddressInfo]}
         onDisconnect={onDisconnect}
@@ -211,10 +289,14 @@ const WalletMethods = () => {
 };
 
 const BitcoinMethods = () => {
-  const { network, btcAddressInfo, onDisconnect } = useConnectionContext();
+  const { network, btcAddressInfo, onDisconnect, accountId } = useConnectionContext();
+
+  if (!accountId) return <div>Error: no account ID set.</div>;
+
   return (
     <>
       <AddressDisplay
+        accountId={accountId}
         network={network}
         addresses={[...btcAddressInfo]}
         onDisconnect={onDisconnect}
@@ -233,10 +315,14 @@ const BitcoinMethods = () => {
 };
 
 const StacksMethods = () => {
-  const { network, stxAddressInfo, onDisconnect } = useConnectionContext();
+  const { network, stxAddressInfo, onDisconnect, accountId } = useConnectionContext();
+
+  if (!accountId) return <div>Error: no account ID set.</div>;
+
   return (
     <>
       <AddressDisplay
+        accountId={accountId}
         network={network}
         addresses={[...stxAddressInfo]}
         onDisconnect={onDisconnect}
