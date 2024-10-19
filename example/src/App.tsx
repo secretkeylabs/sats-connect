@@ -97,7 +97,7 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
     };
   }, [btcAddressInfo]);
 
-  const onConnectLegacy = useCallback(() => {
+  const handleLegacyConnectWithGetAccounts = useCallback(() => {
     (async () => {
       const response = await Wallet.request('getAccounts', {
         purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
@@ -110,7 +110,7 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
     })().catch(console.error);
   }, [setBtcAddressInfo, setStxAddressInfo]);
 
-  const onConnect = useCallback(() => {
+  const handleLegacyConnectWithRequestPermissions = useCallback(() => {
     (async () => {
       const res = await Wallet.request('wallet_requestPermissions', undefined);
       if (res.status === 'error') {
@@ -139,6 +139,23 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
     })().catch(console.error);
   }, [setBtcAddressInfo, setStxAddressInfo]);
 
+  const handleConnect = useCallback(() => {
+    (async () => {
+      const res = await Wallet.request('wallet_connect', undefined);
+      if (res.status === 'error') {
+        console.error('Error connecting to wallet, details in terminal.');
+        console.error(res);
+        return;
+      }
+      const btcAddresses = res.result.addresses.filter((a) =>
+        [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
+      );
+      setBtcAddressInfo(btcAddresses);
+
+      setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
+    })().catch(console.error);
+  }, [setBtcAddressInfo, setStxAddressInfo]);
+
   const connectionContextValue = useMemo(
     () => ({ network, btcAddressInfo, stxAddressInfo, onDisconnect }),
     [network, btcAddressInfo, stxAddressInfo, onDisconnect],
@@ -152,8 +169,13 @@ function AppWithProviders({ children }: React.PropsWithChildren<{}>) {
           <NetworkSelector network={network} setNetwork={setNetwork} />
           <p>Click the button to connect your wallet</p>
           <ConnectButtonsContainer>
-            <Button onClick={onConnect}>Connect Account</Button>
-            <Button onClick={onConnectLegacy}>Connect (Legacy)</Button>
+            <Button onClick={handleConnect}>Connect</Button>
+            <Button onClick={handleLegacyConnectWithRequestPermissions}>
+              Connect (Legacy wallet_requestPermissions)
+            </Button>
+            <Button onClick={handleLegacyConnectWithGetAccounts}>
+              Connect (Legacy getAccounts)
+            </Button>
           </ConnectButtonsContainer>
         </Header>
       </Container>
