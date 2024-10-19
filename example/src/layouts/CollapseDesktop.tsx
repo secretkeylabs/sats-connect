@@ -40,6 +40,11 @@ export function CollapseDesktop({ children }: React.PropsWithChildren<{}>) {
             label: 'Stacks Methods',
             href: '/stacks-methods',
           },
+          {
+            icon: 'home',
+            label: 'Mobile Universal Link',
+            href: '/mobile-universal-link',
+          },
         ].map(({ label, href }) => (
           <NavLink key={href} href={href} label={label} />
         ))}
