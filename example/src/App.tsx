@@ -212,7 +212,10 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
   const handleConnect = useCallback(() => {
     (async () => {
-      const res = await Wallet.request('wallet_connect', undefined);
+      const res = await Wallet.request('wallet_connect', {
+        message: 'Cool app wants to know your addresses!',
+        addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+      });
       if (res.status === 'error') {
         console.error('Error connecting to wallet, details in terminal.');
         console.error(res);
@@ -244,7 +247,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
           <ConnectButtonsContainer>
             <Button onClick={handleConnect}>Connect</Button>
             <Button onClick={handleLegacyConnectWithRequestPermissions}>
-              Connect (Legacy wallet_requestPermissions)
+              wallet_requestPermissions
             </Button>
             <Button onClick={handleLegacyConnectWithGetAccounts}>
               Connect (Legacy getAccounts)
