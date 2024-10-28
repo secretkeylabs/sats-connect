@@ -101,8 +101,8 @@ export const EtchRunes = ({ addresses, network }: Props) => {
         terms:
           amount || mintCap
             ? {
-                amount: amount || undefined,
-                cap: mintCap || undefined,
+                amount: amount || '',
+                cap: mintCap || '',
               }
             : undefined,
         feeRate: +feeRate,

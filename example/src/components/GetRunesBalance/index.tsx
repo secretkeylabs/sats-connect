@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import Wallet, { GetRunesBalanceResult } from 'sats-connect';
+import Wallet, { RunesGetBalanceResult } from 'sats-connect';
 import { Button, Card } from '../../App.styles';
 
 export const GetRunesBalance = () => {
-  const [balances, setBalances] = useState<GetRunesBalanceResult['balances']>([]);
+  const [balances, setBalances] = useState<RunesGetBalanceResult['balances']>([]);
 
   const getBalance = useCallback(() => {
     (async () => {
