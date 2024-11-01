@@ -116,9 +116,10 @@ class Wallet {
     }
 
     if (!this.isProviderSet()) {
-      throw new Error(
+      console.error(
         'No wallet provider selected. The user must first select a wallet before adding listeners to wallet events.'
       );
+      return () => {};
     }
 
     const adapter = this.defaultAdapters[this.providerId as string];
