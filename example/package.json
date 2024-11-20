@@ -18,8 +18,8 @@
   "dependencies": {
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
-    "@stacks/common": "^6.16.0",
-    "@stacks/transactions": "^6.16.1",
+    "@stacks/common": "^7.0.2",
+    "@stacks/transactions": "^7.0.2",
     "@tanstack/react-query": "^5.50.1",
     "bip322-js": "^2.0.0",
     "bitcoinjs-message": "^2.2.0",
