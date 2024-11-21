@@ -35,6 +35,7 @@ import { NetworkSelector } from './components/NetworkSelector';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
+import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
 import { GetPermissions } from './components/wallet/GetPermissions.tsx';
 import { WalletType } from './components/wallet/WalletType';
@@ -329,6 +330,7 @@ const StacksMethods = () => {
       {stxAddressInfo?.[0]?.publicKey ? (
         <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
       ) : null}
+      <SignTransactions publicKey={stxAddressInfo[0].publicKey} />
     </>
   );
 };
