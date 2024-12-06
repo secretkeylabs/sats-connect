@@ -6,6 +6,7 @@ import {
   makeUnsignedContractDeploy,
   makeUnsignedSTXTokenTransfer,
   noneCV,
+  StacksTransactionWire,
   standardPrincipalCV,
   uintCV,
 } from '@stacks/transactions';
@@ -40,6 +41,14 @@ export interface MutationFnArgs {
   publicKey: string;
 }
 
+function getLastUsedNonce(transactions: StacksTransactionWire[]) {
+  const lastTransaction = transactions.at(-1);
+
+  if (!lastTransaction) return undefined;
+
+  return lastTransaction.auth.spendingCondition.nonce + 1n;
+}
+
 export async function mutationFunction({
   isPoolAllowContractSelected,
   isPoolDelegateStacksSelected,
@@ -48,7 +57,7 @@ export async function mutationFunction({
   broadcast,
   publicKey,
 }: MutationFnArgs) {
-  const transactions: string[] = [];
+  const transactions: StacksTransactionWire[] = [];
 
   if (isPoolAllowContractSelected) {
     const transaction = await makeUnsignedContractCall({
@@ -57,8 +66,9 @@ export async function mutationFunction({
       functionName: 'allow-contract-caller',
       functionArgs: [contractPrincipalCV(poolContractAddress, poolContractName), noneCV()],
       publicKey,
+      ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
-    transactions.push(transaction.serialize());
+    transactions.push(transaction);
   }
 
   if (isPoolDelegateStacksSelected) {
@@ -67,7 +77,7 @@ export async function mutationFunction({
       contractName: poolContractName,
       functionName: 'delegate-stx',
       functionArgs: [
-        uintCV(1234567890),
+        uintCV(101_000_000),
         standardPrincipalCV(poolAdminStacksAddress),
         noneCV(),
         noneCV(),
@@ -75,8 +85,9 @@ export async function mutationFunction({
         noneCV(),
       ],
       publicKey,
+      ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
-    transactions.push(transaction.serialize());
+    transactions.push(transaction);
   }
 
   if (isContractDeploySelected) {
@@ -85,8 +96,9 @@ export async function mutationFunction({
       contractName: `hello-world-${now}`,
       codeBody: helloWorldContractBody,
       publicKey,
+      ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
-    transactions.push(transaction.serialize());
+    transactions.push(transaction);
   }
 
   if (isTokenTransferSelected) {
@@ -94,12 +106,13 @@ export async function mutationFunction({
       recipient: 'SP1VYV2JBF1QPNDSKHBZRAWRC4KQXP8ZSSRNKPJE4', // acc 4
       amount: '100000', // 0.1 STX
       publicKey,
+      ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
-    transactions.push(transaction.serialize());
+    transactions.push(transaction);
   }
 
   const res = await request('stx_signTransactions', {
-    transactions,
+    transactions: transactions.map((t) => t.serialize()),
     broadcast,
   });
 
