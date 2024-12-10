@@ -19,7 +19,7 @@ export function SignTransactions({ publicKey }: Props) {
   const [isContractDeploySelected, setIsContractDeploySelected] = useState(false);
   const [isTokenTransferSelected, setIsTokenTransferSelected] = useState(false);
 
-  const [broadcast, setBroadcast] = useState(true);
+  const [broadcast, setBroadcast] = useState(false);
 
   const signTransactionsMutation = useMutation({
     mutationFn: mutationFunction,
