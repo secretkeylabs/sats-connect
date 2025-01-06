@@ -67,10 +67,11 @@ export const MintRunes = ({ addresses, network }: Props) => {
     })().catch(console.error);
   }, [feeRate, network, ordinalsAddress, paymentAddress, repeats, runeName]);
 
-  const networkPath = {
+  const networkPath: Record<BitcoinNetworkType, string> = {
     [BitcoinNetworkType.Mainnet]: '',
     [BitcoinNetworkType.Testnet]: '/testnet',
     [BitcoinNetworkType.Signet]: '/signet',
+    [BitcoinNetworkType.Regtest]: '/testnet',
   };
   const fundTxLink = `https://mempool.space${networkPath[network]}/tx/${fundTxId}`;
 
