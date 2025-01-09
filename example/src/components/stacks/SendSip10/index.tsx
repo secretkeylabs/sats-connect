@@ -1,5 +1,6 @@
 import { Button, Card, Stack, TextInput } from '@mantine/core';
 import {
+  cvToHex,
   // bufferCV,
   cvToString,
   noneCV,
@@ -70,12 +71,12 @@ export const SendSip10 = ({
         contract: form.contract,
         functionName: 'transfer',
         arguments: [
-          uintCV(+form.amount),
+          uintCV(Number(form.amount)),
           standardPrincipalCV(stxAddressInfo?.[0].address),
           standardPrincipalCV(form.address),
           noneCV(),
           //form.memo ? someCV(bufferCV(Buffer.from(form.memo))) : noneCV(),
-        ].map((arg) => cvToString(arg)),
+        ].map((arg) => cvToHex(arg)),
       });
 
       if (response.status === 'error') {
