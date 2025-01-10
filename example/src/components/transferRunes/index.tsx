@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import Wallet, { BitcoinNetworkType } from 'sats-connect';
 import { Button, Card, Input, Success } from '../../App.styles';
+import { getMempoolEndpoint } from '../../util';
 
 interface Props {
   network: BitcoinNetworkType;
@@ -52,13 +53,7 @@ const TransferRunes = ({ network }: Props) => {
     })().catch(console.error);
   }, [recipients]);
 
-  const explorerUrl = useMemo(
-    () =>
-      network === BitcoinNetworkType.Mainnet
-        ? `https://mempool.space/tx/${txnId}`
-        : `https://mempool.space/testnet/tx/${txnId}`,
-    [network, txnId]
-  );
+  const explorerUrl = useMemo(() => `${getMempoolEndpoint(network)}tx/${txnId}`, [network, txnId]);
 
   return (
     <Card>

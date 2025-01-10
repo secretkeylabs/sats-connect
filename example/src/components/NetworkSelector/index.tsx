@@ -10,9 +10,11 @@ export const NetworkSelector = ({ network, setNetwork }: Props) => {
   const onNetworkChange = () => {
     const newNetwork =
       network === BitcoinNetworkType.Mainnet
-        ? BitcoinNetworkType.Testnet
-        : network === BitcoinNetworkType.Testnet
+        ? BitcoinNetworkType.Testnet4
+        : network === BitcoinNetworkType.Testnet4
         ? BitcoinNetworkType.Signet
+        : network === BitcoinNetworkType.Signet
+        ? BitcoinNetworkType.Testnet
         : BitcoinNetworkType.Mainnet;
     setNetwork(newNetwork);
   };

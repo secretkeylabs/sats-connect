@@ -28,6 +28,7 @@ import { SendInscription } from './components/sendInscriptions';
 import AddressDisplay from './components/AddressDisplay';
 import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
+import { CreateInscription } from './components/createInscription/index.tsx';
 import EtchRunes from './components/EtchRunes';
 import MintRunes from './components/MintRunes';
 import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
@@ -303,6 +304,7 @@ const BitcoinMethods = () => {
       <SignMessage addresses={[...btcAddressInfo]} />
       <SendBtc network={network} />
       <SendInscription network={network} />
+      <CreateInscription network={network} />
       <TransferRunes network={network} />
       <GetBtcBalance />
       <GetRunesBalance />
