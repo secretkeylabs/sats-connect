@@ -1,7 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
-import Wallet, { BitcoinNetworkType, createInscription } from 'sats-connect';
-import { Button, Card, Input, Success } from '../../App.styles';
-import { getMempoolEndpoint } from '../../util';
+import { useCallback, useState } from 'react';
+import { BitcoinNetworkType, createInscription } from 'sats-connect';
+import { Button, Card, Input } from '../../App.styles';
 
 interface Props {
   network: BitcoinNetworkType;
@@ -32,7 +31,7 @@ export const CreateInscription = ({ network }: Props) => {
 
   return (
     <Card>
-      <h3>Create Inscriptions</h3>
+      <h3>Create Inscription</h3>
       <h4>Sample BRC20 deploy payload</h4>
       <pre>{'{ "p": "brc-20","op": "deploy","tick": "rrfq","max": "21000000","lim": "1000"}'}</pre>
 
@@ -47,7 +46,7 @@ export const CreateInscription = ({ network }: Props) => {
         onChange={(e) => setContent(e.target.value)}
       />
 
-      <Button onClick={onClick}>Send</Button>
+      <Button onClick={onClick}>Create inscription</Button>
     </Card>
   );
 };
