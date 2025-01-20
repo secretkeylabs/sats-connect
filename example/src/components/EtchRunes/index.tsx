@@ -139,6 +139,7 @@ export const EtchRunes = ({ addresses, network }: Props) => {
     [BitcoinNetworkType.Testnet]: '/testnet',
     [BitcoinNetworkType.Signet]: '/signet',
     [BitcoinNetworkType.Regtest]: '/testnet',
+    [BitcoinNetworkType.Testnet4]: '/testnet',
   };
   const fundTxLink = `https://mempool.space${networkPath[network]}/tx/${fundTxId}`;
 
