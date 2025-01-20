@@ -1,7 +1,7 @@
 {
   "name": "dapp-cookie-cutter",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "ts-check": "tsc -p tsconfig.app.json --noEmit",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepare": "cd .. && npm i && npm run build && cd example"
@@ -18,8 +19,9 @@
   "dependencies": {
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
-    "@stacks/common": "^6.16.0",
-    "@stacks/transactions": "^6.16.1",
+    "@stacks/common": "^7.0.2",
+    "@stacks/stacking": "^7.0.2",
+    "@stacks/transactions": "^7.0.2",
     "@tanstack/react-query": "^5.50.1",
     "bip322-js": "^2.0.0",
     "bitcoinjs-message": "^2.2.0",
