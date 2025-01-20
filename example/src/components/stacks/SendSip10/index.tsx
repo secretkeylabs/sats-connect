@@ -2,7 +2,6 @@ import { Button, Card, Stack, TextInput } from '@mantine/core';
 import {
   cvToHex,
   // bufferCV,
-  cvToString,
   noneCV,
   // someCV,
   standardPrincipalCV,
