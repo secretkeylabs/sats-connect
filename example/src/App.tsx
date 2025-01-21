@@ -140,9 +140,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
   // data.
   useEffect(() => {
     (async function () {
-      console.log('[ARY]: making request');
       const res = await Wallet.request('wallet_getAccount', undefined);
-      console.log('[ARY]: request response');
 
       if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
         // The app doesn't have permission to read from this account. Clear
