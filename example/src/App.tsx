@@ -37,6 +37,7 @@ import { SendStx } from './components/stacks/SendStx';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
+import { GetNetwork } from './components/wallet/GetNetwork.tsx';
 import { GetPermissions } from './components/wallet/GetPermissions.tsx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
@@ -285,6 +286,7 @@ const WalletMethods = () => {
       <GetAddresses />
       <WalletType />
       <GetPermissions />
+      <GetNetwork />
       <GetAccounts />
     </>
   );
@@ -367,6 +369,10 @@ const router = createBrowserRouter(
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      // Set to false since the client is mostly used to send requests to the
+      // wallet, which unlike requests to APIs over the internet, are much more
+      // reliable and unlikely to succeed when retried if they have already
+      // failed.
       retry: false,
     },
   },
