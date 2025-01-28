@@ -94,6 +94,15 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
   }, [clearAppData]);
 
   useEffect(() => {
+    const removeListenerNetworkChange = Wallet.addListener('networkChange', (ev) => {
+      console.log('The network has changed.', ev);
+      clearAppData();
+    });
+
+    return () => removeListenerNetworkChange();
+  }, [clearAppData]);
+
+  useEffect(() => {
     const removeListenerAccountChange = Wallet.addListener('accountChange', (ev) => {
       console.log('The account has changed.', ev);
 
@@ -223,6 +232,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
         console.error(res);
         return;
       }
+      console.log('Connected', res);
       const btcAddresses = res.result.addresses.filter((a) =>
         [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
       );
