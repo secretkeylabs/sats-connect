@@ -74,6 +74,10 @@ export const MintRunes = ({ addresses, network }: Props) => {
     [BitcoinNetworkType.Regtest]: '/testnet',
     [BitcoinNetworkType.Testnet4]: '/testnet',
   };
+  if (network === BitcoinNetworkType.Testnet4 || network === BitcoinNetworkType.Regtest) {
+    console.error('Network not supported for etching runes');
+    return;
+  }
   const fundTxLink = `https://mempool.space${networkPath[network]}/tx/${fundTxId}`;
 
   return (

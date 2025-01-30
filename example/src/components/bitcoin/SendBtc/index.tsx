@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import Wallet, { BitcoinNetworkType } from 'sats-connect';
 import { Button, Card, Input, Success } from '../../../App.styles';
+import { getMempoolEndpoint } from '../../../util';
 
 interface Props {
   network: BitcoinNetworkType;
@@ -52,10 +53,7 @@ export const SendBtc = ({ network }: Props) => {
     })().catch(console.error);
   }, [recipients]);
 
-  const explorerUrl =
-    network === BitcoinNetworkType.Mainnet
-      ? `https://mempool.space/tx/${txnId}`
-      : `https://mempool.space/testnet/tx/${txnId}`;
+  const explorerUrl = `${getMempoolEndpoint(network)}tx/${txnId}`;
 
   return (
     <Card>
