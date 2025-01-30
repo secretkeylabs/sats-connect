@@ -134,10 +134,12 @@ export const EtchRunes = ({ addresses, network }: Props) => {
     symbol,
   ]);
 
-  const networkPath = {
+  const networkPath: Record<BitcoinNetworkType, string> = {
     [BitcoinNetworkType.Mainnet]: '',
     [BitcoinNetworkType.Testnet]: '/testnet',
     [BitcoinNetworkType.Signet]: '/signet',
+    [BitcoinNetworkType.Regtest]: '/testnet',
+    [BitcoinNetworkType.Testnet4]: '/testnet',
   };
 
   if (network === BitcoinNetworkType.Testnet4 || network === BitcoinNetworkType.Regtest) {

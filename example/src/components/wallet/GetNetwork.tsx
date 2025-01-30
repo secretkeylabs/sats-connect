@@ -1,17 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import Wallet, { AddressPurpose } from 'sats-connect';
+import Wallet from 'sats-connect';
 import { Button, Card } from '../../App.styles';
 import { ErrorMessage } from '../common';
 
-export function GetAddresses() {
+export function GetNetwork() {
   const { refetch, error, data, isFetching, isError, isSuccess } = useQuery({
-    queryKey: ['getAddresses'],
+    queryKey: ['wallet_getNetwork'],
     queryFn: async () => {
-      const res = await Wallet.request('getAddresses', {
-        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
-      });
+      const res = await Wallet.request('wallet_getNetwork', null);
       if (res.status === 'error') {
-        throw new Error('Error getting wallet type', { cause: res.error });
+        throw new Error('Error getting wallet network', { cause: res.error });
       }
       return res.result;
     },
@@ -20,14 +18,14 @@ export function GetAddresses() {
 
   return (
     <Card>
-      <h3>Get addresses</h3>
+      <h3>Get Network</h3>
 
       <Button
         onClick={() => {
           refetch().catch(console.error);
         }}
       >
-        Get addresses
+        Get network
       </Button>
 
       {(() => {
@@ -45,7 +43,9 @@ export function GetAddresses() {
           console.log(data);
           return (
             <div>
-              <p>Check console for data.</p>
+              <pre>
+                <code>{JSON.stringify(data, null, 2)}</code>
+              </pre>
             </div>
           );
         }

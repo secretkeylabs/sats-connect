@@ -36,7 +36,9 @@ import { NetworkSelector } from './components/NetworkSelector';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
+import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
+import { GetNetwork } from './components/wallet/GetNetwork.tsx';
 import { GetPermissions } from './components/wallet/GetPermissions.tsx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
@@ -90,6 +92,15 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       await Wallet.disconnect();
       clearAppData();
     })().catch(console.error);
+  }, [clearAppData]);
+
+  useEffect(() => {
+    const removeListenerNetworkChange = Wallet.addListener('networkChange', (ev) => {
+      console.log('The network has changed.', ev);
+      clearAppData();
+    });
+
+    return () => removeListenerNetworkChange();
   }, [clearAppData]);
 
   useEffect(() => {
@@ -222,6 +233,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
         console.error(res);
         return;
       }
+      console.log('Connected', res);
       const btcAddresses = res.result.addresses.filter((a) =>
         [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
       );
@@ -285,6 +297,7 @@ const WalletMethods = () => {
       <GetAddresses />
       <WalletType />
       <GetPermissions />
+      <GetNetwork />
       <GetAccounts />
     </>
   );
@@ -331,6 +344,7 @@ const StacksMethods = () => {
       {stxAddressInfo?.[0]?.publicKey ? (
         <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
       ) : null}
+      <SignTransactions publicKey={stxAddressInfo[0].publicKey} />
     </>
   );
 };
@@ -367,6 +381,10 @@ const router = createBrowserRouter(
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      // Set to false since the client is mostly used to send requests to the
+      // wallet, which unlike requests to APIs over the internet, are much more
+      // reliable and unlikely to succeed when retried if they have already
+      // failed.
       retry: false,
     },
   },

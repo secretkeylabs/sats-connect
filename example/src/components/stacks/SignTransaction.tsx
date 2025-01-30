@@ -2,6 +2,7 @@ import { Button, Card, Stack, Switch } from '@mantine/core';
 import { BitcoinNetworkType } from '@sats-connect/core';
 import {
   PostConditionMode,
+  StacksTransactionWire,
   makeUnsignedContractCall,
   makeUnsignedContractDeploy,
   makeUnsignedSTXTokenTransfer,
@@ -24,10 +25,6 @@ const codeBody = `
 )
 `;
 
-function uint8ArrayToHex(uint8Array: Uint8Array) {
-  return Array.from(uint8Array, (byte) => byte.toString(16).padStart(2, '0')).join('');
-}
-
 const errorMessage = 'Error signing transaction. Check console for error logs.';
 
 interface Props {
@@ -41,10 +38,10 @@ export function SignTransaction({ publicKey }: Props) {
     PostConditionMode.Deny,
   );
 
-  const requestSignTransaction = async (transaction: any) => {
+  const requestSignTransaction = async (transaction: StacksTransactionWire) => {
     try {
       const response = await request('stx_signTransaction', {
-        transaction: uint8ArrayToHex(transaction.serialize()),
+        transaction: transaction.serialize(),
         broadcast,
       });
       if (response.status === 'success') {
@@ -60,42 +57,48 @@ export function SignTransaction({ publicKey }: Props) {
     }
   };
 
-  const handleSignTransactionContractCallClick = async () => {
-    const transaction = await makeUnsignedContractCall({
+  function handleSignTransactionContractCallClick() {
+    makeUnsignedContractCall({
       fee: 3000,
-      anchorMode: 'onChainOnly',
       contractAddress: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP',
       contractName: 'pox-fast-pool-v2',
       functionName: 'set-stx-buffer',
       functionArgs: [uintCV(1)],
       postConditionMode,
       publicKey,
-    });
-    requestSignTransaction(transaction);
-  };
+    })
+      .then((transaction) => {
+        return requestSignTransaction(transaction);
+      })
+      .catch(console.error);
+  }
 
-  const handleSignTransactionSTXTokenTransferClick = async () => {
-    const transaction = await makeUnsignedSTXTokenTransfer({
-      anchorMode: 'any',
+  function handleSignTransactionSTXTokenTransferClick() {
+    makeUnsignedSTXTokenTransfer({
       fee: 3000,
       recipient: 'SP2FFKDKR122BZWS7GDPFWC0J0FK4WMW5NPQ0Z21M', // account 4
       amount: 1000,
       publicKey,
-    });
-    requestSignTransaction(transaction);
-  };
+    })
+      .then((transaction) => {
+        return requestSignTransaction(transaction);
+      })
+      .catch(console.error);
+  }
 
-  const handleSignTransactionContractDeployClick = async () => {
-    const transaction = await makeUnsignedContractDeploy({
-      anchorMode: 'any',
+  function handleSignTransactionContractDeployClick() {
+    makeUnsignedContractDeploy({
       contractName: 'my-contract',
       codeBody,
       fee: 3000,
       postConditionMode,
       publicKey,
-    });
-    requestSignTransaction(transaction);
-  };
+    })
+      .then((transaction) => {
+        return requestSignTransaction(transaction);
+      })
+      .catch(console.error);
+  }
 
   return (
     <Card>
