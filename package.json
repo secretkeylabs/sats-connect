@@ -43,7 +43,7 @@
     "url": "git+https://github.com/secretkeylabs/sats-connect.git"
   },
   "author": "Secret Key Labs",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/secretkeylabs/sats-connect/issues"
   },
