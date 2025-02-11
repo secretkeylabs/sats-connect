@@ -1,6 +1,6 @@
 {
   "name": "sats-connect",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "main": "dist/index.mjs",
   "files": [
     "dist"
@@ -43,7 +43,7 @@
     "url": "git+https://github.com/secretkeylabs/sats-connect.git"
   },
   "author": "Secret Key Labs",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/secretkeylabs/sats-connect/issues"
   },
