@@ -1,4 +1,3 @@
-import { request } from '@sats-connect/core';
 import { poxAddressToTuple } from '@stacks/stacking';
 import {
   contractPrincipalCV,
@@ -10,6 +9,7 @@ import {
   standardPrincipalCV,
   uintCV,
 } from '@stacks/transactions';
+import Wallet from 'sats-connect';
 
 const helloWorldContractBody = `
 (define-data-var greeting (string-ascii 100) "Hello, World!")
@@ -111,7 +111,7 @@ export async function mutationFunction({
     transactions.push(transaction);
   }
 
-  const res = await request('stx_signTransactions', {
+  const res = await Wallet.request('stx_signTransactions', {
     transactions: transactions.map((t) => t.serialize()),
     broadcast,
   });

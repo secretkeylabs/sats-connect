@@ -9,7 +9,7 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { useState } from 'react';
-import { request } from 'sats-connect';
+import Wallet from 'sats-connect';
 
 const codeBody = `
 (define-data-var greeting (string-ascii 100) "Hello, World!")
@@ -40,7 +40,7 @@ export function SignTransaction({ publicKey }: Props) {
 
   const requestSignTransaction = async (transaction: StacksTransactionWire) => {
     try {
-      const response = await request('stx_signTransaction', {
+      const response = await Wallet.request('stx_signTransaction', {
         transaction: transaction.serialize(),
         broadcast,
       });
