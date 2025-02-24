@@ -151,6 +151,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
   useEffect(() => {
     (async function () {
       const res = await Wallet.request('wallet_getAccount', undefined);
+      console.log('~ getAccount response:', res);
 
       if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
         // The app doesn't have permission to read from this account. Clear
@@ -228,6 +229,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
         message: 'Cool app wants to know your addresses!',
         addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
       });
+      console.log('~ Connect response:', res);
       if (res.status === 'error') {
         console.error('Error connecting to wallet, details in terminal.');
         console.error(res);
