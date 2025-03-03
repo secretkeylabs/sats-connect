@@ -28,6 +28,7 @@ import { SendInscription } from './components/sendInscriptions';
 import AddressDisplay from './components/AddressDisplay';
 import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
+import ChangeNetwork from './components/ChangeNetwork/index.tsx';
 import { CreateInscription } from './components/createInscription/index.tsx';
 import EtchRunes from './components/EtchRunes';
 import MintRunes from './components/MintRunes';
@@ -300,6 +301,7 @@ const WalletMethods = () => {
       <WalletType />
       <GetPermissions />
       <GetNetwork />
+      <ChangeNetwork />
       <GetAccounts />
     </>
   );
