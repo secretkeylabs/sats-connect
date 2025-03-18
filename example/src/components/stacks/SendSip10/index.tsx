@@ -1,8 +1,11 @@
 import { Button, Card, Stack, TextInput } from '@mantine/core';
 import {
+  Pc,
+  PostCondition,
   cvToHex,
   // bufferCV,
   noneCV,
+  postConditionToHex,
   // someCV,
   standardPrincipalCV,
   uintCV,
@@ -64,6 +67,32 @@ export const SendSip10 = ({
       setForm((prevForm) => ({ ...prevForm, [fieldName]: e.target.value }));
     };
 
+  interface PostConditionsOptions {
+    contractAddress: string;
+    contractName: string;
+    assetName: string;
+    stxAddress: string;
+    amount: string | number;
+  }
+
+  const makeFungiblePostCondition = (options: PostConditionsOptions): PostCondition => {
+    const { contractAddress, contractName, assetName, stxAddress, amount } = options;
+
+    return Pc.principal(stxAddress)
+      .willSendEq(amount)
+      .ft(`${contractAddress}.${contractName}`, assetName);
+  };
+
+  const postConditions = [
+    makeFungiblePostCondition({
+      contractAddress: form.address,
+      contractName: form.contract,
+      assetName: 'leo',
+      stxAddress: stxAddressInfo?.[0].address,
+      amount: form.amount,
+    }),
+  ];
+
   const onClick = () => {
     (async () => {
       const response = await Wallet.request('stx_callContract', {
@@ -76,6 +105,8 @@ export const SendSip10 = ({
           noneCV(),
           //form.memo ? someCV(bufferCV(Buffer.from(form.memo))) : noneCV(),
         ].map((arg) => cvToHex(arg)),
+        // postConditionMode: 'deny',
+        // postConditions: postConditions.map((pc) => postConditionToHex(pc)),
       });
 
       if (response.status === 'error') {
