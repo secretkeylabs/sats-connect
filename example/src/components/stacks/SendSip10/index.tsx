@@ -105,8 +105,8 @@ export const SendSip10 = ({
           noneCV(),
           //form.memo ? someCV(bufferCV(Buffer.from(form.memo))) : noneCV(),
         ].map((arg) => cvToHex(arg)),
-        // postConditionMode: 'deny',
-        // postConditions: postConditions.map((pc) => postConditionToHex(pc)),
+        postConditionMode: 'deny',
+        postConditions: postConditions.map((pc) => postConditionToHex(pc)),
       });
 
       if (response.status === 'error') {
