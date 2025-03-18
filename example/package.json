@@ -19,6 +19,8 @@
   "dependencies": {
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
+    "@scure/base": "^1.2.4",
+    "@scure/btc-signer": "^1.7.0",
     "@stacks/common": "^7.0.2",
     "@stacks/stacking": "^7.0.2",
     "@stacks/transactions": "^7.0.2",

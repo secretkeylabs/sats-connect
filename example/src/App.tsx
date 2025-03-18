@@ -28,6 +28,7 @@ import { SendInscription } from './components/sendInscriptions';
 import AddressDisplay from './components/AddressDisplay';
 import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
+import { SignPsbt } from './components/bitcoin/SignPsbt/index.tsx';
 import { CreateInscription } from './components/createInscription/index.tsx';
 import EtchRunes from './components/EtchRunes';
 import MintRunes from './components/MintRunes';
@@ -314,6 +315,7 @@ const BitcoinMethods = () => {
         addresses={[...btcAddressInfo]}
         onDisconnect={onDisconnect}
       />
+      <SignPsbt addresses={[...btcAddressInfo]} />
       <SignMessage addresses={[...btcAddressInfo]} />
       <SendBtc network={network} />
       <SendInscription network={network} />
