@@ -85,8 +85,8 @@ export const SendSip10 = ({
 
   const postConditions = [
     makeFungiblePostCondition({
-      contractAddress: form.address,
-      contractName: form.contract,
+      contractAddress: form.contract.split('.')[0],
+      contractName: form.contract.split('.')[1],
       assetName: 'leo',
       stxAddress: stxAddressInfo?.[0].address,
       amount: form.amount,
@@ -98,7 +98,7 @@ export const SendSip10 = ({
       const response = await Wallet.request('stx_callContract', {
         contract: form.contract,
         functionName: 'transfer',
-        arguments: [
+        functionArgs: [
           uintCV(Number(form.amount)),
           standardPrincipalCV(stxAddressInfo?.[0].address),
           standardPrincipalCV(form.address),
