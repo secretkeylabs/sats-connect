@@ -40,6 +40,7 @@ export const GetRunesBalance = () => {
               <div>Inscription ID: {balance.inscriptionId}</div>
               <div>Rune name: {balance.runeName}</div>
               <div>Rune symbol: {balance.symbol}</div>
+              <div>Rune Spendable Balance: {balance.spendableBalance}</div>
             </div>
           ));
         })()}
