@@ -1,6 +1,6 @@
 {
   "name": "sats-connect",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "main": "dist/index.mjs",
   "files": [
     "dist"
@@ -24,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.6.0",
+    "@sats-connect/core": "0.6.1",
     "@sats-connect/make-default-provider-config": "0.0.10",
     "@sats-connect/ui": "0.0.7"
   },
