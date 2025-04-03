@@ -1,4 +1,6 @@
 import { Button, Card, Input } from '@mantine/core';
+import { hashMessage } from '@stacks/encryption';
+import { publicKeyFromSignatureRsv } from '@stacks/transactions';
 import { useState } from 'react';
 import Wallet, { Address } from 'sats-connect';
 
@@ -7,16 +9,26 @@ interface Props {
 }
 
 export const SignMessageStacks = ({ addresses }: Props) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('Hello, world!');
 
   const onClick = async () => {
+    const messageHash = hashMessage(message);
     const response = await Wallet.request('stx_signMessage', {
       message,
       publicKey: addresses[0]?.publicKey,
     });
     if (response.status === 'success') {
       alert(`Message signed successfully. Check console for details.`);
-      console.log(response.result);
+      console.log('Response:', response.result);
+      const sigPubKey = publicKeyFromSignatureRsv(
+        Buffer.from(messageHash).toString('hex'),
+        response.result.signature,
+      );
+      if (sigPubKey === addresses[0]?.publicKey) {
+        console.log('Message verified successfully.');
+      } else {
+        console.log('Message verification failed.');
+      }
     } else {
       console.error(response.error);
       alert('Error signing message. See console for details.');
