@@ -33,15 +33,15 @@ jobs:
         if: github.event.release.prerelease
         run: npm publish --tag prerelease
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
       - id: npm-publish-latest
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
         run: npm publish
       - id: set-dist-tag-latest
         if: ${{steps.npm-publish-latest.outcome.failure}}
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
         run: |
           VERSION=$(npm pkg get version | jq . -r)
           npm dist-tag add sats-connect@$VERSION latest
