@@ -15,7 +15,6 @@ export const SignMessageStacks = ({ addresses }: Props) => {
     const messageHash = hashMessage(message);
     const response = await Wallet.request('stx_signMessage', {
       message,
-      publicKey: addresses[0]?.publicKey,
     });
     if (response.status === 'success') {
       alert(`Message signed successfully. Check console for details.`);
