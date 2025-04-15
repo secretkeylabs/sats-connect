@@ -36,6 +36,7 @@ import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
 import { NetworkSelector } from './components/NetworkSelector';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
+import { SignMessageStacks } from './components/stacks/signMessageStacks';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
@@ -44,7 +45,6 @@ import { GetPermissions } from './components/wallet/GetPermissions.tsx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
-
 const ConnectionContext = createContext<{
   accountId: string | null;
   network: BitcoinNetworkType;
@@ -341,6 +341,7 @@ const StacksMethods = () => {
         addresses={[...stxAddressInfo]}
         onDisconnect={onDisconnect}
       />
+      <SignMessageStacks addresses={[...stxAddressInfo]} />
       <SendStx network={network} />
       <SendSip10 network={network} stxAddressInfo={stxAddressInfo} />
       {stxAddressInfo?.[0]?.publicKey ? (

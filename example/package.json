@@ -20,6 +20,7 @@
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
     "@stacks/common": "^7.0.2",
+    "@stacks/encryption": "7.0.5",
     "@stacks/stacking": "^7.0.2",
     "@stacks/transactions": "^7.0.2",
     "@tanstack/react-query": "^5.50.1",
