@@ -228,7 +228,9 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       const res = await Wallet.request('wallet_connect', {
         message: 'Cool app wants to know your addresses!',
         addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        network,
       });
+
       if (res.status === 'error') {
         console.error('Error connecting to wallet, details in terminal.');
         console.error(res);
@@ -242,7 +244,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
       setAccountId(res.result.id);
     })().catch(console.error);
-  }, [setBtcAddressInfo, setStxAddressInfo]);
+  }, [setBtcAddressInfo, setStxAddressInfo, network]);
 
   const connectionContextValue = useMemo(
     () => ({ network, btcAddressInfo, stxAddressInfo, onDisconnect, accountId }),
