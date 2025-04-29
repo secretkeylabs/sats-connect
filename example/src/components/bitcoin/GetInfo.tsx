@@ -5,7 +5,7 @@ import { ErrorMessage } from '../common';
 
 export function GetInfo() {
   const { refetch, error, data, isFetching, isError, isSuccess } = useQuery({
-    queryKey: ['getAccounts'],
+    queryKey: ['getInfo'],
     queryFn: async () => {
       const res = await request('getInfo', null);
       if (res.status === 'error') {
