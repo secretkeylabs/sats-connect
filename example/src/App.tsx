@@ -27,6 +27,7 @@ import { SendInscription } from './components/sendInscriptions';
 
 import AddressDisplay from './components/AddressDisplay';
 import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
+import { GetInfo } from './components/bitcoin/GetInfo.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
 import ChangeNetwork from './components/ChangeNetwork/index.tsx';
 import { CreateInscription } from './components/createInscription/index.tsx';
@@ -318,6 +319,7 @@ const BitcoinMethods = () => {
         addresses={[...btcAddressInfo]}
         onDisconnect={onDisconnect}
       />
+      <GetInfo />
       <SignMessage addresses={[...btcAddressInfo]} />
       <SendBtc network={network} />
       <SendInscription network={network} />
