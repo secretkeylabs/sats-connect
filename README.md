@@ -1,4 +1,4 @@
-![logo](/example/public/sats-connect.svg)
+Hazemkhatab95@gmail.com![logo](/example/public/sats-connect.svg)
 
 **[API Docs](https://docs.xverse.app/sats-connect) • [Example App](https://sats-connect.netlify.app/) • [Discord](https://discord.gg/tN84HhSDrz) • [Xverse](https://www.xverse.app/)**
 
