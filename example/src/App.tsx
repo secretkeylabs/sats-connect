@@ -150,7 +150,7 @@ const WalletMethods = () => {
 
   useEffect(() => {
     if (!isConnected) navigate('/');
-  });
+  }, [isConnected, navigate]);
 
   if (!isConnected) return;
 
@@ -179,7 +179,7 @@ const BitcoinMethods = () => {
 
   useEffect(() => {
     if (!isConnected) navigate('/');
-  });
+  }, [isConnected, navigate]);
 
   if (!isConnected) return;
 
@@ -213,7 +213,7 @@ const StacksMethods = () => {
 
   useEffect(() => {
     if (!isConnected) navigate('/');
-  });
+  }, [isConnected, navigate]);
 
   if (!isConnected) return;
 
