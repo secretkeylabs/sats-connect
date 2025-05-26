@@ -1,13 +1,13 @@
 import { Button, Card, NativeSelect } from '@mantine/core';
 import { useState } from 'react';
-import Wallet, { BitcoinNetworkType } from 'sats-connect';
+import { BitcoinNetworkType, request } from 'sats-connect';
 
 const ChangeNetwork = () => {
   const [desiredNetwork, setDesiredNetwork] = useState<BitcoinNetworkType>(
     BitcoinNetworkType.Testnet4,
   );
   const handleChangeNetwork = async () => {
-    const response = await Wallet.request('wallet_changeNetwork', {
+    const response = await request('wallet_changeNetwork', {
       name: desiredNetwork,
     });
 

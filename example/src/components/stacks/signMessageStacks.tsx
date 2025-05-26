@@ -2,7 +2,7 @@ import { Button, Card, Input } from '@mantine/core';
 import { hashMessage } from '@stacks/encryption';
 import { publicKeyFromSignatureRsv } from '@stacks/transactions';
 import { useState } from 'react';
-import Wallet, { Address } from 'sats-connect';
+import { Address, request } from 'sats-connect';
 
 interface Props {
   addresses: Address[];
@@ -13,7 +13,7 @@ export const SignMessageStacks = ({ addresses }: Props) => {
 
   const onClick = async () => {
     const messageHash = hashMessage(message);
-    const response = await Wallet.request('stx_signMessage', {
+    const response = await request('stx_signMessage', {
       message,
     });
     if (response.status === 'success') {

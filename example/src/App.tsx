@@ -11,9 +11,10 @@ import {
   RouterProvider,
   useNavigate,
 } from 'react-router-dom';
-import Wallet, {
+import {
   AddressPurpose,
   BitcoinNetworkType,
+  request,
   RpcErrorCode,
   type Address,
 } from 'sats-connect';
@@ -91,7 +92,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
   const onDisconnect = useCallback(() => {
     (async () => {
-      await Wallet.disconnect();
+      await request('wallet_disconnect', null);
       clearAppData();
     })().catch(console.error);
   }, [clearAppData]);
@@ -111,7 +112,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
       // Attempt to get the new account details.
       (async () => {
-        const res = await Wallet.request('wallet_getAccount', undefined);
+        const res = await request('wallet_getAccount', undefined);
 
         if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
           // The app doesn't have permission to read from this account. Clear
@@ -152,7 +153,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
   // data.
   useEffect(() => {
     (async function () {
-      const res = await Wallet.request('wallet_getAccount', undefined);
+      const res = await request('wallet_getAccount', undefined);
 
       if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
         // The app doesn't have permission to read from this account. Clear
@@ -184,7 +185,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
   const handleLegacyConnectWithGetAccounts = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('getAccounts', {
+      const response = await request('getAccounts', {
         purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
         message: 'Cool app wants to know your addresses!',
       });
@@ -197,13 +198,13 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
   const handleLegacyConnectWithRequestPermissions = useCallback(() => {
     (async () => {
-      const res = await Wallet.request('wallet_requestPermissions', undefined);
+      const res = await request('wallet_requestPermissions', undefined);
       if (res.status === 'error') {
         console.error('Error connecting to wallet, details in terminal.');
         console.error(res);
         return;
       }
-      const res2 = await Wallet.request('getAddresses', {
+      const res2 = await request('getAddresses', {
         purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
       });
       if (res2.status === 'error') {
@@ -212,7 +213,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
         return;
       }
       setBtcAddressInfo(res2.result.addresses);
-      const res3 = await Wallet.request('stx_getAddresses', null);
+      const res3 = await request('stx_getAddresses', null);
       if (res3.status === 'error') {
         alert(
           'Error retrieving stacks addresses after having requested permissions. Details in terminal.',
@@ -226,11 +227,14 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
   const handleConnect = useCallback(() => {
     (async () => {
-      const res = await Wallet.request('wallet_connect', {
+      const method = 'wallet_connect';
+      const options = {
         message: 'Cool app wants to know your addresses!',
         addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
         network,
-      });
+      };
+      console.log(`called request("${method}") with options:`, options);
+      const res = await request(method, options);
 
       if (res.status === 'error') {
         console.error('Error connecting to wallet, details in terminal.');

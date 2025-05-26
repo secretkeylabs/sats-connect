@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import Wallet, { BitcoinNetworkType } from 'sats-connect';
+import { BitcoinNetworkType, request } from 'sats-connect';
 import { Button, Card, Input, Success } from '../../App.styles';
 import { getMempoolEndpoint } from '../../util';
 
@@ -38,7 +38,7 @@ const TransferRunes = ({ network }: Props) => {
 
   const onClick = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('runes_transfer', {
+      const response = await request('runes_transfer', {
         recipients,
       });
 

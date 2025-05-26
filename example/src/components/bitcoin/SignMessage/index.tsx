@@ -2,7 +2,7 @@ import { Button, Card, Input, NativeSelect } from '@mantine/core';
 import { Verifier } from 'bip322-js';
 import { verify } from 'bitcoinjs-message';
 import { useState } from 'react';
-import Wallet, { Address, MessageSigningProtocols, RpcErrorCode } from 'sats-connect';
+import { Address, MessageSigningProtocols, RpcErrorCode, request } from 'sats-connect';
 
 interface Props {
   addresses: Address[];
@@ -14,7 +14,7 @@ export const SignMessage = ({ addresses }: Props) => {
   const [protocol, setProtocol] = useState(MessageSigningProtocols.ECDSA);
 
   const onClick = async () => {
-    const response = await Wallet.request('signMessage', {
+    const response = await request('signMessage', {
       message,
       address,
       protocol: protocol ? (protocol as MessageSigningProtocols) : MessageSigningProtocols.ECDSA,

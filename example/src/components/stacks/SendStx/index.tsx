@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import Wallet, { BitcoinNetworkType } from 'sats-connect';
+import { BitcoinNetworkType, request } from 'sats-connect';
 import { Button, Card, Input, Success } from '../../../App.styles';
 
 interface Props {
@@ -14,7 +14,7 @@ export const SendStx = ({ network }: Props) => {
 
   const onClick = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('stx_transferStx', {
+      const response = await request('stx_transferStx', {
         recipient: address,
         amount: +amount,
         memo: memo === '' ? undefined : memo,

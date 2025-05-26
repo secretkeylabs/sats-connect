@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import Wallet from 'sats-connect';
+import { request } from 'sats-connect';
 import { Button, Card } from '../../App.styles';
 import { ErrorMessage } from '../common';
 
@@ -7,7 +7,7 @@ export function WalletType() {
   const { refetch, error, data, isFetching, isError, isSuccess } = useQuery({
     queryKey: ['wallet_getWalletType'],
     queryFn: async () => {
-      const res = await Wallet.request('wallet_getWalletType', undefined);
+      const res = await request('wallet_getWalletType', undefined);
       if (res.status === 'error') {
         throw new Error('Error getting wallet type', { cause: res.error });
       }

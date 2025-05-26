@@ -9,7 +9,7 @@ import {
   standardPrincipalCV,
   uintCV,
 } from '@stacks/transactions';
-import Wallet from 'sats-connect';
+import { request } from 'sats-connect';
 
 const helloWorldContractBody = `
 (define-data-var greeting (string-ascii 100) "Hello, World!")
@@ -111,7 +111,7 @@ export async function mutationFunction({
     transactions.push(transaction);
   }
 
-  const res = await Wallet.request('stx_signTransactions', {
+  const res = await request('stx_signTransactions', {
     transactions: transactions.map((t) => t.serialize()),
     broadcast,
   });

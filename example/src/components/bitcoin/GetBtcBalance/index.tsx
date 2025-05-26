@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import Wallet from 'sats-connect';
+import { request } from 'sats-connect';
 import { Button, Card } from '../../../App.styles';
 
 export const GetBtcBalance = () => {
@@ -9,7 +9,7 @@ export const GetBtcBalance = () => {
 
   const onClick = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('getBalance', undefined);
+      const response = await request('getBalance', undefined);
 
       if (response.status === 'error') {
         console.error(response.error);

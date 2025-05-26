@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import Wallet, { Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
+import { Address, AddressPurpose, BitcoinNetworkType, request } from 'sats-connect';
 import { Button, Card, H4, Input, Success } from '../../App.styles';
 
 interface Props {
@@ -27,7 +27,7 @@ export const MintRunes = ({ addresses, network }: Props) => {
 
   const onClickEstimate = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('runes_estimateMint', {
+      const response = await request('runes_estimateMint', {
         destinationAddress: ordinalsAddress,
         feeRate: +feeRate,
         repeats: +repeats,
@@ -47,7 +47,7 @@ export const MintRunes = ({ addresses, network }: Props) => {
 
   const onClickExecute = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('runes_mint', {
+      const response = await request('runes_mint', {
         destinationAddress: ordinalsAddress,
         feeRate: +feeRate,
         repeats: +repeats,

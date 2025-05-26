@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import Wallet, { AddressPurpose } from 'sats-connect';
+import { AddressPurpose, request } from 'sats-connect';
 import { Button, Card } from '../../App.styles';
 import { ErrorMessage } from '../common';
 
@@ -7,7 +7,7 @@ export function GetAccounts() {
   const { refetch, error, data, isFetching, isError, isSuccess } = useQuery({
     queryKey: ['getAccounts'],
     queryFn: async () => {
-      const res = await Wallet.request('getAccounts', {
+      const res = await request('getAccounts', {
         purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
       });
       if (res.status === 'error') {

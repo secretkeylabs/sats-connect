@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import Wallet, { Address, AddressPurpose, BitcoinNetworkType } from 'sats-connect';
+import { Address, AddressPurpose, BitcoinNetworkType, request } from 'sats-connect';
 import { Button, Card, H4, Input, Success } from '../../App.styles';
 import { Container } from './index.styles';
 
@@ -35,7 +35,7 @@ export const EtchRunes = ({ addresses, network }: Props) => {
 
   const onClickEstimate = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('runes_estimateEtch', {
+      const response = await request('runes_estimateEtch', {
         destinationAddress: ordinalsAddress,
         feeRate: +feeRate,
         symbol: symbol || undefined,
@@ -86,7 +86,7 @@ export const EtchRunes = ({ addresses, network }: Props) => {
 
   const onClickExecute = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('runes_etch', {
+      const response = await request('runes_etch', {
         destinationAddress: ordinalsAddress,
         symbol: symbol || undefined,
         premine: preMine || undefined,
