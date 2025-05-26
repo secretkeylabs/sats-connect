@@ -133,8 +133,6 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
       setAccountId(res.result.id);
 
-      console.log('navigate to /wallet');
-
       navigate('/wallet');
     })().catch(console.error);
   }, [navigate, setAccountId, setBtcAddressInfo, setStxAddressInfo]);
