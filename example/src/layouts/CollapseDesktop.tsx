@@ -1,8 +1,9 @@
 import { AppShell, Burger, Group, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { Link } from 'react-router-dom';
 import { Logo } from '../App.styles';
 
-export function CollapseDesktop({ children }: React.PropsWithChildren<{}>) {
+export function CollapseDesktop({ children }: React.PropsWithChildren) {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
@@ -27,8 +28,13 @@ export function CollapseDesktop({ children }: React.PropsWithChildren<{}>) {
         {[
           {
             icon: 'home',
-            label: 'Wallet',
+            label: 'Home',
             href: '/',
+          },
+          {
+            icon: 'wallet',
+            label: 'Wallet',
+            href: '/wallet',
           },
           {
             icon: 'bitcoin',
@@ -41,12 +47,12 @@ export function CollapseDesktop({ children }: React.PropsWithChildren<{}>) {
             href: '/stacks-methods',
           },
           {
-            icon: 'home',
+            icon: 'mobile-home',
             label: 'Mobile Universal Link',
             href: '/mobile-universal-link',
           },
         ].map(({ label, href }) => (
-          <NavLink key={href} href={href} label={label} />
+          <NavLink key={href} to={href} label={label} component={Link} />
         ))}
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>

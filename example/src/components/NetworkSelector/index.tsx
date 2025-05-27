@@ -1,13 +1,12 @@
+import { useCallback } from 'react';
 import { BitcoinNetworkType } from 'sats-connect';
 import { Action, Button } from '../../App.styles';
+import { useGlobalState } from '../GlobalStateProvider/use-global-state';
 
-interface Props {
-  network: BitcoinNetworkType;
-  setNetwork: (newNetwork: BitcoinNetworkType) => void;
-}
+export const NetworkSelector = () => {
+  const { setNetwork, network } = useGlobalState();
 
-export const NetworkSelector = ({ network, setNetwork }: Props) => {
-  const onNetworkChange = () => {
+  const onNetworkChange = useCallback(() => {
     const newNetwork =
       network === BitcoinNetworkType.Mainnet
         ? BitcoinNetworkType.Testnet4
@@ -17,7 +16,7 @@ export const NetworkSelector = ({ network, setNetwork }: Props) => {
         ? BitcoinNetworkType.Testnet
         : BitcoinNetworkType.Mainnet;
     setNetwork(newNetwork);
-  };
+  }, [network, setNetwork]);
 
   return (
     <>

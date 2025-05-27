@@ -1,7 +1,7 @@
-import { Container, createTheme, MantineProvider, Stack } from '@mantine/core';
+import { createTheme, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
-import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -11,14 +11,7 @@ import {
   RouterProvider,
   useNavigate,
 } from 'react-router-dom';
-import Wallet, {
-  AddressPurpose,
-  BitcoinNetworkType,
-  request,
-  RpcErrorCode,
-  type Address,
-} from 'sats-connect';
-import { Button, ConnectButtonsContainer, Header, Logo } from './App.styles';
+import Wallet, { AddressPurpose, request, RpcErrorCode } from 'sats-connect';
 import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
 import { SignMessage } from './components/bitcoin/SignMessage';
@@ -31,11 +24,13 @@ import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { GetInfo } from './components/bitcoin/GetInfo.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
 import ChangeNetwork from './components/ChangeNetwork/index.tsx';
+import { Connect } from './components/Connect/index.tsx';
 import { CreateInscription } from './components/createInscription/index.tsx';
 import EtchRunes from './components/EtchRunes';
+import { GlobalStateProvider } from './components/GlobalStateProvider/index.tsx';
+import { useGlobalState } from './components/GlobalStateProvider/use-global-state.tsx';
 import MintRunes from './components/MintRunes';
 import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
-import { NetworkSelector } from './components/NetworkSelector';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignMessageStacks } from './components/stacks/signMessageStacks';
@@ -46,58 +41,15 @@ import { GetNetwork } from './components/wallet/GetNetwork.tsx';
 import { GetPermissions } from './components/wallet/GetPermissions.tsx';
 import WalletConnect from './components/wallet/WalletConnect.tsx';
 import { WalletType } from './components/wallet/WalletType';
-import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
-const ConnectionContext = createContext<{
-  accountId: string | null;
-  network: BitcoinNetworkType;
-  btcAddressInfo: Address[];
-  stxAddressInfo: Address[];
-  onDisconnect: () => void;
-}>({
-  accountId: null,
-  network: BitcoinNetworkType.Mainnet,
-  btcAddressInfo: [],
-  stxAddressInfo: [],
-  onDisconnect: () => {
-    console.log('onDisconnect not implemented');
-  },
-});
-
-const useConnectionContext = () => useContext(ConnectionContext);
-
-const whiteListedPaths = ['/mobile-universal-link'];
 
 function AppWithProviders({ children }: React.PropsWithChildren) {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
-    'network',
-    BitcoinNetworkType.Mainnet,
-  );
-  const [accountId, setAccountId] = useState<string | null>(null);
-  const [btcAddressInfo, setBtcAddressInfo] = useState<Address[]>([]);
-  const [stxAddressInfo, setStxAddressInfo] = useState<Address[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const isConnected = btcAddressInfo.length + stxAddressInfo.length > 0;
+  const { clearAppData, setBtcAddressInfo, setStxAddressInfo, setAccountId, isConnected } =
+    useGlobalState();
 
-  const isWhiteListedPath = whiteListedPaths.includes(window.location.pathname);
-
-  const clearAppData = useCallback(() => {
-    setAccountId(null);
-    setBtcAddressInfo([]);
-    setStxAddressInfo([]);
-    queryClient.clear();
-  }, [queryClient, setBtcAddressInfo, setStxAddressInfo, setAccountId]);
-
-  const onDisconnect = useCallback(() => {
-    (async () => {
-      await request('wallet_disconnect', null);
-      clearAppData();
-    })().catch(console.error);
-  }, [clearAppData]);
-
+  // Clear data on network change.
   useEffect(() => {
     const removeListenerNetworkChange = Wallet.addListener('networkChange', (ev) => {
       console.log('The network has changed.', ev);
@@ -107,6 +59,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
     return () => removeListenerNetworkChange();
   }, [clearAppData]);
 
+  // Attempt to auto-reconnect on account change.
   useEffect(() => {
     const removeListenerAccountChange = Wallet.addListener('accountChange', (ev) => {
       console.log('The account has changed.', ev);
@@ -120,7 +73,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
           // state and redirect to home page, where the user is prompted to
           // connect.
           clearAppData();
-          navigate('/');
+          navigate('/connect');
           return;
         }
 
@@ -139,37 +92,38 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       })().catch(console.error);
     });
 
+    return () => {
+      removeListenerAccountChange();
+    };
+  }, [clearAppData, navigate, setAccountId, setBtcAddressInfo, setStxAddressInfo]);
+
+  // Go to home screen on disconnect.
+  useEffect(() => {
+    if (!isConnected) return;
+
     const removeListenerDisconnect = Wallet.addListener('disconnect', (ev) => {
       console.log('The wallet has been disconnected. Event:', ev);
       clearAppData();
+      navigate('/');
     });
 
     return () => {
-      removeListenerAccountChange();
       removeListenerDisconnect();
     };
-  }, [clearAppData, navigate]);
+  }, [clearAppData, isConnected, navigate]);
 
-  // On initial load, check if the app has the perms it needs and load necessary
-  // data.
+  // Attempt to connect to the wallet on load.
   useEffect(() => {
     (async function () {
       const res = await request('wallet_getAccount', undefined);
 
       if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
-        // The app doesn't have permission to read from this account. Clear
-        // state and redirect to home page, where the user is prompted to
-        // connect.
-        clearAppData();
-        navigate('/');
-        setIsLoading(false);
         return;
       }
 
       if (res.status === 'error') {
         console.error('Received unexpected error while getting account details.');
         console.error(res);
-        setIsLoading(false);
         return;
       }
 
@@ -180,128 +134,32 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
       setAccountId(res.result.id);
 
-      setIsLoading(false);
+      navigate('/wallet');
     })().catch(console.error);
-  }, [clearAppData, navigate]);
+  }, [navigate, setAccountId, setBtcAddressInfo, setStxAddressInfo]);
 
-  const handleLegacyConnectWithGetAccounts = useCallback(() => {
-    (async () => {
-      const response = await request('getAccounts', {
-        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
-        message: 'Cool app wants to know your addresses!',
-      });
-      if (response.status === 'success') {
-        setBtcAddressInfo([response.result[0], response.result[1]]);
-        if (response.result[2]) setStxAddressInfo([response.result[2]]);
-      }
-    })().catch(console.error);
-  }, [setBtcAddressInfo, setStxAddressInfo]);
-
-  const handleLegacyConnectWithRequestPermissions = useCallback(() => {
-    (async () => {
-      const res = await request('wallet_requestPermissions', undefined);
-      if (res.status === 'error') {
-        console.error('Error connecting to wallet, details in terminal.');
-        console.error(res);
-        return;
-      }
-      const res2 = await request('getAddresses', {
-        purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
-      });
-      if (res2.status === 'error') {
-        console.error('Error retrieving bitcoin addresses after having requested permissions.');
-        console.error(res2);
-        return;
-      }
-      setBtcAddressInfo(res2.result.addresses);
-      const res3 = await request('stx_getAddresses', null);
-      if (res3.status === 'error') {
-        alert(
-          'Error retrieving stacks addresses after having requested permissions. Details in terminal.',
-        );
-        console.error(res3);
-        return;
-      }
-      setStxAddressInfo(res3.result.addresses);
-    })().catch(console.error);
-  }, [setBtcAddressInfo, setStxAddressInfo]);
-
-  const handleConnect = useCallback(() => {
-    (async () => {
-      const method = 'wallet_connect';
-      const options = {
-        message: 'Cool app wants to know your addresses!',
-        addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
-        network,
-      };
-      console.log(`called request("${method}") with options:`, options);
-      const res = await request(method, options);
-
-      if (res.status === 'error') {
-        console.error('Error connecting to wallet, details in terminal.');
-        console.error(res);
-        return;
-      }
-      console.log('Connected', res);
-      const btcAddresses = res.result.addresses.filter((a) =>
-        [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
-      );
-      setBtcAddressInfo(btcAddresses);
-      setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
-      setAccountId(res.result.id);
-    })().catch(console.error);
-  }, [setBtcAddressInfo, setStxAddressInfo, network]);
-
-  const connectionContextValue = useMemo(
-    () => ({ network, btcAddressInfo, stxAddressInfo, onDisconnect, accountId }),
-    [network, btcAddressInfo, stxAddressInfo, onDisconnect, accountId],
-  );
-
-  if (isLoading) return <div>Loading...</div>;
-
-  if (!isConnected && !isWhiteListedPath) {
-    return (
-      <Container>
-        <Header>
-          <Logo src="/sats-connect.svg" alt="SatsConnect" />
-          <NetworkSelector network={network} setNetwork={setNetwork} />
-          <p>Click the button to connect your wallet</p>
-          <ConnectButtonsContainer>
-            <Button onClick={handleConnect}>Connect</Button>
-            <Button onClick={handleLegacyConnectWithRequestPermissions}>
-              wallet_requestPermissions
-            </Button>
-            <Button onClick={handleLegacyConnectWithGetAccounts}>
-              Connect (Legacy getAccounts)
-            </Button>
-          </ConnectButtonsContainer>
-        </Header>
-      </Container>
-    );
-  }
-
-  return (
-    <ConnectionContext.Provider value={connectionContextValue}>
-      <Stack>{children}</Stack>
-    </ConnectionContext.Provider>
-  );
+  return children;
 }
 
 // TODO move to pages or routes.tsx
 const WalletMethods = () => {
-  const { network, btcAddressInfo, stxAddressInfo, onDisconnect, accountId } =
-    useConnectionContext();
+  const { network, btcAddressInfo, stxAddressInfo, disconnect, accountId, isConnected } =
+    useGlobalState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isConnected) navigate('/');
+  }, [isConnected, navigate]);
+
+  if (!isConnected) return;
 
   return (
     <>
-      <div>
-        <Logo src="/sats-connect.svg" alt="SatsConnect" />
-      </div>
       <AddressDisplay
         accountId={accountId}
         network={network}
         addresses={[...btcAddressInfo, ...stxAddressInfo]}
-        onDisconnect={onDisconnect}
+        onDisconnect={disconnect}
       />
       <WalletConnect />
       <GetAddresses />
@@ -315,7 +173,15 @@ const WalletMethods = () => {
 };
 
 const BitcoinMethods = () => {
-  const { network, btcAddressInfo, onDisconnect, accountId } = useConnectionContext();
+  const { network, btcAddressInfo, disconnect, accountId, isConnected } = useGlobalState();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isConnected) navigate('/');
+  }, [isConnected, navigate]);
+
+  if (!isConnected) return;
 
   return (
     <>
@@ -323,7 +189,7 @@ const BitcoinMethods = () => {
         accountId={accountId}
         network={network}
         addresses={[...btcAddressInfo]}
-        onDisconnect={onDisconnect}
+        onDisconnect={disconnect}
       />
       <GetInfo />
       <SignMessage addresses={[...btcAddressInfo]} />
@@ -341,7 +207,15 @@ const BitcoinMethods = () => {
 };
 
 const StacksMethods = () => {
-  const { network, stxAddressInfo, onDisconnect, accountId } = useConnectionContext();
+  const { network, stxAddressInfo, disconnect, accountId, isConnected } = useGlobalState();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isConnected) navigate('/');
+  }, [isConnected, navigate]);
+
+  if (!isConnected) return;
 
   return (
     <>
@@ -349,7 +223,7 @@ const StacksMethods = () => {
         accountId={accountId}
         network={network}
         addresses={[...stxAddressInfo]}
-        onDisconnect={onDisconnect}
+        onDisconnect={disconnect}
       />
       <SignMessageStacks addresses={[...stxAddressInfo]} />
       <SendStx network={network} />
@@ -382,7 +256,8 @@ const NoMatch = () => (
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route index element={<WalletMethods />} />
+      <Route index element={<Connect />} />
+      <Route path="wallet" element={<WalletMethods />} />
       <Route path="bitcoin-methods" element={<BitcoinMethods />} />
       <Route path="stacks-methods" element={<StacksMethods />} />
       <Route path="mobile-universal-link" element={<MobileUniversalLink />} />
@@ -411,7 +286,9 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme} defaultColorScheme="dark">
-        <RouterProvider router={router} />
+        <GlobalStateProvider>
+          <RouterProvider router={router} />
+        </GlobalStateProvider>
       </MantineProvider>
     </QueryClientProvider>
   );
