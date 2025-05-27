@@ -12,7 +12,6 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import Wallet, { AddressPurpose, request, RpcErrorCode } from 'sats-connect';
-import { GetAccounts } from './components/bitcoin/GetAccounts';
 import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
 import { SignMessage } from './components/bitcoin/SignMessage';
 import { GetInscriptions } from './components/GetInscriptions';
@@ -20,7 +19,6 @@ import { GetRunesBalance } from './components/GetRunesBalance';
 import { SendInscription } from './components/sendInscriptions';
 
 import AddressDisplay from './components/AddressDisplay';
-import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { GetInfo } from './components/bitcoin/GetInfo.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
 import ChangeNetwork from './components/ChangeNetwork/index.tsx';
@@ -174,8 +172,6 @@ const WalletMethods = () => {
       <WalletGetWalletType />
       <GetNetwork />
       <ChangeNetwork />
-      <GetAddresses />
-      <GetAccounts />
     </div>
   );
 };
