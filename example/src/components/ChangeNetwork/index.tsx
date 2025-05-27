@@ -1,48 +1,41 @@
-import { Button, Card, NativeSelect } from '@mantine/core';
+import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
-import { BitcoinNetworkType, request } from 'sats-connect';
+import { BitcoinNetworkType, request, type ChangeNetworkParams } from 'sats-connect';
+import { MethodLayout } from '../../layouts/MethodLayout';
 
 const ChangeNetwork = () => {
   const [desiredNetwork, setDesiredNetwork] = useState<BitcoinNetworkType>(
-    BitcoinNetworkType.Testnet4,
+    BitcoinNetworkType.Mainnet,
   );
+  const [response, setResponse] = useState<string | null>(null);
+
   const handleChangeNetwork = async () => {
     const response = await request('wallet_changeNetwork', {
       name: desiredNetwork,
     });
+    setResponse(JSON.stringify(response, null, 2));
 
     if (response.status === 'error') {
-      alert('Error changing network check logs for more info');
-      console.error(response);
+      console.error('wallet_changeNetwork error');
       return;
     }
-
-    alert('Wallet Network changed');
   };
   return (
-    <Card>
-      <h3>Change Network</h3>
-      <div style={{ marginBottom: 15 }}>
-        <div>Network</div>
-        <NativeSelect
-          defaultValue={desiredNetwork}
-          onChange={(e) => setDesiredNetwork(e.target.value as BitcoinNetworkType)}
-        >
-          <option value={BitcoinNetworkType.Mainnet}>{BitcoinNetworkType.Mainnet}</option>
-          <option value={BitcoinNetworkType.Testnet}>{BitcoinNetworkType.Testnet}</option>
-          <option value={BitcoinNetworkType.Testnet4}>{BitcoinNetworkType.Testnet4}</option>
-          <option value={BitcoinNetworkType.Signet}>{BitcoinNetworkType.Signet}</option>
-          <option value={BitcoinNetworkType.Regtest}>{BitcoinNetworkType.Regtest}</option>
-        </NativeSelect>
-      </div>
-      <Button
-        onClick={() => {
-          handleChangeNetwork().catch(console.error);
-        }}
-      >
-        Change Network
-      </Button>
-    </Card>
+    <MethodLayout<ChangeNetworkParams>
+      method="wallet_changeNetwork"
+      docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_changenetwork"
+      options={{ name: desiredNetwork }}
+      handleRequest={() => {
+        handleChangeNetwork().catch(console.error);
+      }}
+      response={response}
+    >
+      <NativeSelect
+        defaultValue={desiredNetwork}
+        onChange={(e) => setDesiredNetwork(e.target.value as BitcoinNetworkType)}
+        data={Object.values(BitcoinNetworkType)}
+      />
+    </MethodLayout>
   );
 };
 export default ChangeNetwork;

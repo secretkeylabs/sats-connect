@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { GetCurrentPermissionsParams, request } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
-export function GetPermissions() {
+export function WalletGetCurrentPermissions() {
   const options = undefined;
 
-  const { refetch, data, error } = useQuery({
+  const { refetch, data } = useQuery({
     queryKey: ['wallet_getCurrentPermissions'],
     queryFn: async () => {
       const res = await request('wallet_getCurrentPermissions', options);
@@ -15,7 +15,6 @@ export function GetPermissions() {
 
       if (res.status === 'error') {
         console.error('wallet_getCurrentPermissions error');
-        throw new Error(res.error?.message);
       }
       return res;
     },
@@ -30,7 +29,6 @@ export function GetPermissions() {
       handleRequest={() => {
         refetch().catch(console.error);
       }}
-      error={error?.message}
       response={JSON.stringify(data, null, 2)}
       options={options}
     />

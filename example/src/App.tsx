@@ -38,9 +38,13 @@ import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
 import { GetNetwork } from './components/wallet/GetNetwork.tsx';
-import { GetPermissions } from './components/wallet/GetPermissions.tsx';
 import WalletConnect from './components/wallet/WalletConnect.tsx';
-import { WalletType } from './components/wallet/WalletType';
+import WalletDisconnect from './components/wallet/WalletDisconnect.tsx';
+import WalletGetAccount from './components/wallet/WalletGetAccount.tsx';
+import { WalletGetCurrentPermissions } from './components/wallet/WalletGetCurrentPermissions.tsx';
+import WalletRenouncePermissions from './components/wallet/WalletRenouncePermissions.tsx';
+import WalletRequestPermissions from './components/wallet/WalletRequestPermissions.tsx';
+import { WalletGetWalletType } from './components/wallet/WalletType';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
 
 function AppWithProviders({ children }: React.PropsWithChildren) {
@@ -154,7 +158,7 @@ const WalletMethods = () => {
   if (!isConnected) return;
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <AddressDisplay
         accountId={accountId}
         network={network}
@@ -162,13 +166,17 @@ const WalletMethods = () => {
         onDisconnect={disconnect}
       />
       <WalletConnect />
-      <GetAddresses />
-      <WalletType />
-      <GetPermissions />
+      <WalletDisconnect />
+      <WalletGetAccount />
+      <WalletGetCurrentPermissions />
+      <WalletRequestPermissions />
+      <WalletRenouncePermissions />
+      <WalletGetWalletType />
       <GetNetwork />
       <ChangeNetwork />
+      <GetAddresses />
       <GetAccounts />
-    </>
+    </div>
   );
 };
 
