@@ -11,7 +11,7 @@ import {
   RouterProvider,
   useNavigate,
 } from 'react-router-dom';
-import {
+import Wallet, {
   AddressPurpose,
   BitcoinNetworkType,
   request,
@@ -44,6 +44,7 @@ import { SignTransactions } from './components/stacks/SignTransactions/index.tsx
 import TransferRunes from './components/transferRunes/index.tsx';
 import { GetNetwork } from './components/wallet/GetNetwork.tsx';
 import { GetPermissions } from './components/wallet/GetPermissions.tsx';
+import WalletConnect from './components/wallet/WalletConnect.tsx';
 import { WalletType } from './components/wallet/WalletType';
 import { useLocalStorage } from './hooks';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
@@ -302,6 +303,7 @@ const WalletMethods = () => {
         addresses={[...btcAddressInfo, ...stxAddressInfo]}
         onDisconnect={onDisconnect}
       />
+      <WalletConnect />
       <GetAddresses />
       <WalletType />
       <GetPermissions />
