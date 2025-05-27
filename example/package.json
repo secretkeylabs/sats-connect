@@ -23,6 +23,7 @@
     "@stacks/encryption": "7.0.5",
     "@stacks/stacking": "^7.0.2",
     "@stacks/transactions": "^7.0.2",
+    "@tabler/icons-react": "3.33.0",
     "@tanstack/react-query": "^5.50.1",
     "bip322-js": "^2.0.0",
     "bitcoinjs-message": "^2.2.0",
