@@ -11,8 +11,7 @@ import {
   RouterProvider,
   useNavigate,
 } from 'react-router-dom';
-import Wallet, { AddressPurpose, RpcErrorCode } from 'sats-connect';
-import { GetAccounts } from './components/bitcoin/GetAccounts';
+import Wallet, { AddressPurpose, request, RpcErrorCode } from 'sats-connect';
 import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
 import { SignMessage } from './components/bitcoin/SignMessage';
 import { GetInscriptions } from './components/GetInscriptions';
@@ -20,7 +19,6 @@ import { GetRunesBalance } from './components/GetRunesBalance';
 import { SendInscription } from './components/sendInscriptions';
 
 import AddressDisplay from './components/AddressDisplay';
-import { GetAddresses } from './components/bitcoin/GetAddresses.tsx';
 import { GetInfo } from './components/bitcoin/GetInfo.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
 import ChangeNetwork from './components/ChangeNetwork/index.tsx';
@@ -38,8 +36,13 @@ import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
 import { GetNetwork } from './components/wallet/GetNetwork.tsx';
-import { GetPermissions } from './components/wallet/GetPermissions.tsx';
-import { WalletType } from './components/wallet/WalletType';
+import WalletConnect from './components/wallet/WalletConnect.tsx';
+import WalletDisconnect from './components/wallet/WalletDisconnect.tsx';
+import WalletGetAccount from './components/wallet/WalletGetAccount.tsx';
+import { WalletGetCurrentPermissions } from './components/wallet/WalletGetCurrentPermissions.tsx';
+import WalletRenouncePermissions from './components/wallet/WalletRenouncePermissions.tsx';
+import WalletRequestPermissions from './components/wallet/WalletRequestPermissions.tsx';
+import { WalletGetWalletType } from './components/wallet/WalletType';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
 
 function AppWithProviders({ children }: React.PropsWithChildren) {
@@ -65,7 +68,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
       // Attempt to get the new account details.
       (async () => {
-        const res = await Wallet.request('wallet_getAccount', undefined);
+        const res = await request('wallet_getAccount', undefined);
 
         if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
           // The app doesn't have permission to read from this account. Clear
@@ -114,7 +117,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
   // Attempt to connect to the wallet on load.
   useEffect(() => {
     (async function () {
-      const res = await Wallet.request('wallet_getAccount', undefined);
+      const res = await request('wallet_getAccount', undefined);
 
       if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
         return;
@@ -153,20 +156,23 @@ const WalletMethods = () => {
   if (!isConnected) return;
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <AddressDisplay
         accountId={accountId}
         network={network}
         addresses={[...btcAddressInfo, ...stxAddressInfo]}
         onDisconnect={disconnect}
       />
-      <GetAddresses />
-      <WalletType />
-      <GetPermissions />
+      <WalletConnect />
+      <WalletDisconnect />
+      <WalletGetAccount />
+      <WalletGetCurrentPermissions />
+      <WalletRequestPermissions />
+      <WalletRenouncePermissions />
+      <WalletGetWalletType />
       <GetNetwork />
       <ChangeNetwork />
-      <GetAccounts />
-    </>
+    </div>
   );
 };
 

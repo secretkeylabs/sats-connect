@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import Wallet from 'sats-connect';
+import { request } from 'sats-connect';
 import { Button, Card } from '../../App.styles';
 
 export const GetInscriptions = () => {
   const onClick = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('ord_getInscriptions', {
+      const response = await request('ord_getInscriptions', {
         limit: 100,
         offset: 0,
       });

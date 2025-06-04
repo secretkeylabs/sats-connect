@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import Wallet, { BitcoinNetworkType } from 'sats-connect';
+import { BitcoinNetworkType, request } from 'sats-connect';
 import { Button, Card, Input, Success } from '../../App.styles';
 
 interface Props {
@@ -34,7 +34,7 @@ export const SendInscription = ({ network }: Props) => {
 
   const onClick = useCallback(() => {
     (async () => {
-      const response = await Wallet.request('ord_sendInscriptions', {
+      const response = await request('ord_sendInscriptions', {
         transfers: recipients.map((r) => ({
           address: r.address,
           inscriptionId: r.inscriptionId,

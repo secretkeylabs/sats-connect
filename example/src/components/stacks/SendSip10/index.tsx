@@ -11,7 +11,7 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { ChangeEventHandler, useState } from 'react';
-import Wallet, { Address, BitcoinNetworkType } from 'sats-connect';
+import { Address, BitcoinNetworkType, request } from 'sats-connect';
 import { Success } from '../../../App.styles';
 
 // TODO use emptry strings once done testing
@@ -95,7 +95,7 @@ export const SendSip10 = ({
 
   const onClick = () => {
     (async () => {
-      const response = await Wallet.request('stx_callContract', {
+      const response = await request('stx_callContract', {
         contract: form.contract,
         functionName: 'transfer',
         functionArgs: [
