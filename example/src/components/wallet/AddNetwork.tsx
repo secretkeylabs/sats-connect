@@ -8,7 +8,7 @@ export const AddNetwork = () => {
   const [options, setOptions] = useState<Extract<AddNetworkParams, { chain: 'bitcoin' }>>({
     chain: 'bitcoin',
     name: 'My Custom Regtest',
-    networkType: BitcoinNetworkType.Regtest,
+    type: BitcoinNetworkType.Regtest,
     indexerUrl: 'https://api-3.xverse.app',
     rpcUrl: 'http://localhost:18444',
   });
@@ -50,13 +50,15 @@ export const AddNetwork = () => {
       />
       <div>Network type</div>
       <NativeSelect
+        defaultValue="Regtest"
         data={Object.values(BitcoinNetworkType)}
         onChange={(e) =>
           setOptions((prev) => ({
             ...prev,
-            networkType: e.target.value as BitcoinNetworkType,
+            type: e.target.value as BitcoinNetworkType,
           }))
         }
+        disabled
       />
       <div>Name</div>
       <Input
