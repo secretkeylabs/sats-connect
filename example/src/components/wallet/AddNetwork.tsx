@@ -72,19 +72,24 @@ export const AddNetwork = () => {
         value={options.rpcUrl}
         onChange={(e) => setOptions((prev) => ({ ...prev, rpcUrl: e.target.value }))}
       />
-      <div>RPC URL - fallback</div>
+      <div>RPC URL - fallback (optional)</div>
       <Input
         type="text"
         value={options.rpcFallbackUrl}
-        onChange={(e) => setOptions((prev) => ({ ...prev, rpcFallbackUrl: e.target.value }))}
+        onChange={(e) =>
+          setOptions((prev) => ({
+            ...prev,
+            rpcFallbackUrl: e.target.value ? e.target.value : undefined,
+          }))
+        }
       />
-      <div>Indexer URL</div>
+      <div>Indexer URL (optional)</div>
       <Input
         type="text"
         value={options.indexerUrl}
         onChange={(e) => setOptions((prev) => ({ ...prev, indexerUrl: e.target.value }))}
       />
-      <div>Block explorer URL</div>
+      <div>Block explorer URL (optional)</div>
       <Input
         type="text"
         value={options.blockExplorerUrl}
