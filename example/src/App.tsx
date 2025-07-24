@@ -35,6 +35,7 @@ import { SignMessageStacks } from './components/stacks/signMessageStacks';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
 import TransferRunes from './components/transferRunes/index.tsx';
+import { AddNetwork } from './components/wallet/AddNetwork.tsx';
 import { GetNetwork } from './components/wallet/GetNetwork.tsx';
 import WalletConnect from './components/wallet/WalletConnect.tsx';
 import WalletDisconnect from './components/wallet/WalletDisconnect.tsx';
@@ -172,6 +173,7 @@ const WalletMethods = () => {
       <WalletGetWalletType />
       <GetNetwork />
       <ChangeNetwork />
+      <AddNetwork />
     </div>
   );
 };

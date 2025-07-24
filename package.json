@@ -24,9 +24,10 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.6.5",
+    "@sats-connect/core": "0.6.10-3d7e822",
     "@sats-connect/make-default-provider-config": "0.0.10",
-    "@sats-connect/ui": "0.0.7"
+    "@sats-connect/ui": "0.0.7",
+    "valibot": "1.1.0"
   },
   "devDependencies": {
     "husky": "8.0.3",
@@ -36,7 +37,8 @@
     "rimraf": "3.0.2",
     "ts-jest": "29.0.5",
     "tsup": "8.0.2",
-    "typescript": "5.4.4"
+    "typescript": "5.4.4",
+    "vite-plugin-node-polyfills": "0.24.0"
   },
   "repository": {
     "type": "git",
