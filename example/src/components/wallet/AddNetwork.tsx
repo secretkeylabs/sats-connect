@@ -1,4 +1,4 @@
-import { Input, NativeSelect } from '@mantine/core';
+import { Input, NativeSelect, Switch } from '@mantine/core';
 import { useState } from 'react';
 import { BitcoinNetworkType, request, type AddNetworkParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
@@ -11,6 +11,7 @@ export const AddNetwork = () => {
     type: BitcoinNetworkType.Regtest,
     indexerUrl: 'https://api-3.xverse.app',
     rpcUrl: 'http://localhost:18444',
+    switch: false,
   });
 
   const handleRequest = () => {
@@ -94,6 +95,15 @@ export const AddNetwork = () => {
         type="text"
         value={options.blockExplorerUrl}
         onChange={(e) => setOptions((prev) => ({ ...prev, blockExplorerUrl: e.target.value }))}
+      />
+      <Switch
+        label="Switch"
+        checked={options.switch}
+        onChange={(e) => {
+          setOptions((prev) => {
+            return { ...prev, switch: e.target.checked };
+          });
+        }}
       />
     </MethodLayout>
   );
