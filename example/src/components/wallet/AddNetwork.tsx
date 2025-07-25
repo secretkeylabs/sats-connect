@@ -35,7 +35,7 @@ export const AddNetwork = () => {
   return (
     <MethodLayout<AddNetworkParams>
       method="wallet_addNetwork"
-      docsUrl="https://docs.xverse.app#TODO"
+      docsUrl="https://docs.xverse.app#"
       options={options}
       handleRequest={handleRequest}
       response={response}
