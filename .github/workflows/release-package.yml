@@ -35,11 +35,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
       - id: npm-publish-latest
+        if: ${{github.event.release.prerelease == false}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
         run: npm publish
       - id: set-dist-tag-latest
-        if: ${{steps.npm-publish-latest.outcome.failure}}
+        if: ${{failure() && steps.npm-publish-latest.outcome == 'failure'}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
         run: |
