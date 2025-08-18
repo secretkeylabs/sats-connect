@@ -54,9 +54,12 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
   // Clear data on network change.
   useEffect(() => {
-    const removeListenerNetworkChange = Wallet.addListener('networkChange', (ev) => {
-      console.log('The network has changed.', ev);
-      clearAppData();
+    const removeListenerNetworkChange = Wallet.addListener({
+      eventName: 'networkChange',
+      cb: (ev) => {
+        console.log('The network has changed.', ev);
+        clearAppData();
+      },
     });
 
     return () => removeListenerNetworkChange();
@@ -64,35 +67,40 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 
   // Attempt to auto-reconnect on account change.
   useEffect(() => {
-    const removeListenerAccountChange = Wallet.addListener('accountChange', (ev) => {
-      console.log('The account has changed.', ev);
+    const removeListenerAccountChange = Wallet.addListener({
+      eventName: 'accountChange',
+      cb: (ev) => {
+        console.log('The account has changed.', ev);
 
-      // Attempt to get the new account details.
-      (async () => {
-        const res = await request('wallet_getAccount', undefined);
+        // Attempt to get the new account details.
+        (async () => {
+          const res = await request('wallet_getAccount', undefined);
 
-        if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
-          // The app doesn't have permission to read from this account. Clear
-          // state and redirect to home page, where the user is prompted to
-          // connect.
-          clearAppData();
-          navigate('/connect');
-          return;
-        }
+          if (res.status === 'error' && res.error.code === (RpcErrorCode.ACCESS_DENIED as number)) {
+            // The app doesn't have permission to read from this account. Clear
+            // state and redirect to home page, where the user is prompted to
+            // connect.
+            clearAppData();
+            navigate('/connect');
+            return;
+          }
 
-        if (res.status === 'error') {
-          console.error('Received unexpected error while getting account details.');
-          console.error(res);
-          return;
-        }
+          if (res.status === 'error') {
+            console.error('Received unexpected error while getting account details.');
+            console.error(res);
+            return;
+          }
 
-        const btcAddresses = res.result.addresses.filter((a) =>
-          [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
-        );
-        setBtcAddressInfo(btcAddresses);
-        setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
-        setAccountId(res.result.id);
-      })().catch(console.error);
+          const btcAddresses = res.result.addresses.filter((a) =>
+            [AddressPurpose.Ordinals, AddressPurpose.Payment].includes(a.purpose),
+          );
+          setBtcAddressInfo(btcAddresses);
+          setStxAddressInfo(
+            res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks),
+          );
+          setAccountId(res.result.id);
+        })().catch(console.error);
+      },
     });
 
     return () => {
@@ -104,10 +112,13 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
   useEffect(() => {
     if (!isConnected) return;
 
-    const removeListenerDisconnect = Wallet.addListener('disconnect', (ev) => {
-      console.log('The wallet has been disconnected. Event:', ev);
-      clearAppData();
-      navigate('/');
+    const removeListenerDisconnect = Wallet.addListener({
+      eventName: 'disconnect',
+      cb: (ev) => {
+        console.log('The wallet has been disconnected. Event:', ev);
+        clearAppData();
+        navigate('/');
+      },
     });
 
     return () => {

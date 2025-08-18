@@ -109,7 +109,7 @@ class Wallet {
     return response;
   }
 
-  public addListener: AddListener = (event, cb) => {
+  public addListener: AddListener = (listenerInfo) => {
     const defaultProvider = getDefaultProvider();
     if (!this.isProviderSet() && defaultProvider) {
       this.providerId = defaultProvider;
@@ -135,7 +135,7 @@ class Wallet {
       return () => {};
     }
 
-    return new adapter().addListener(event, cb);
+    return new adapter().addListener(listenerInfo);
   };
 }
 
