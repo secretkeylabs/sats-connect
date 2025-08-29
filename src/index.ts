@@ -1,5 +1,6 @@
 import {
   BaseAdapter,
+  ListenerInfo,
   Params,
   Requests,
   RpcErrorCode,
@@ -109,7 +110,18 @@ class Wallet {
     return response;
   }
 
-  public addListener: AddListener = (event, cb) => {
+  public addListener: AddListener = (...rawArgs) => {
+    const listenerInfo: ListenerInfo = (() => {
+      if (rawArgs.length === 1) return rawArgs[0];
+
+      // Assume legacy request with 2 params
+      const actualArgs: unknown[] = rawArgs;
+      return {
+        eventName: actualArgs[0],
+        cb: actualArgs[1],
+      } as ListenerInfo;
+    })();
+
     const defaultProvider = getDefaultProvider();
     if (!this.isProviderSet() && defaultProvider) {
       this.providerId = defaultProvider;
@@ -135,7 +147,7 @@ class Wallet {
       return () => {};
     }
 
-    return new adapter().addListener(event, cb);
+    return new adapter().addListener(listenerInfo);
   };
 }
 
