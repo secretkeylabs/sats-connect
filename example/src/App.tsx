@@ -29,6 +29,12 @@ import { GlobalStateProvider } from './components/GlobalStateProvider/index.tsx'
 import { useGlobalState } from './components/GlobalStateProvider/use-global-state.tsx';
 import MintRunes from './components/MintRunes';
 import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
+import {
+  SparkGetAddresses,
+  SparkGetBalance,
+  SparkTransfer,
+  SparkTransferToken,
+} from './components/spark/index.tsx';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignMessageStacks } from './components/stacks/signMessageStacks';
@@ -49,8 +55,15 @@ import { CollapseDesktop } from './layouts/CollapseDesktop';
 function AppWithProviders({ children }: React.PropsWithChildren) {
   const navigate = useNavigate();
 
-  const { clearAppData, setBtcAddressInfo, setStxAddressInfo, setAccountId, isConnected } =
-    useGlobalState();
+  const {
+    clearAppData,
+    setBtcAddressInfo,
+    setStxAddressInfo,
+    setSparkAddressInfo,
+    setStarknetAddressInfo,
+    setAccountId,
+    isConnected,
+  } = useGlobalState();
 
   // Clear data on network change.
   useEffect(() => {
@@ -98,6 +111,12 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
           setStxAddressInfo(
             res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks),
           );
+          setSparkAddressInfo(
+            res.result.addresses.filter((a) => a.purpose === AddressPurpose.Spark),
+          );
+          setStarknetAddressInfo(
+            res.result.addresses.filter((a) => a.purpose === AddressPurpose.Starknet),
+          );
           setAccountId(res.result.id);
         })().catch(console.error);
       },
@@ -106,7 +125,15 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
     return () => {
       removeListenerAccountChange();
     };
-  }, [clearAppData, navigate, setAccountId, setBtcAddressInfo, setStxAddressInfo]);
+  }, [
+    clearAppData,
+    navigate,
+    setAccountId,
+    setBtcAddressInfo,
+    setSparkAddressInfo,
+    setStarknetAddressInfo,
+    setStxAddressInfo,
+  ]);
 
   // Go to home screen on disconnect.
   useEffect(() => {
@@ -146,19 +173,38 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       );
       setBtcAddressInfo(btcAddresses);
       setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
+      setSparkAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Spark));
+      setStarknetAddressInfo(
+        res.result.addresses.filter((a) => a.purpose === AddressPurpose.Starknet),
+      );
       setAccountId(res.result.id);
 
       navigate('/wallet');
     })().catch(console.error);
-  }, [navigate, setAccountId, setBtcAddressInfo, setStxAddressInfo]);
+  }, [
+    navigate,
+    setAccountId,
+    setBtcAddressInfo,
+    setSparkAddressInfo,
+    setStarknetAddressInfo,
+    setStxAddressInfo,
+  ]);
 
   return children;
 }
 
 // TODO move to pages or routes.tsx
 const WalletMethods = () => {
-  const { network, btcAddressInfo, stxAddressInfo, disconnect, accountId, isConnected } =
-    useGlobalState();
+  const {
+    network,
+    btcAddressInfo,
+    stxAddressInfo,
+    sparkAddressInfo,
+    starknetAddressInfo,
+    disconnect,
+    accountId,
+    isConnected,
+  } = useGlobalState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -172,7 +218,12 @@ const WalletMethods = () => {
       <AddressDisplay
         accountId={accountId}
         network={network}
-        addresses={[...btcAddressInfo, ...stxAddressInfo]}
+        addresses={[
+          ...btcAddressInfo,
+          ...stxAddressInfo,
+          ...sparkAddressInfo,
+          ...starknetAddressInfo,
+        ]}
         onDisconnect={disconnect}
       />
       <WalletConnect />
@@ -239,16 +290,43 @@ const StacksMethods = () => {
       <AddressDisplay
         accountId={accountId}
         network={network}
-        addresses={[...stxAddressInfo]}
+        addresses={stxAddressInfo}
         onDisconnect={disconnect}
       />
-      <SignMessageStacks addresses={[...stxAddressInfo]} />
+      <SignMessageStacks addresses={stxAddressInfo} />
       <SendStx network={network} />
       <SendSip10 network={network} stxAddressInfo={stxAddressInfo} />
       {stxAddressInfo?.[0]?.publicKey ? (
         <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
       ) : null}
       <SignTransactions publicKey={stxAddressInfo[0].publicKey} />
+    </>
+  );
+};
+
+const SparkMethods = () => {
+  const { network, sparkAddressInfo, disconnect, accountId, isConnected } = useGlobalState();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isConnected) navigate('/');
+  }, [isConnected, navigate]);
+
+  if (!isConnected) return;
+
+  return (
+    <>
+      <AddressDisplay
+        accountId={accountId}
+        network={network}
+        addresses={sparkAddressInfo}
+        onDisconnect={disconnect}
+      />
+      <SparkGetBalance />
+      <SparkGetAddresses />
+      <SparkTransfer network={network} />
+      <SparkTransferToken network={network} />
     </>
   );
 };
@@ -277,6 +355,7 @@ const router = createBrowserRouter(
       <Route path="wallet" element={<WalletMethods />} />
       <Route path="bitcoin-methods" element={<BitcoinMethods />} />
       <Route path="stacks-methods" element={<StacksMethods />} />
+      <Route path="spark-methods" element={<SparkMethods />} />
       <Route path="mobile-universal-link" element={<MobileUniversalLink />} />
       <Route path="*" element={<NoMatch />} />
     </Route>,

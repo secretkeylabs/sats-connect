@@ -8,16 +8,27 @@ import { NetworkSelector } from '../NetworkSelector';
 
 export function Connect() {
   const navigate = useNavigate();
-  const { setBtcAddressInfo, setStxAddressInfo, setAccountId } = useGlobalState();
-
-  const { network, isConnected, disconnect } = useGlobalState();
+  const {
+    isConnected,
+    disconnect,
+    setBtcAddressInfo,
+    setStxAddressInfo,
+    setSparkAddressInfo,
+    setStarknetAddressInfo,
+    setAccountId,
+  } = useGlobalState();
 
   const handleConnect = useCallback(() => {
     (async () => {
       const res = await Wallet.request('wallet_connect', {
         message: 'Cool app wants to know your addresses!',
-        addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
-        network,
+        addresses: [
+          AddressPurpose.Payment,
+          AddressPurpose.Ordinals,
+          AddressPurpose.Stacks,
+          AddressPurpose.Spark,
+          AddressPurpose.Starknet,
+        ],
       });
 
       if (res.status === 'error') {
@@ -31,11 +42,22 @@ export function Connect() {
       );
       setBtcAddressInfo(btcAddresses);
       setStxAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Stacks));
+      setSparkAddressInfo(res.result.addresses.filter((a) => a.purpose === AddressPurpose.Spark));
+      setStarknetAddressInfo(
+        res.result.addresses.filter((a) => a.purpose === AddressPurpose.Starknet),
+      );
       setAccountId(res.result.id);
 
       navigate('/wallet');
     })().catch(console.error);
-  }, [network, setBtcAddressInfo, setStxAddressInfo, setAccountId, navigate]);
+  }, [
+    setBtcAddressInfo,
+    setStxAddressInfo,
+    setSparkAddressInfo,
+    setStarknetAddressInfo,
+    setAccountId,
+    navigate,
+  ]);
 
   const handleLegacyConnectWithRequestPermissions = useCallback(() => {
     (async () => {
@@ -45,43 +67,69 @@ export function Connect() {
         console.error(res);
         return;
       }
+
       const res2 = await Wallet.request('getAddresses', {
         purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
       });
       if (res2.status === 'error') {
-        console.error('Error retrieving bitcoin addresses after having requested permissions.');
         console.error(res2);
+        console.error('Error retrieving bitcoin addresses after having requested permissions.');
         return;
       }
       setBtcAddressInfo(res2.result.addresses);
+
       const res3 = await Wallet.request('stx_getAddresses', null);
       if (res3.status === 'error') {
+        console.error(res3);
         alert(
           'Error retrieving stacks addresses after having requested permissions. Details in terminal.',
         );
-        console.error(res3);
         return;
       }
       setStxAddressInfo(res3.result.addresses);
 
+      const res4 = await Wallet.request('spark_getAddresses', null);
+      if (res4.status === 'error') {
+        console.error(res4);
+        alert(
+          'Error retrieving spark addresses after having requested permissions. Details in terminal.',
+        );
+        return;
+      }
+      setSparkAddressInfo(res4.result.addresses);
+
       navigate('/wallet');
     })().catch(console.error);
-  }, [navigate, setBtcAddressInfo, setStxAddressInfo]);
+  }, [navigate, setBtcAddressInfo, setSparkAddressInfo, setStxAddressInfo]);
 
   const handleLegacyConnectWithGetAccounts = useCallback(() => {
     (async () => {
       const response = await Wallet.request('getAccounts', {
-        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        purposes: [
+          AddressPurpose.Payment,
+          AddressPurpose.Ordinals,
+          AddressPurpose.Stacks,
+          AddressPurpose.Spark,
+          AddressPurpose.Starknet,
+        ],
         message: 'Cool app wants to know your addresses!',
       });
       if (response.status === 'success') {
-        setBtcAddressInfo([response.result[0], response.result[1]]);
-        if (response.result[2]) setStxAddressInfo([response.result[2]]);
+        setBtcAddressInfo(
+          response.result.filter(
+            (a) => a.purpose === AddressPurpose.Payment || a.purpose === AddressPurpose.Ordinals,
+          ),
+        );
+        setStxAddressInfo(response.result.filter((a) => a.purpose === AddressPurpose.Stacks));
+        setSparkAddressInfo(response.result.filter((a) => a.purpose === AddressPurpose.Spark));
+        setStarknetAddressInfo(
+          response.result.filter((a) => a.purpose === AddressPurpose.Starknet),
+        );
       }
 
       navigate('/wallet');
     })().catch(console.error);
-  }, [navigate, setBtcAddressInfo, setStxAddressInfo]);
+  }, [navigate, setBtcAddressInfo, setSparkAddressInfo, setStarknetAddressInfo, setStxAddressInfo]);
 
   return (
     <Container>

@@ -6,6 +6,8 @@ export interface TGlobalStateContext {
   accountId: string | null;
   btcAddressInfo: Address[];
   stxAddressInfo: Address[];
+  sparkAddressInfo: Address[];
+  starknetAddressInfo: Address[];
 
   isConnected: boolean;
 
@@ -13,6 +15,8 @@ export interface TGlobalStateContext {
   setAccountId: (id: string) => void;
   setBtcAddressInfo: (addresses: Address[]) => void;
   setStxAddressInfo: (addresses: Address[]) => void;
+  setSparkAddressInfo: (addresses: Address[]) => void;
+  setStarknetAddressInfo: (addresses: Address[]) => void;
 
   clearAppData: () => void;
   disconnect: () => void;
