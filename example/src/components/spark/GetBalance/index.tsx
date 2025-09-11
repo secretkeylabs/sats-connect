@@ -44,8 +44,6 @@ export const SparkGetBalance = () => {
                   <div>{token.tokenMetadata.tokenName}</div>
                   Balance: {token.balance}
                   <br />
-                  Token Address: {token.tokenMetadata.tokenAddress}
-                  <br />
                   Token Identifier: {token.tokenMetadata.tokenIdentifier}
                   <br />
                   Decimals: {token.tokenMetadata.decimals}

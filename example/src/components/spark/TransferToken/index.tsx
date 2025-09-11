@@ -9,14 +9,14 @@ interface Props {
 export const SparkTransferToken = ({ network }: Props) => {
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
-  const [tokenAddress, setTokenAddress] = useState('');
+  const [tokenIdentifier, setTokenIdentifier] = useState('');
   const [txnId, setTxnId] = useState('');
 
   const onClick = useCallback(() => {
     (async () => {
       const response = await request('spark_transferToken', {
         tokenAmount: amount,
-        tokenAddress,
+        tokenIdentifier,
         receiverSparkAddress: address,
       });
 
@@ -30,7 +30,7 @@ export const SparkTransferToken = ({ network }: Props) => {
       setAmount('');
       setAddress('');
     })().catch(console.error);
-  }, [address, amount, tokenAddress]);
+  }, [address, amount, tokenIdentifier]);
 
   const explorerUrl =
     network === BitcoinNetworkType.Mainnet
@@ -46,8 +46,8 @@ export const SparkTransferToken = ({ network }: Props) => {
             <div>Token Address</div>
             <Input
               type="text"
-              value={tokenAddress}
-              onChange={(e) => setTokenAddress(e.target.value)}
+              value={tokenIdentifier}
+              onChange={(e) => setTokenIdentifier(e.target.value)}
             />
           </div>
           <div>
