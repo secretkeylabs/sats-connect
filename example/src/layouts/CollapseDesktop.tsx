@@ -47,6 +47,11 @@ export function CollapseDesktop({ children }: React.PropsWithChildren) {
             href: '/stacks-methods',
           },
           {
+            icon: 'spark',
+            label: 'Spark Methods',
+            href: '/spark-methods',
+          },
+          {
             icon: 'mobile-home',
             label: 'Mobile Universal Link',
             href: '/mobile-universal-link',

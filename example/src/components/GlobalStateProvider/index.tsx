@@ -12,6 +12,8 @@ export function GlobalStateProvider({ children }: PropsWithChildren) {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [btcAddressInfo, setBtcAddressInfo] = useState<Address[]>([]);
   const [stxAddressInfo, setStxAddressInfo] = useState<Address[]>([]);
+  const [sparkAddressInfo, setSparkAddressInfo] = useState<Address[]>([]);
+  const [starknetAddressInfo, setStarknetAddressInfo] = useState<Address[]>([]);
 
   const queryClient = useQueryClient();
   const clearAppData = useCallback(() => {
@@ -36,6 +38,8 @@ export function GlobalStateProvider({ children }: PropsWithChildren) {
         accountId,
         btcAddressInfo,
         stxAddressInfo,
+        sparkAddressInfo,
+        starknetAddressInfo,
 
         isConnected,
 
@@ -43,6 +47,8 @@ export function GlobalStateProvider({ children }: PropsWithChildren) {
         setAccountId,
         setBtcAddressInfo,
         setStxAddressInfo,
+        setSparkAddressInfo,
+        setStarknetAddressInfo,
 
         clearAppData,
         disconnect,
