@@ -27,6 +27,8 @@ export const SparkGetAddresses = () => {
         <div key={a.address}>
           <div>Address {i + 1}</div>
           <div>{a.address}</div>
+          <div>Public Key</div>
+          <div>{a.publicKey}</div>
         </div>
       ))}
       <Button onClick={onClick}>Call spark_getAddresses</Button>
