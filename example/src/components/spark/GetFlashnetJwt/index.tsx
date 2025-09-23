@@ -9,9 +9,7 @@ export const GetFlashnetJwt = () => {
 
   const onClick = useCallback(() => {
     (async () => {
-      const response = await request('spark_flashnet_getJwt', {
-        message: 'Please confirm to send the JWT to the awesome dApp.',
-      });
+      const response = await request('spark_flashnet_getJwt', null);
 
       if (response.status === 'error') {
         console.error(response.error);
