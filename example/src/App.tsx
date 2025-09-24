@@ -37,6 +37,7 @@ import {
   SparkTransferToken,
 } from './components/spark/index.tsx';
 import { SignFlashnetSwapIntent } from './components/spark/signFlashnetSwapIntent/index.tsx';
+import { SparkSignStructuredMessage } from './components/spark/SignStructuredMessage/index.tsx';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignMessageStacks } from './components/stacks/signMessageStacks';
@@ -331,6 +332,7 @@ const SparkMethods = () => {
       <SparkTransferToken network={network} />
       <GetFlashnetJwt />
       <SignFlashnetSwapIntent />
+      <SparkSignStructuredMessage />
     </>
   );
 };
