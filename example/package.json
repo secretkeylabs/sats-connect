@@ -19,6 +19,9 @@
   "dependencies": {
     "@mantine/core": "^8.2.1",
     "@mantine/hooks": "^8.2.1",
+    "@noble/curves": "^2.0.1",
+    "@noble/hashes": "^2.0.1",
+    "@scure/base": "^2.0.0",
     "@stacks/common": "^7.0.2",
     "@stacks/encryption": "7.0.5",
     "@stacks/stacking": "^7.0.2",
