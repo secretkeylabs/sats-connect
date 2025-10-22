@@ -57,6 +57,10 @@ export const Success = styled.div({
   color: 'green',
 });
 
+export const Failure = styled.div({
+  color: 'red',
+});
+
 export const H4 = styled.h4({
   marginBlockEnd: '0.5em',
 });
