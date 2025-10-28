@@ -1,3 +1,4 @@
+export { ExecuteFlashnetSwap } from './ExecuteFlashnetSwap';
 export { SparkGetAddresses } from './GetAddresses';
 export { SparkGetBalance } from './GetBalance';
 export { GetFlashnetJwt } from './GetFlashnetJwt';
