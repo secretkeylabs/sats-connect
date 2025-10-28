@@ -23,7 +23,7 @@ Developers building on Bitcoin and its L2s can use Sats Connect to interact dire
     * Transfer tokens and inscriptions
     * Inscribe sats with arbitrary content, create and mint tokens
 
-### 🛠️ Why Sats Connect?
+## 🛠️ Why Sats Connect?
 
 * **Wallet-first** – every interaction happens directly in the user’s wallet, with explicit approval
 * **Bitcoin-native & multi-asset** – supports Bitcoin L1 (BTC, Ordinals, Runes, BRC-20) as well as emerging L2s like Spark, Starknet, and Stacks
