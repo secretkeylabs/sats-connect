@@ -20,40 +20,40 @@ Developers building on Bitcoin and its L2s can use Sats Connect to interact dire
     * Inscribe sats with arbitrary content, create and mint tokens
 
 ## Quick start
-```sh
+```bash
 npm i sats-connect
 ```
 Then request a [wallet connection ](https://docs.xverse.app/sats-connect/connecting-to-the-wallet/connect-to-xverse-wallet)— and explore the docs to unlock the full Bitcoin stack: Bitcoin L1, Spark, Starknet, Stacks, and the assets built on top.
 
 ## Usage
 ### import
-```sh
+```ts
 import { request } from 'sats-connect';
 ```
 ### Connect Wallet
-```sh
+```ts
 const response = await request('getAccounts', {
   purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
   message: 'Cool app wants to know your addresses!',
 });
 ```
 ### Request a wallet action
-```sh
+```ts
 await request('sendTransfer', {...});
 ```
 
 ### Disconnect Wallet
-```sh
+```ts
 await Wallet.disconnect();
 ```
 
 ## Development
 ### Build the package
-```sh
+```bash
 npm run build
 ```
 ### Run example app
-```sh
+```bash
 npm run dev:example
 ```
 
