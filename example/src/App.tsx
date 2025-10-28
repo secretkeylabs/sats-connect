@@ -30,8 +30,12 @@ import { useGlobalState } from './components/GlobalStateProvider/use-global-stat
 import MintRunes from './components/MintRunes';
 import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
 import {
+  GetFlashnetJwt,
+  SignFlashnetSwapIntent,
   SparkGetAddresses,
   SparkGetBalance,
+  SparkSignMessage,
+  SparkSignStructuredMessage,
   SparkTransfer,
   SparkTransferToken,
 } from './components/spark/index.tsx';
@@ -325,8 +329,12 @@ const SparkMethods = () => {
       />
       <SparkGetBalance />
       <SparkGetAddresses />
+      <SparkSignMessage sparkPublicKey={sparkAddressInfo[0].publicKey} />
       <SparkTransfer network={network} />
       <SparkTransferToken network={network} />
+      <SparkSignStructuredMessage />
+      <GetFlashnetJwt />
+      <SignFlashnetSwapIntent />
     </>
   );
 };
