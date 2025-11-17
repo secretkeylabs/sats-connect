@@ -31,6 +31,7 @@ import MintRunes from './components/MintRunes';
 import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
 import {
   ExecuteFlashnetSwap,
+  FlashnetClawbackFunds,
   GetFlashnetJwt,
   SignFlashnetSwapIntent,
   SparkGetAddresses,
@@ -337,6 +338,7 @@ const SparkMethods = () => {
       <GetFlashnetJwt />
       <SignFlashnetSwapIntent />
       <ExecuteFlashnetSwap />
+      <FlashnetClawbackFunds network={network} />
     </>
   );
 };

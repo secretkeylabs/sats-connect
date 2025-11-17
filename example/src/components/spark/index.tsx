@@ -1,4 +1,5 @@
 export { ExecuteFlashnetSwap } from './ExecuteFlashnetSwap';
+export { FlashnetClawbackFunds } from './FlashnetClawbackFunds';
 export { SparkGetAddresses } from './GetAddresses';
 export { SparkGetBalance } from './GetBalance';
 export { GetFlashnetJwt } from './GetFlashnetJwt';
