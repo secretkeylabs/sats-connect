@@ -30,6 +30,8 @@ import { useGlobalState } from './components/GlobalStateProvider/use-global-stat
 import MintRunes from './components/MintRunes';
 import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
 import {
+  ExecuteFlashnetSwap,
+  FlashnetClawbackFunds,
   GetFlashnetJwt,
   SignFlashnetSwapIntent,
   SparkGetAddresses,
@@ -335,6 +337,8 @@ const SparkMethods = () => {
       <SparkSignStructuredMessage />
       <GetFlashnetJwt />
       <SignFlashnetSwapIntent />
+      <ExecuteFlashnetSwap />
+      <FlashnetClawbackFunds network={network} />
     </>
   );
 };
