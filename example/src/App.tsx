@@ -32,6 +32,7 @@ import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
 import {
   ExecuteFlashnetSwap,
   FlashnetClawbackFunds,
+  GetEligibleClawbackTransactions,
   GetFlashnetJwt,
   SignFlashnetSwapIntent,
   SparkGetAddresses,
@@ -338,6 +339,7 @@ const SparkMethods = () => {
       <GetFlashnetJwt />
       <SignFlashnetSwapIntent />
       <ExecuteFlashnetSwap />
+      <GetEligibleClawbackTransactions />
       <FlashnetClawbackFunds network={network} />
     </>
   );

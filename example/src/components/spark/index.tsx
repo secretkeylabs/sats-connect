@@ -2,6 +2,7 @@ export { ExecuteFlashnetSwap } from './ExecuteFlashnetSwap';
 export { FlashnetClawbackFunds } from './FlashnetClawbackFunds';
 export { SparkGetAddresses } from './GetAddresses';
 export { SparkGetBalance } from './GetBalance';
+export { GetEligibleClawbackTransactions } from './GetEligibleClawbackTransactions';
 export { GetFlashnetJwt } from './GetFlashnetJwt';
 export { SignFlashnetSwapIntent } from './signFlashnetSwapIntent';
 export { SparkSignMessage } from './SignMessage';
