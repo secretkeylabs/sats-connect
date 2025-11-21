@@ -5,9 +5,8 @@ import { useGlobalState } from '../../GlobalStateProvider/use-global-state';
 
 export const GetClawbackEligibleTransfers = () => {
   const { sparkAddressInfo } = useGlobalState();
-  const [transfers, setTransfers] = useState<
-    SparkGetClawbackEligibleTransfersResult['eligibleTransfers']
-  >([]);
+  const [transfers, setTransfers] =
+    useState<SparkGetClawbackEligibleTransfersResult['eligibleTransfers']>();
 
   const onClick = useCallback(() => {
     (async () => {
