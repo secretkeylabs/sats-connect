@@ -5,7 +5,7 @@ import { useGlobalState } from '../../GlobalStateProvider/use-global-state';
 
 export const GetClawbackEligibleTransfers = () => {
   const { sparkAddressInfo } = useGlobalState();
-  const [transactions, setTransactions] = useState<
+  const [transfers, setTransfers] = useState<
     SparkGetClawbackEligibleTransfersResult['eligibleTransfers']
   >([]);
 
@@ -15,12 +15,12 @@ export const GetClawbackEligibleTransfers = () => {
 
       if (response.status === 'error') {
         console.error(response.error);
-        alert('Error retrieving eligible clawback transactions. See console for details.');
+        alert('Error retrieving eligible clawback transfer. See console for details.');
         return;
       }
 
       console.log(response.result);
-      setTransactions(response.result.eligibleTransfers);
+      setTransfers(response.result.eligibleTransfers);
     })().catch(console.error);
   }, []);
 
@@ -28,14 +28,15 @@ export const GetClawbackEligibleTransfers = () => {
     return <div>Please connect your Spark wallet to use this feature.</div>;
   }
 
+  console.log({ transfers });
   return (
     <Card>
-      <h3>Get Eligible Clawback Transactions</h3>
-      {transactions && transactions.length > 0 && (
+      <h3>Get Eligible Clawback Transfers</h3>
+      {transfers && transfers.length > 0 && (
         <>
-          <div>Found {transactions.length} eligible transaction(s)</div>
+          <div>Found {transfers.length} eligible transfers(s)</div>
           <br />
-          {transactions.map((tx) => (
+          {transfers.map((tx) => (
             <div
               key={tx.txId}
               style={{ marginBottom: '1rem', padding: '0.5rem', border: '1px solid #333' }}
@@ -55,9 +56,7 @@ export const GetClawbackEligibleTransfers = () => {
           ))}
         </>
       )}
-      {transactions && transactions.length === 0 && (
-        <div>No eligible clawback transactions found.</div>
-      )}
+      {transfers && transfers.length === 0 && <div>No eligible clawback transfers found.</div>}
       <Button onClick={onClick}>Call spark_flashnet_getClawbackEligibleTransfers</Button>
     </Card>
   );
