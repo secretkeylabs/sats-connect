@@ -27,6 +27,36 @@ const codeBody = `
 
 const errorMessage = 'Error signing transaction. Check console for error logs.';
 
+const stringifyWithBigIntToString = (obj: any) =>
+  JSON.stringify(
+    obj,
+    (_, value) => (typeof value === 'bigint' ? value.toString() + 'n' : value),
+    2,
+  );
+
+import { deserializeTransaction } from '@stacks/transactions';
+
+const verifySigHash = ({ txHex }: { txHex: string }) => {
+  try {
+    const tx = deserializeTransaction(txHex);
+
+    tx.verifyOrigin();
+  } catch (error) {
+    console.log(error);
+
+    if (String(error).toLowerCase().includes('invalid signature')) {
+      console.error('Invalid signature');
+    } else if (
+      String(error).toLowerCase().includes('signer hash does not equal hash of public key')
+    ) {
+      console.error('Sign with connected wallet');
+    } else {
+      console.error('Error verifying signature');
+    }
+    throw error;
+  }
+};
+
 interface Props {
   network: BitcoinNetworkType; // TODO handle networks
   publicKey: string;
@@ -34,19 +64,23 @@ interface Props {
 
 export function SignTransaction({ publicKey }: Props) {
   const [broadcast, setBroadcast] = useState(false);
+  const [sponsored, setSponsored] = useState(false);
   const [postConditionMode, setPostConditionMode] = useState<PostConditionMode>(
     PostConditionMode.Deny,
   );
 
   const requestSignTransaction = async (transaction: StacksTransactionWire) => {
     try {
+      console.log('request: ', stringifyWithBigIntToString(transaction));
       const response = await request('stx_signTransaction', {
         transaction: transaction.serialize(),
         broadcast,
       });
       if (response.status === 'success') {
         alert('Success! Check console for result.');
-        console.log(response.result.transaction);
+        console.log('response: ', response.result.transaction);
+        console.log('deserialized: ', deserializeTransaction(response.result.transaction));
+        verifySigHash({ txHex: response.result.transaction });
       } else {
         alert('Error signing transaction. Check console for error logs');
         console.error(response.error);
@@ -66,6 +100,7 @@ export function SignTransaction({ publicKey }: Props) {
       functionArgs: [uintCV(1)],
       postConditionMode,
       publicKey,
+      sponsored,
     })
       .then((transaction) => {
         return requestSignTransaction(transaction);
@@ -79,6 +114,7 @@ export function SignTransaction({ publicKey }: Props) {
       recipient: 'SP2FFKDKR122BZWS7GDPFWC0J0FK4WMW5NPQ0Z21M', // account 4
       amount: 1000,
       publicKey,
+      sponsored,
     })
       .then((transaction) => {
         return requestSignTransaction(transaction);
@@ -93,6 +129,7 @@ export function SignTransaction({ publicKey }: Props) {
       fee: 3000,
       postConditionMode,
       publicKey,
+      sponsored,
     })
       .then((transaction) => {
         return requestSignTransaction(transaction);
@@ -119,6 +156,11 @@ export function SignTransaction({ publicKey }: Props) {
           label={`Post condition mode: ${
             postConditionMode === PostConditionMode.Allow ? 'Allow' : 'Deny'
           } `}
+        />
+        <Switch
+          checked={sponsored}
+          onChange={() => setSponsored((prev) => !prev)}
+          label={`Sponsored: ${sponsored ? 'True' : 'False'}`}
         />
         <Button onClick={handleSignTransactionSTXTokenTransferClick}>
           Sign Transaction (token transfer)
