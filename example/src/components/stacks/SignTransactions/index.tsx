@@ -1,5 +1,4 @@
 import { Checkbox, Stack, Switch } from '@mantine/core';
-import { deserializeTransaction } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { type StxSignTransactionsParams } from 'sats-connect';
