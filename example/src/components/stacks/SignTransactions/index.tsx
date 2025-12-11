@@ -1,15 +1,14 @@
-import { Button, Card, Checkbox, Stack, Switch } from '@mantine/core';
+import { Checkbox, Stack, Switch } from '@mantine/core';
+import { deserializeTransaction } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ErrorMessage } from '../../common';
+import { type StxSignTransactionsParams } from 'sats-connect';
+import { MethodLayout } from '../../../layouts/MethodLayout';
+import { verifySigHash } from '../utils';
 import { mutationFunction } from './mutationFunction';
 
 export interface Props {
   publicKey: string;
-}
-
-function buttonText(isPending: boolean) {
-  return isPending ? 'Signing transactions...' : 'Sign transactions';
 }
 
 export function SignTransactions({ publicKey }: Props) {
@@ -20,6 +19,8 @@ export function SignTransactions({ publicKey }: Props) {
   const [isTokenTransferSelected, setIsTokenTransferSelected] = useState(false);
 
   const [broadcast, setBroadcast] = useState(false);
+  const [response, setResponse] = useState<string | null>(null);
+  const [options, setOptions] = useState<StxSignTransactionsParams | null>(null);
 
   const signTransactionsMutation = useMutation({
     mutationFn: mutationFunction,
@@ -35,16 +36,34 @@ export function SignTransactions({ publicKey }: Props) {
         broadcast,
         publicKey,
       })
-      .then(console.log)
+      .then(({ result, params }) => {
+        setOptions(params);
+        setResponse(JSON.stringify(result, null, 2));
+        console.log('response:\n', result);
+        result.transactions.forEach((tx) => {
+          verifySigHash({ txHex: tx });
+        });
+      })
       .catch((error: unknown) => {
+        setResponse(JSON.stringify({ error: String(error) }, null, 2));
         console.error(error);
         if (error instanceof Error) console.error(error.cause);
       });
   }
 
   return (
-    <Card>
-      <h3>Sign transactions</h3>
+    <MethodLayout<StxSignTransactionsParams>
+      method="stx_signTransactions"
+      docsUrl="https://docs.xverse.app/sats-connect/stacks-methods/stx_signtransactions"
+      options={options}
+      handleRequest={handleSignTransactionsClick}
+      response={response}
+      error={
+        signTransactionsMutation.isError && !signTransactionsMutation.isPending
+          ? 'Failed to sign transactions. Check console for details.'
+          : undefined
+      }
+    >
       <Stack>
         <Checkbox
           label="Pool Allow Contract"
@@ -67,15 +86,7 @@ export function SignTransactions({ publicKey }: Props) {
           onChange={() => setIsTokenTransferSelected(!isTokenTransferSelected)}
         />
         <Switch label="Broadcast" checked={broadcast} onChange={() => setBroadcast(!broadcast)} />
-
-        <Button onClick={handleSignTransactionsClick} disabled={signTransactionsMutation.isPending}>
-          {buttonText(signTransactionsMutation.isPending)}
-        </Button>
-
-        {signTransactionsMutation.isError && !signTransactionsMutation.isPending && (
-          <ErrorMessage>Failed to sign transactions. Check console for details.</ErrorMessage>
-        )}
       </Stack>
-    </Card>
+    </MethodLayout>
   );
 }

@@ -1,20 +1,18 @@
-import { Button, Card, Stack, TextInput } from '@mantine/core';
+import { Stack, TextInput } from '@mantine/core';
 import {
   Pc,
   PostCondition,
   cvToHex,
-  // bufferCV,
   noneCV,
   postConditionToHex,
-  // someCV,
   standardPrincipalCV,
   uintCV,
 } from '@stacks/transactions';
 import { ChangeEventHandler, useState } from 'react';
-import { Address, BitcoinNetworkType, request } from 'sats-connect';
+import { Address, BitcoinNetworkType, request, type StxCallContractParams } from 'sats-connect';
 import { Success } from '../../../App.styles';
+import { MethodLayout } from '../../../layouts/MethodLayout';
 
-// TODO use emptry strings once done testing
 const formInitialState = {
   amount: '100000000', // 100LEO
   contract: 'SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6.leo-token', // LEO token contract
@@ -58,8 +56,8 @@ export const SendSip10 = ({
 }) => {
   const [form, setForm] = useState(formInitialState);
   const [txnId, setTxnId] = useState('');
-
-  const canSubmit = form.amount && form.address && form.contract;
+  const [response, setResponse] = useState<string | null>(null);
+  const [options, setOptions] = useState<StxCallContractParams | null>(null);
 
   const getChangeFormHandler =
     (fieldName: keyof typeof formInitialState): ChangeEventHandler<HTMLInputElement> =>
@@ -83,19 +81,19 @@ export const SendSip10 = ({
       .ft(`${contractAddress}.${contractName}`, assetName);
   };
 
-  const postConditions = [
-    makeFungiblePostCondition({
-      contractAddress: form.contract.split('.')[0],
-      contractName: form.contract.split('.')[1],
-      assetName: 'leo',
-      stxAddress: stxAddressInfo?.[0].address,
-      amount: form.amount,
-    }),
-  ];
+  const handleSendSip10 = () => {
+    const handler = async () => {
+      const postConditions = [
+        makeFungiblePostCondition({
+          contractAddress: form.contract.split('.')[0],
+          contractName: form.contract.split('.')[1],
+          assetName: 'leo',
+          stxAddress: stxAddressInfo?.[0].address,
+          amount: form.amount,
+        }),
+      ];
 
-  const onClick = () => {
-    (async () => {
-      const response = await request('stx_callContract', {
+      const params: StxCallContractParams = {
         contract: form.contract,
         functionName: 'transfer',
         functionArgs: [
@@ -103,21 +101,26 @@ export const SendSip10 = ({
           standardPrincipalCV(stxAddressInfo?.[0].address),
           standardPrincipalCV(form.address),
           noneCV(),
-          //form.memo ? someCV(bufferCV(Buffer.from(form.memo))) : noneCV(),
         ].map((arg) => cvToHex(arg)),
         postConditionMode: 'deny',
         postConditions: postConditions.map((pc) => postConditionToHex(pc)),
-      });
+      };
+      setOptions(params);
 
-      if (response.status === 'error') {
-        console.error(response.error);
-        alert('Error sending. See console for details.');
+      const res = await request('stx_callContract', params);
+      setResponse(JSON.stringify(res, null, 2));
+      console.log('request("stx_callContract", options)');
+      console.log('options:\n', params);
+      console.log('response:\n', res);
+
+      if (res.status === 'error') {
+        console.error(res.error);
         return;
       }
 
-      setTxnId(response.result.txid);
-      setForm(formInitialState);
-    })().catch(console.error);
+      setTxnId(res.result.txid);
+    };
+    handler().catch(console.error);
   };
 
   const explorerUrl =
@@ -126,33 +129,33 @@ export const SendSip10 = ({
       : `https://explorer.hiro.so/txid/${txnId}?chain=testnet`;
 
   return (
-    <Card>
-      <h3>Send SIP-10</h3>
-      {!txnId && (
-        <Stack>
-          {formInputs.map(({ field, label, type }) => (
-            <TextInput
-              key={field}
-              label={label}
-              type={type}
-              value={form[field]}
-              onChange={getChangeFormHandler(field)}
-            />
-          ))}
-          <Button onClick={onClick} disabled={!canSubmit}>
-            Send
-          </Button>
-        </Stack>
-      )}
-      {txnId && (
-        <Success>
-          Success! Click{' '}
-          <a href={explorerUrl} target="_blank" rel="noreferrer">
-            here
-          </a>{' '}
-          to see your transaction
-        </Success>
-      )}
-    </Card>
+    <MethodLayout<StxCallContractParams>
+      method="stx_callContract"
+      docsUrl="https://docs.xverse.app/sats-connect/stacks-methods/stx_callcontract"
+      options={options}
+      handleRequest={handleSendSip10}
+      response={response}
+    >
+      <Stack>
+        {formInputs.map(({ field, label, type }) => (
+          <TextInput
+            key={field}
+            label={label}
+            type={type}
+            value={form[field]}
+            onChange={getChangeFormHandler(field)}
+          />
+        ))}
+        {txnId && (
+          <Success>
+            Success! Click{' '}
+            <a href={explorerUrl} target="_blank" rel="noreferrer">
+              here
+            </a>{' '}
+            to see your transaction
+          </Success>
+        )}
+      </Stack>
+    </MethodLayout>
   );
 };

@@ -13,6 +13,10 @@ const TwoColGrid = styled.div({
   display: 'grid',
   gridTemplateColumns: '1fr minmax(66%, 2fr)',
   gap: '1rem',
+  '& pre': {
+    'white-space': 'pre-wrap',
+    'word-break': 'break-word',
+  },
 });
 
 const FormDiv = styled.div({
@@ -28,8 +32,9 @@ interface MethodLayoutProps<T> {
   handleRequest: () => void;
   children?: React.ReactNode;
   docsUrl?: string;
-  options?: T;
+  options?: T | null;
   error?: string;
+  hideButton?: boolean;
 }
 
 export const MethodLayout = <T,>({
@@ -40,6 +45,7 @@ export const MethodLayout = <T,>({
   response,
   handleRequest,
   error,
+  hideButton = false,
 }: MethodLayoutProps<T>) => {
   return (
     <Card>
@@ -57,12 +63,12 @@ export const MethodLayout = <T,>({
           <Code block>{JSON.stringify(options, null, 2)}</Code>
           <FormDiv>
             {children}
-            <Button onClick={handleRequest}>request</Button>
+            {!hideButton && <Button onClick={handleRequest}>request</Button>}
           </FormDiv>
         </div>
         <div>
           <h4>Response</h4>
-          <Code block>{response}</Code>
+          <Code block>{response || 'null'}</Code>
           {error ? <ErrorMessage>{error}</ErrorMessage> : null}
         </div>
       </TwoColGrid>

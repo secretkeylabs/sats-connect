@@ -110,15 +110,15 @@ export async function mutationFunction({
     });
     transactions.push(transaction);
   }
-
-  const res = await request('stx_signTransactions', {
+  const params = {
     transactions: transactions.map((t) => t.serialize()),
     broadcast,
-  });
+  };
+  const res = await request('stx_signTransactions', params);
 
   if (res.status === 'error') {
     throw new Error('Error signing transactions', { cause: res.error });
   }
 
-  return res.result;
+  return { result: res.result, params };
 }

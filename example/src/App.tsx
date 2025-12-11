@@ -18,6 +18,7 @@ import { GetInscriptions } from './components/GetInscriptions';
 import { GetRunesBalance } from './components/GetRunesBalance';
 import { SendInscription } from './components/sendInscriptions';
 
+import styled from 'styled-components';
 import AddressDisplay from './components/AddressDisplay';
 import { GetInfo } from './components/bitcoin/GetInfo.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
@@ -58,6 +59,12 @@ import WalletRenouncePermissions from './components/wallet/WalletRenouncePermiss
 import WalletRequestPermissions from './components/wallet/WalletRequestPermissions.tsx';
 import { WalletGetWalletType } from './components/wallet/WalletType';
 import { CollapseDesktop } from './layouts/CollapseDesktop';
+
+const CardsDiv = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+});
 
 function AppWithProviders({ children }: React.PropsWithChildren) {
   const navigate = useNavigate();
@@ -221,7 +228,7 @@ const WalletMethods = () => {
   if (!isConnected) return;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <CardsDiv>
       <AddressDisplay
         accountId={accountId}
         network={network}
@@ -243,7 +250,7 @@ const WalletMethods = () => {
       <GetNetwork />
       <ChangeNetwork />
       <AddNetwork />
-    </div>
+    </CardsDiv>
   );
 };
 
@@ -259,7 +266,7 @@ const BitcoinMethods = () => {
   if (!isConnected) return;
 
   return (
-    <>
+    <CardsDiv>
       <AddressDisplay
         accountId={accountId}
         network={network}
@@ -277,7 +284,7 @@ const BitcoinMethods = () => {
       <GetInscriptions />
       <MintRunes network={network} addresses={[...btcAddressInfo]} />
       <EtchRunes network={network} addresses={[...btcAddressInfo]} />
-    </>
+    </CardsDiv>
   );
 };
 
@@ -293,7 +300,7 @@ const StacksMethods = () => {
   if (!isConnected) return;
 
   return (
-    <>
+    <CardsDiv>
       <AddressDisplay
         accountId={accountId}
         network={network}
@@ -307,7 +314,7 @@ const StacksMethods = () => {
         <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
       ) : null}
       <SignTransactions publicKey={stxAddressInfo[0].publicKey} />
-    </>
+    </CardsDiv>
   );
 };
 
@@ -323,7 +330,7 @@ const SparkMethods = () => {
   if (!isConnected) return;
 
   return (
-    <>
+    <CardsDiv>
       <AddressDisplay
         accountId={accountId}
         network={network}
@@ -341,7 +348,7 @@ const SparkMethods = () => {
       <ExecuteFlashnetSwap />
       <GetClawbackEligibleTransfers />
       <FlashnetClawbackFunds network={network} />
-    </>
+    </CardsDiv>
   );
 };
 
