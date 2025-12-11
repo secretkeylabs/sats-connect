@@ -39,6 +39,7 @@ export interface MutationFnArgs {
   isTokenTransferSelected: boolean;
   broadcast: boolean;
   publicKey: string;
+  sponsored: boolean;
 }
 
 function getLastUsedNonce(transactions: StacksTransactionWire[]) {
@@ -56,6 +57,7 @@ export async function mutationFunction({
   isTokenTransferSelected,
   broadcast,
   publicKey,
+  sponsored,
 }: MutationFnArgs) {
   const transactions: StacksTransactionWire[] = [];
 
@@ -66,6 +68,7 @@ export async function mutationFunction({
       functionName: 'allow-contract-caller',
       functionArgs: [contractPrincipalCV(poolContractAddress, poolContractName), noneCV()],
       publicKey,
+      sponsored,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);
@@ -85,6 +88,7 @@ export async function mutationFunction({
         noneCV(),
       ],
       publicKey,
+      sponsored,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);
@@ -96,6 +100,7 @@ export async function mutationFunction({
       contractName: `hello-world-${now}`,
       codeBody: helloWorldContractBody,
       publicKey,
+      sponsored,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);
@@ -106,6 +111,7 @@ export async function mutationFunction({
       recipient: 'SP1VYV2JBF1QPNDSKHBZRAWRC4KQXP8ZSSRNKPJE4', // acc 4
       amount: '100000', // 0.1 STX
       publicKey,
+      sponsored,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);

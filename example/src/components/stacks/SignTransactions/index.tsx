@@ -19,6 +19,7 @@ export function SignTransactions({ publicKey }: Props) {
   const [isTokenTransferSelected, setIsTokenTransferSelected] = useState(false);
 
   const [broadcast, setBroadcast] = useState(false);
+  const [sponsored, setSponsored] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
   const [options, setOptions] = useState<StxSignTransactionsParams | null>(null);
 
@@ -35,6 +36,7 @@ export function SignTransactions({ publicKey }: Props) {
         isTokenTransferSelected,
         broadcast,
         publicKey,
+        sponsored,
       })
       .then(({ result, params }) => {
         setOptions(params);
@@ -85,7 +87,16 @@ export function SignTransactions({ publicKey }: Props) {
           checked={isTokenTransferSelected}
           onChange={() => setIsTokenTransferSelected(!isTokenTransferSelected)}
         />
-        <Switch label="Broadcast" checked={broadcast} onChange={() => setBroadcast(!broadcast)} />
+        <Switch
+          checked={broadcast}
+          onChange={() => setBroadcast((prev) => !prev)}
+          label={`Broadcast: ${broadcast ? 'True' : 'False'}`}
+        />
+        <Switch
+          checked={sponsored}
+          onChange={() => setSponsored((prev) => !prev)}
+          label={`Sponsored: ${sponsored ? 'True' : 'False'}`}
+        />
       </Stack>
     </MethodLayout>
   );
