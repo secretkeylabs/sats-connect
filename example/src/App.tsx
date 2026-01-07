@@ -54,6 +54,7 @@ import WalletConnect from './components/wallet/WalletConnect.tsx';
 import WalletDisconnect from './components/wallet/WalletDisconnect.tsx';
 import WalletGetAccount from './components/wallet/WalletGetAccount.tsx';
 import { WalletGetCurrentPermissions } from './components/wallet/WalletGetCurrentPermissions.tsx';
+import WalletOpenReceive from './components/wallet/WalletOpenReceive.tsx';
 import WalletRenouncePermissions from './components/wallet/WalletRenouncePermissions.tsx';
 import WalletRequestPermissions from './components/wallet/WalletRequestPermissions.tsx';
 import { WalletGetWalletType } from './components/wallet/WalletType';
@@ -243,6 +244,7 @@ const WalletMethods = () => {
       <GetNetwork />
       <ChangeNetwork />
       <AddNetwork />
+      <WalletOpenReceive address={btcAddressInfo[0]?.address || ''} />
     </div>
   );
 };
