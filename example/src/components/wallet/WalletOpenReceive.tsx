@@ -28,7 +28,7 @@ export const WalletOpenReceive = ({ address }: Props) => {
   return (
     <MethodLayout<OpenReceiveParams>
       method="wallet_openReceive"
-      docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_openreceive"
+      docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_openReceive"
       options={options}
       handleRequest={handleWalletOpenReceive}
       response={response}
