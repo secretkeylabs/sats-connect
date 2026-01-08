@@ -5,16 +5,8 @@ import { MethodLayout } from '../../layouts/MethodLayout';
 export const WalletOpenBridge = () => {
   const [response, setResponse] = useState<string | null>(null);
   const options = {
-    from: {
-      asset: 'BTC',
-      chain: 'bitcoin',
-      network: 'mainnet',
-    },
-    to: {
-      asset: 'SparkBTC',
-      chain: 'spark',
-      network: 'mainnet',
-    },
+    fromAsset: 'BTC',
+    toAsset: 'SparkBTC',
   };
 
   const handleWalletOpenBridge = () => {

@@ -6,7 +6,6 @@ export const WalletOpenBuy = () => {
   const [response, setResponse] = useState<string | null>(null);
   const options = {
     asset: 'BTC',
-    chain: 'bitcoin',
   };
 
   const handleWalletOpenBuy = () => {
