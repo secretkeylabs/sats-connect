@@ -1,12 +1,18 @@
+import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
 import { OpenBridgeParams, request } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
+const supportedTokens = ['BTC', 'sBTC', 'WBTC', 'STRK', 'SparkBTC'];
+
 export const WalletOpenBridge = () => {
   const [response, setResponse] = useState<string | null>(null);
+  const [fromAsset, setFromAsset] = useState<string>('BTC');
+  const [toAsset, setToAsset] = useState<string>('SparkBTC');
+
   const options = {
-    fromAsset: 'BTC',
-    toAsset: 'SparkBTC',
+    fromAsset,
+    toAsset,
   };
 
   const handleWalletOpenBridge = () => {
@@ -31,7 +37,20 @@ export const WalletOpenBridge = () => {
       options={options}
       handleRequest={handleWalletOpenBridge}
       response={response}
-    />
+    >
+      <div>From</div>
+      <NativeSelect
+        defaultValue={fromAsset}
+        data={supportedTokens}
+        onChange={(e) => setFromAsset(e.target.value)}
+      />
+      <div>To</div>
+      <NativeSelect
+        defaultValue={toAsset}
+        data={supportedTokens}
+        onChange={(e) => setToAsset(e.target.value)}
+      />
+    </MethodLayout>
   );
 };
 export default WalletOpenBridge;

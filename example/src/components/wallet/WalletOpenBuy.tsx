@@ -1,11 +1,15 @@
+import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
 import { OpenBuyParams, request } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
+const supportedCurrencies = ['BTC', 'STX', 'WBTC', 'STRK', 'USDC'];
+
 export const WalletOpenBuy = () => {
   const [response, setResponse] = useState<string | null>(null);
+  const [asset, setAsset] = useState<string>('BTC');
   const options = {
-    asset: 'BTC',
+    asset,
   };
 
   const handleWalletOpenBuy = () => {
@@ -30,7 +34,14 @@ export const WalletOpenBuy = () => {
       options={options}
       handleRequest={handleWalletOpenBuy}
       response={response}
-    />
+    >
+      <div>Asset</div>
+      <NativeSelect
+        defaultValue={asset}
+        data={supportedCurrencies}
+        onChange={(e) => setAsset(e.target.value)}
+      />
+    </MethodLayout>
   );
 };
 export default WalletOpenBuy;
