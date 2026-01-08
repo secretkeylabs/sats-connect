@@ -24,10 +24,10 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "^0.14.1-e2b5f47",
+    "@sats-connect/core": "0.15.0",
     "@sats-connect/make-default-provider-config": "0.0.10",
     "@sats-connect/ui": "0.0.7",
-    "valibot": "1.1.0"
+    "valibot": "1.2.0"
   },
   "devDependencies": {
     "husky": "9.1.7",
