@@ -21,11 +21,12 @@ import { SendInscription } from './components/sendInscriptions';
 import AddressDisplay from './components/AddressDisplay';
 import { GetInfo } from './components/bitcoin/GetInfo.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
-import ChangeNetwork from './components/ChangeNetwork/index.tsx';
-import { Connect } from './components/Connect/index.tsx';
-import { CreateInscription } from './components/createInscription/index.tsx';
+import { SignMultipleMessages } from './components/bitcoin/SignMultipleMessages';
+import ChangeNetwork from './components/ChangeNetwork';
+import { Connect } from './components/Connect';
+import { CreateInscription } from './components/createInscription';
 import EtchRunes from './components/EtchRunes';
-import { GlobalStateProvider } from './components/GlobalStateProvider/index.tsx';
+import { GlobalStateProvider } from './components/GlobalStateProvider';
 import { useGlobalState } from './components/GlobalStateProvider/use-global-state.tsx';
 import MintRunes from './components/MintRunes';
 import { MobileUniversalLink } from './components/mobile/universalLink.tsx';
@@ -41,13 +42,13 @@ import {
   SparkSignStructuredMessage,
   SparkTransfer,
   SparkTransferToken,
-} from './components/spark/index.tsx';
+} from './components/spark';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignMessageStacks } from './components/stacks/signMessageStacks';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
-import { SignTransactions } from './components/stacks/SignTransactions/index.tsx';
-import TransferRunes from './components/transferRunes/index.tsx';
+import { SignTransactions } from './components/stacks/SignTransactions';
+import TransferRunes from './components/transferRunes';
 import { AddNetwork } from './components/wallet/AddNetwork.tsx';
 import { GetNetwork } from './components/wallet/GetNetwork.tsx';
 import WalletConnect from './components/wallet/WalletConnect.tsx';
@@ -274,6 +275,7 @@ const BitcoinMethods = () => {
       />
       <GetInfo />
       <SignMessage addresses={[...btcAddressInfo]} />
+      <SignMultipleMessages addresses={[...btcAddressInfo]} />
       <SendBtc network={network} />
       <SendInscription network={network} />
       <CreateInscription network={network} />
