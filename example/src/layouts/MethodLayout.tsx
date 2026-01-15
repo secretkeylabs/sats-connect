@@ -11,7 +11,7 @@ const MethodHeading = styled.h3({
 
 const TwoColGrid = styled.div({
   display: 'grid',
-  gridTemplateColumns: '1fr minmax(66%, 2fr)',
+  gridTemplateColumns: '1fr 1fr',
   gap: '1rem',
   '& pre': {
     'white-space': 'pre-wrap',
