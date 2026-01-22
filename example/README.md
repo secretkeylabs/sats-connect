@@ -2,23 +2,30 @@
 
 This is a simple example of how to use the sats-connect library to build a dapp. The dapp is a simple web application that allows users to send and receive btc and stx using the sats-connect library.
 
-The dapp is built in typescript with Create-React-App.
+The dapp is built in TypeScript with Vite.
 
 # Installation and running the dapp
 
-To install the node dependencies for the dapp, run the following command:
+### Option 1: From the repository root (recommended)
 
 ```bash
-npm i
+# Install dependencies and build the library
+npm install
+npm run build
+
+# Run the example app
+npm run dev:example
 ```
 
-To run the dapp, run the following command:
+### Option 2: From the example directory
 
 ```bash
-npm start
+cd example
+npm install
+npm run dev
 ```
 
-The dapp should now be reachable in your browser on http://localhost:3001
+The dapp should now be reachable in your browser at http://localhost:5173
 
 # Using sats-connect
 
