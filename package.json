@@ -49,8 +49,5 @@
   "bugs": {
     "url": "https://github.com/secretkeylabs/sats-connect/issues"
   },
-  "homepage": "https://github.com/secretkeylabs/sats-connect#readme",
-  "engines": {
-    "node": ">=24.14.0"
-  }
+  "homepage": "https://github.com/secretkeylabs/sats-connect#readme"
 }
