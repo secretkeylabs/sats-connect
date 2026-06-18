@@ -7,7 +7,8 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "npm run clean && tsup src/index.ts --format esm --dts",
+    "check-agents": "node scripts/check-agents.mjs",
+    "build": "npm run check-agents && npm run clean && tsup src/index.ts --format esm --dts",
     "build:watch": "npm run clean && tsup src/index.ts --format esm --dts --watch",
     "dev:build": "tsup src/index.ts --format esm --dts --watch",
     "dev:example": "cd example && npm run dev",

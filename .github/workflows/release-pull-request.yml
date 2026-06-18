@@ -24,6 +24,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run check-agents
       # TODO: enable linting once ready
       # - run: npm run lint
       # - run: npm test
