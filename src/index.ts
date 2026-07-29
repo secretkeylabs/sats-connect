@@ -7,9 +7,9 @@ import {
   RpcResult,
   SatsConnectAdapter,
   SupportedWallet,
+  addListener as addProviderListener,
   defaultAdapters,
   getDefaultProvider,
-  getSupportedWallets,
   removeDefaultProvider,
   setDefaultProvider,
   type AddListener,
@@ -23,6 +23,7 @@ import {
   walletClose,
   walletOpen,
 } from '@sats-connect/ui';
+import { getSelectableProviders } from './selectableProviders';
 
 class Wallet {
   private providerId: string | undefined;
@@ -40,7 +41,7 @@ class Wallet {
   }
 
   public async selectProvider() {
-    const providers = getSupportedWallets();
+    const providers = getSelectableProviders();
 
     if (providers.length === 0) {
       throw new Error('No wallets detected, may want to prompt user to install a wallet.');
@@ -140,14 +141,9 @@ class Wallet {
     // their wallets having been updated. Until we have API versioning for the
     // wallet, we can avoid having apps crash by checking whether the adapter
     // actually supports `addListener`.
-    if (!adapter || !new adapter().addListener) {
-      console.error(
-        `The wallet provider you are using does not support the addListener method. Please update your wallet provider.`
-      );
-      return () => {};
-    }
-
-    return new adapter().addListener(listenerInfo);
+    return adapter
+      ? new adapter().addListener(listenerInfo)
+      : addProviderListener(listenerInfo, this.providerId as string);
   };
 }
 
