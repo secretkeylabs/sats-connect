@@ -1,6 +1,6 @@
 import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
-import { OpenBridgeParams, request } from 'sats-connect';
+import { WalletOpenBridgeParams, request } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 const supportedTokens = ['BTC', 'sBTC', 'WBTC', 'STRK', 'SparkBTC'];
@@ -31,7 +31,7 @@ export const WalletOpenBridge = () => {
   };
 
   return (
-    <MethodLayout<OpenBridgeParams>
+    <MethodLayout<WalletOpenBridgeParams>
       method="wallet_openBridge"
       docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_openBridge"
       options={options}

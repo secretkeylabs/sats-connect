@@ -1,6 +1,6 @@
 import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
-import { BitcoinNetworkType, request, type ChangeNetworkParams } from 'sats-connect';
+import { BitcoinNetworkType, request, type WalletChangeNetworkParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 const ChangeNetwork = () => {
@@ -21,7 +21,7 @@ const ChangeNetwork = () => {
     }
   };
   return (
-    <MethodLayout<ChangeNetworkParams>
+    <MethodLayout<WalletChangeNetworkParams>
       method="wallet_changeNetwork"
       docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_changenetwork"
       options={{ name: desiredNetwork }}

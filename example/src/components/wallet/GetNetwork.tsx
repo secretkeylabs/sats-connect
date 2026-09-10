@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { request, type GetNetworkParams } from 'sats-connect';
+import { request, type WalletGetNetworkParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export function GetNetwork() {
@@ -23,7 +23,7 @@ export function GetNetwork() {
   });
 
   return (
-    <MethodLayout<GetNetworkParams>
+    <MethodLayout<WalletGetNetworkParams>
       method="wallet_getNetwork"
       docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_getnetwork"
       options={options}

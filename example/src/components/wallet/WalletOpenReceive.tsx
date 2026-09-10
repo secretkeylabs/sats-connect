@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { OpenReceiveParams, request } from 'sats-connect';
+import { WalletOpenReceiveParams, request } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 interface Props {
@@ -26,7 +26,7 @@ export const WalletOpenReceive = ({ address }: Props) => {
   };
 
   return (
-    <MethodLayout<OpenReceiveParams>
+    <MethodLayout<WalletOpenReceiveParams>
       method="wallet_openReceive"
       docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_openReceive"
       options={options}

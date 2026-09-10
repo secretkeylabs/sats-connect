@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { request, type GetAccountParams } from 'sats-connect';
+import { request, type WalletGetAccountParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export const WalletGetAccount = () => {
   const [response, setResponse] = useState<string | null>(null);
-  const [options] = useState<GetAccountParams>(null);
+  const [options] = useState<WalletGetAccountParams>(null);
 
   const handleWalletGetAccount = () => {
     const handler = async () => {
@@ -24,7 +24,7 @@ export const WalletGetAccount = () => {
   };
 
   return (
-    <MethodLayout<GetAccountParams>
+    <MethodLayout<WalletGetAccountParams>
       method="wallet_getAccount"
       docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_getaccount"
       options={options}
