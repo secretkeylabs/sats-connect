@@ -19,7 +19,13 @@ export const WalletConnect = () => {
   const [response, setResponse] = useState<string | null>(null);
   const [options, setOptions] = useState<WalletConnectParams>({
     message: 'Optional message displayed on connection popup',
-    addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+    addresses: [
+      AddressPurpose.Payment,
+      AddressPurpose.Ordinals,
+      AddressPurpose.Stacks,
+      AddressPurpose.Spark,
+      AddressPurpose.Starknet,
+    ],
     network: BitcoinNetworkType.Mainnet,
   });
 

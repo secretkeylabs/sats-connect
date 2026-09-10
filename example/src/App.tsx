@@ -23,6 +23,7 @@ import AddressDisplay from './components/AddressDisplay';
 import { GetInfo } from './components/bitcoin/GetInfo.tsx';
 import { SendBtc } from './components/bitcoin/SendBtc';
 import { SignMultipleMessages } from './components/bitcoin/SignMultipleMessages';
+import { VaultSignIn } from './components/bitcoin/VaultSignIn';
 import ChangeNetwork from './components/ChangeNetwork';
 import { Connect } from './components/Connect';
 import { CreateInscription } from './components/createInscription';
@@ -49,6 +50,7 @@ import { SendStx } from './components/stacks/SendStx';
 import { SignMessageStacks } from './components/stacks/signMessageStacks';
 import { SignTransaction } from './components/stacks/SignTransaction.tsx';
 import { SignTransactions } from './components/stacks/SignTransactions';
+import { SignTypedData } from './components/starknet/SignTypedData';
 import TransferRunes from './components/transferRunes';
 import { AddNetwork } from './components/wallet/AddNetwork.tsx';
 import { GetNetwork } from './components/wallet/GetNetwork.tsx';
@@ -291,6 +293,7 @@ const BitcoinMethods = () => {
         onDisconnect={disconnect}
       />
       <GetInfo />
+      <VaultSignIn addresses={btcAddressInfo} />
       <SignMessage addresses={[...btcAddressInfo]} />
       <SignMultipleMessages addresses={[...btcAddressInfo]} />
       <BuildAndSignPsbt addresses={btcAddressInfo} network={network} />
@@ -339,6 +342,29 @@ const StacksMethods = () => {
         <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
       ) : null}
       <SignTransactions publicKey={stxAddressInfo[0].publicKey} />
+    </>
+  );
+};
+
+const StarknetMethods = () => {
+  const { network, starknetAddressInfo, disconnect, accountId, isConnected } = useGlobalState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isConnected) navigate('/');
+  }, [isConnected, navigate]);
+
+  if (!isConnected || !network) return;
+
+  return (
+    <>
+      <AddressDisplay
+        accountId={accountId}
+        network={network}
+        addresses={starknetAddressInfo}
+        onDisconnect={disconnect}
+      />
+      <SignTypedData />
     </>
   );
 };
@@ -407,6 +433,7 @@ const router = createBrowserRouter(
       <Route path="wallet" element={<WalletMethods />} />
       <Route path="bitcoin-methods" element={<BitcoinMethods />} />
       <Route path="stacks-methods" element={<StacksMethods />} />
+      <Route path="starknet-methods" element={<StarknetMethods />} />
       <Route path="spark-methods" element={<SparkMethods />} />
       <Route path="mobile-universal-link" element={<MobileUniversalLink />} />
       <Route path="*" element={<NoMatch />} />
