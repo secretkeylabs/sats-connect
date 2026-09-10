@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { GetCurrentPermissionsParams, request } from 'sats-connect';
+import { WalletGetCurrentPermissionsParams, request } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export function GetPermissions() {
@@ -24,7 +24,7 @@ export function GetPermissions() {
   });
 
   return (
-    <MethodLayout<GetCurrentPermissionsParams>
+    <MethodLayout<WalletGetCurrentPermissionsParams>
       method="wallet_getCurrentPermissions"
       docsUrl="https://docs.xverse.app/sats-connect/xverse-wallet-permissions"
       handleRequest={() => {

@@ -22,6 +22,7 @@
     "@noble/curves": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "@scure/base": "^2.0.0",
+    "@scure/btc-signer": "^2.4.1",
     "@stacks/common": "^7.0.2",
     "@stacks/encryption": "7.0.5",
     "@stacks/stacking": "^7.0.2",

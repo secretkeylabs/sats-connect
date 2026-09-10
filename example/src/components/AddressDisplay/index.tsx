@@ -8,6 +8,9 @@ interface Props {
   onDisconnect: () => void;
 }
 
+const formatUnlockDefinition = (address: Address): string =>
+  address.unlockDefinition ? JSON.stringify(address.unlockDefinition, null, 2) : '-';
+
 export const AddressDisplay = ({ accountId, network, addresses, onDisconnect }: Props) => {
   return (
     <Card>
@@ -16,10 +19,19 @@ export const AddressDisplay = ({ accountId, network, addresses, onDisconnect }: 
         <H4>Account: {accountId ?? '-'}</H4>
       </div>
       {addresses.map((address) => (
-        <div key={address.purpose}>
+        <div key={address.address}>
           <H4>{address.purpose}</H4>
           <div>Address: {address.address}</div>
-          <div>Public key: {address.publicKey}</div>
+          <div>Public key: {address.publicKey || '-'}</div>
+          <div>Address type: {address.addressType ?? '-'}</div>
+          <div>Wallet type: {address.walletType ?? '-'}</div>
+          <div style={{ overflowWrap: 'anywhere' }}>
+            Script pubkey: {address.scriptPubKey ?? '-'}
+          </div>
+          <div>Unlock definition:</div>
+          <pre style={{ marginTop: 0, overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
+            {formatUnlockDefinition(address)}
+          </pre>
         </div>
       ))}
       <div>

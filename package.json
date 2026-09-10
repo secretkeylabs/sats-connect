@@ -6,7 +6,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "npm run clean && tsup src/index.ts --format esm --dts",
     "build:watch": "npm run clean && tsup src/index.ts --format esm --dts --watch",
     "dev:build": "tsup src/index.ts --format esm --dts --watch",
@@ -24,13 +24,17 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.16.0",
+    "@sats-connect/core": "0.18.0-6d6c9b4",
     "@sats-connect/make-default-provider-config": "0.0.10",
     "@sats-connect/ui": "0.0.7",
+    "@scure/base": "2.4.0",
+    "@scure/btc-signer": "2.4.1",
     "valibot": "1.2.0"
   },
   "devDependencies": {
+    "@types/jest": "29.5.14",
     "husky": "9.1.7",
+    "jest": "29.7.0",
     "lint-staged": "16.1.5",
     "prettier": "3.6.2",
     "prettier-plugin-organize-imports": "4.2.0",

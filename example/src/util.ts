@@ -1,4 +1,4 @@
-import { BitcoinNetworkType } from '@sats-connect/core';
+import { BitcoinNetworkType } from 'sats-connect';
 
 export function getMempoolEndpoint(network: BitcoinNetworkType): string {
   let url = 'https://mempool.space/';

@@ -12,6 +12,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import Wallet, { AddressPurpose, request, RpcErrorCode } from 'sats-connect';
+import { BuildAndSignPsbt } from './components/bitcoin/BuildAndSignPsbt';
 import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
 import { SignMessage } from './components/bitcoin/SignMessage';
 import { GetInscriptions } from './components/GetInscriptions';
@@ -73,6 +74,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
     setSparkAddressInfo,
     setStarknetAddressInfo,
     setAccountId,
+    syncNetwork,
     isConnected,
   } = useGlobalState();
 
@@ -83,11 +85,12 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
       cb: (ev) => {
         console.log('The network has changed.', ev);
         clearAppData();
+        syncNetwork().catch(console.error);
       },
     });
 
     return () => removeListenerNetworkChange();
-  }, [clearAppData]);
+  }, [clearAppData, syncNetwork]);
 
   // Attempt to auto-reconnect on account change.
   useEffect(() => {
@@ -189,6 +192,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
         res.result.addresses.filter((a) => a.purpose === AddressPurpose.Starknet),
       );
       setAccountId(res.result.id);
+      await syncNetwork();
 
       navigate('/wallet');
     })().catch(console.error);
@@ -199,6 +203,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
     setSparkAddressInfo,
     setStarknetAddressInfo,
     setStxAddressInfo,
+    syncNetwork,
   ]);
 
   return children;
@@ -208,6 +213,7 @@ function AppWithProviders({ children }: React.PropsWithChildren) {
 const WalletMethods = () => {
   const {
     network,
+    networkError,
     btcAddressInfo,
     stxAddressInfo,
     sparkAddressInfo,
@@ -223,6 +229,11 @@ const WalletMethods = () => {
   }, [isConnected, navigate]);
 
   if (!isConnected) return;
+  if (!network) {
+    return (
+      <p role={networkError ? 'alert' : 'status'}>{networkError ?? 'Reading wallet network…'}</p>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -255,7 +266,8 @@ const WalletMethods = () => {
 };
 
 const BitcoinMethods = () => {
-  const { network, btcAddressInfo, disconnect, accountId, isConnected } = useGlobalState();
+  const { network, networkError, btcAddressInfo, disconnect, accountId, isConnected } =
+    useGlobalState();
 
   const navigate = useNavigate();
 
@@ -264,6 +276,11 @@ const BitcoinMethods = () => {
   }, [isConnected, navigate]);
 
   if (!isConnected) return;
+  if (!network) {
+    return (
+      <p role={networkError ? 'alert' : 'status'}>{networkError ?? 'Reading wallet network…'}</p>
+    );
+  }
 
   return (
     <>
@@ -276,6 +293,7 @@ const BitcoinMethods = () => {
       <GetInfo />
       <SignMessage addresses={[...btcAddressInfo]} />
       <SignMultipleMessages addresses={[...btcAddressInfo]} />
+      <BuildAndSignPsbt addresses={btcAddressInfo} network={network} />
       <SendBtc network={network} />
       <SendInscription network={network} />
       <CreateInscription network={network} />
@@ -290,7 +308,8 @@ const BitcoinMethods = () => {
 };
 
 const StacksMethods = () => {
-  const { network, stxAddressInfo, disconnect, accountId, isConnected } = useGlobalState();
+  const { network, networkError, stxAddressInfo, disconnect, accountId, isConnected } =
+    useGlobalState();
 
   const navigate = useNavigate();
 
@@ -299,6 +318,11 @@ const StacksMethods = () => {
   }, [isConnected, navigate]);
 
   if (!isConnected) return;
+  if (!network) {
+    return (
+      <p role={networkError ? 'alert' : 'status'}>{networkError ?? 'Reading wallet network…'}</p>
+    );
+  }
 
   return (
     <>
@@ -320,7 +344,8 @@ const StacksMethods = () => {
 };
 
 const SparkMethods = () => {
-  const { network, sparkAddressInfo, disconnect, accountId, isConnected } = useGlobalState();
+  const { network, networkError, sparkAddressInfo, disconnect, accountId, isConnected } =
+    useGlobalState();
 
   const navigate = useNavigate();
 
@@ -329,6 +354,11 @@ const SparkMethods = () => {
   }, [isConnected, navigate]);
 
   if (!isConnected) return;
+  if (!network) {
+    return (
+      <p role={networkError ? 'alert' : 'status'}>{networkError ?? 'Reading wallet network…'}</p>
+    );
+  }
 
   return (
     <>

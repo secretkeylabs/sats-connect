@@ -1,10 +1,10 @@
 import {
   BaseAdapter,
   ListenerInfo,
-  Params,
-  Requests,
+  Method,
+  RequestReturn,
   RpcErrorCode,
-  RpcResult,
+  RpcRequestParams,
   SatsConnectAdapter,
   SupportedWallet,
   defaultAdapters,
@@ -59,10 +59,10 @@ class Wallet {
     removeDefaultProvider();
   }
 
-  public async request<Method extends keyof Requests>(
-    method: Method,
-    params: Params<Method>
-  ): Promise<RpcResult<Method>> {
+  public async request<RequestMethod extends Method>(
+    method: RequestMethod,
+    params: RpcRequestParams<RequestMethod>
+  ): Promise<RequestReturn<RequestMethod>> {
     loadSelector();
 
     const defaultProvider = getDefaultProvider();
@@ -152,5 +152,6 @@ class Wallet {
 }
 
 export * from '@sats-connect/core';
+export * from './decodeAddressPsbtData';
 
 export default new Wallet();

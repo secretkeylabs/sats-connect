@@ -1,11 +1,23 @@
 import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
-import { AddressPurpose, BitcoinNetworkType, request, type ConnectParams } from 'sats-connect';
+import {
+  AddressPurpose,
+  BitcoinNetworkType,
+  request,
+  type WalletConnectParams,
+} from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
+import { useGlobalState } from '../GlobalStateProvider/use-global-state';
+
+type WalletConnectNetwork =
+  | BitcoinNetworkType.Mainnet
+  | BitcoinNetworkType.Testnet
+  | BitcoinNetworkType.Signet;
 
 export const WalletConnect = () => {
+  const { syncNetwork } = useGlobalState();
   const [response, setResponse] = useState<string | null>(null);
-  const [options, setOptions] = useState<ConnectParams>({
+  const [options, setOptions] = useState<WalletConnectParams>({
     message: 'Optional message displayed on connection popup',
     addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
     network: BitcoinNetworkType.Mainnet,
@@ -24,12 +36,14 @@ export const WalletConnect = () => {
         console.error('wallet_connect error');
         return;
       }
+
+      await syncNetwork();
     };
     handler().catch(console.error);
   };
 
   return (
-    <MethodLayout<ConnectParams>
+    <MethodLayout<WalletConnectParams>
       method="wallet_connect"
       docsUrl="https://docs.xverse.app/sats-connect/connecting-to-the-wallet/connect-to-xverse-wallet"
       options={options}
@@ -38,9 +52,12 @@ export const WalletConnect = () => {
     >
       <NativeSelect
         label={'network'}
-        data={Object.values(BitcoinNetworkType)}
+        data={[BitcoinNetworkType.Mainnet, BitcoinNetworkType.Testnet, BitcoinNetworkType.Signet]}
         onChange={(e) =>
-          setOptions((prev) => ({ ...prev, network: e.target.value as BitcoinNetworkType }))
+          setOptions((prev) => ({
+            ...prev,
+            network: e.target.value as WalletConnectNetwork,
+          }))
         }
       />
     </MethodLayout>

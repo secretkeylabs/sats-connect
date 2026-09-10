@@ -1,5 +1,4 @@
 import { Button, Card, Stack, Switch } from '@mantine/core';
-import { BitcoinNetworkType } from '@sats-connect/core';
 import {
   PostConditionMode,
   StacksTransactionWire,
@@ -9,7 +8,7 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { useState } from 'react';
-import { request } from 'sats-connect';
+import { BitcoinNetworkType, request } from 'sats-connect';
 
 const codeBody = `
 (define-data-var greeting (string-ascii 100) "Hello, World!")
