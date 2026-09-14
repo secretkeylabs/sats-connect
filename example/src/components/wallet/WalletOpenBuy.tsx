@@ -1,6 +1,6 @@
 import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
-import { OpenBuyParams, request } from 'sats-connect';
+import { WalletOpenBuyParams, request } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 const supportedCurrencies = ['BTC', 'STX', 'WBTC', 'STRK', 'USDC'];
@@ -28,7 +28,7 @@ export const WalletOpenBuy = () => {
   };
 
   return (
-    <MethodLayout<OpenBuyParams>
+    <MethodLayout<WalletOpenBuyParams>
       method="wallet_openBuy"
       docsUrl="https://docs.xverse.app/sats-connect/wallet-methods/wallet_openBuy"
       options={options}

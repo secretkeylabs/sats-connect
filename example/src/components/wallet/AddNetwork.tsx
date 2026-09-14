@@ -1,11 +1,11 @@
 import { Input, NativeSelect, Switch } from '@mantine/core';
 import { useState } from 'react';
-import { BitcoinNetworkType, request, type AddNetworkParams } from 'sats-connect';
+import { BitcoinNetworkType, request, type WalletAddNetworkParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export const AddNetwork = () => {
   const [response, setResponse] = useState<string | null>(null);
-  const [options, setOptions] = useState<Extract<AddNetworkParams, { chain: 'bitcoin' }>>({
+  const [options, setOptions] = useState<Extract<WalletAddNetworkParams, { chain: 'bitcoin' }>>({
     chain: 'bitcoin',
     name: 'My Custom Regtest',
     type: BitcoinNetworkType.Regtest,
@@ -33,7 +33,7 @@ export const AddNetwork = () => {
   };
 
   return (
-    <MethodLayout<AddNetworkParams>
+    <MethodLayout<WalletAddNetworkParams>
       method="wallet_addNetwork"
       docsUrl="https://docs.xverse.app#"
       options={options}

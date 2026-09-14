@@ -1,11 +1,18 @@
 import { NativeSelect } from '@mantine/core';
 import { useState } from 'react';
-import { AddressPurpose, BitcoinNetworkType, request, type ConnectParams } from 'sats-connect';
+import {
+  AddressPurpose,
+  BitcoinNetworkType,
+  request,
+  type WalletConnectParams,
+} from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
+
+type ConnectOptions = NonNullable<WalletConnectParams>;
 
 export const WalletConnect = () => {
   const [response, setResponse] = useState<string | null>(null);
-  const [options, setOptions] = useState<ConnectParams>({
+  const [options, setOptions] = useState<WalletConnectParams>({
     message: 'Optional message displayed on connection popup',
     addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
     network: BitcoinNetworkType.Mainnet,
@@ -29,7 +36,7 @@ export const WalletConnect = () => {
   };
 
   return (
-    <MethodLayout<ConnectParams>
+    <MethodLayout<WalletConnectParams>
       method="wallet_connect"
       docsUrl="https://docs.xverse.app/sats-connect/connecting-to-the-wallet/connect-to-xverse-wallet"
       options={options}
@@ -40,7 +47,10 @@ export const WalletConnect = () => {
         label={'network'}
         data={Object.values(BitcoinNetworkType)}
         onChange={(e) =>
-          setOptions((prev) => ({ ...prev, network: e.target.value as BitcoinNetworkType }))
+          setOptions((prev) => ({
+            ...prev,
+            network: e.target.value as ConnectOptions['network'],
+          }))
         }
       />
     </MethodLayout>
