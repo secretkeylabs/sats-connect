@@ -17,12 +17,12 @@ jobs:
       - run: npm ci
       # - run: npm test
 
-  publish-gpr:
+  publish-npm:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      packages: write
       contents: read
+      id-token: write # required for npm trusted publishing (OIDC)
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # actions/checkout@v4
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
@@ -31,20 +31,10 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
+      # Authenticates via GitHub OIDC (trusted publishing), no npm token needed.
       - id: publish-prerelease
         if: github.event.release.prerelease
         run: npm publish --tag prerelease
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
       - id: npm-publish-latest
-        if: ${{github.event.release.prerelease == false}}
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
+        if: ${{ github.event.release.prerelease == false }}
         run: npm publish
-      - id: set-dist-tag-latest
-        if: ${{failure() && steps.npm-publish-latest.outcome == 'failure'}}
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
-        run: |
-          VERSION=$(npm pkg get version | jq . -r)
-          npm dist-tag add sats-connect@$VERSION latest

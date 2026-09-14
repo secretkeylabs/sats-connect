@@ -40,6 +40,7 @@ jobs:
       packages: write
       contents: read
       pull-requests: write
+      id-token: write # required for npm trusted publishing (OIDC)
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # actions/checkout@v4
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
@@ -62,10 +63,9 @@ jobs:
           SHA: ${{ steps.git-commit.outputs.sha }}
           CURRENT_VERSION: ${{ steps.current-version.outputs.version }}
 
+      # Authenticates via GitHub OIDC (trusted publishing), no npm token needed.
       - id: publish
         run: npm publish --tag pr
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PACKAGE_REGISTRY_TOKEN}}
 
       - id: published-version
         run: echo "version=$(npm pkg get version  | tr -d '"')" >> $GITHUB_OUTPUT
