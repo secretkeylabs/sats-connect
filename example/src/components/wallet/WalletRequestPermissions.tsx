@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { request, type RequestPermissionsParams } from 'sats-connect';
+import { request, type WalletRequestPermissionsParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export const WalletRequestPermissions = () => {
   const [response, setResponse] = useState<string | null>(null);
-  const [options] = useState<RequestPermissionsParams>([
+  const [options] = useState<WalletRequestPermissionsParams>([
     {
       type: 'wallet',
       resourceId: 'wallet',
@@ -30,7 +30,7 @@ export const WalletRequestPermissions = () => {
   };
 
   return (
-    <MethodLayout<RequestPermissionsParams>
+    <MethodLayout<WalletRequestPermissionsParams>
       method="wallet_requestPermissions"
       docsUrl="https://docs.xverse.app/sats-connect/xverse-wallet-permissions"
       options={options}

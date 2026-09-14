@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { request, type GetWalletTypeParams } from 'sats-connect';
+import { request, type WalletGetWalletTypeParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export function WalletGetWalletType() {
@@ -22,7 +22,7 @@ export function WalletGetWalletType() {
   });
 
   return (
-    <MethodLayout<GetWalletTypeParams>
+    <MethodLayout<WalletGetWalletTypeParams>
       method="wallet_getWalletType"
       handleRequest={() => {
         refetch().catch(console.error);

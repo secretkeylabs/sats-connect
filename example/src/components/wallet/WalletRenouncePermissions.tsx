@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { request, type RenouncePermissionsParams } from 'sats-connect';
+import { request, type WalletRenouncePermissionsParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export const WalletRenouncePermissions = () => {
   const [response, setResponse] = useState<string | null>(null);
-  const [options] = useState<RenouncePermissionsParams>(undefined);
+  const [options] = useState<WalletRenouncePermissionsParams>(undefined);
 
   const handleWalletRenouncePermissions = () => {
     const handler = async () => {
@@ -24,7 +24,7 @@ export const WalletRenouncePermissions = () => {
   };
 
   return (
-    <MethodLayout<RenouncePermissionsParams>
+    <MethodLayout<WalletRenouncePermissionsParams>
       method="wallet_renouncePermissions"
       docsUrl="https://docs.xverse.app/sats-connect/xverse-wallet-permissions"
       options={options}

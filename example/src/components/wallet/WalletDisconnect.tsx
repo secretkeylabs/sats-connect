@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { request, type DisconnectParams } from 'sats-connect';
+import { request, type WalletDisconnectParams } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
 
 export const WalletDisconnect = () => {
   const [response, setResponse] = useState<string | null>(null);
-  const [options] = useState<DisconnectParams>(null);
+  const [options] = useState<WalletDisconnectParams>(null);
 
   const handleWalletDisconnect = () => {
     const handler = async () => {
@@ -24,7 +24,7 @@ export const WalletDisconnect = () => {
   };
 
   return (
-    <MethodLayout<DisconnectParams>
+    <MethodLayout<WalletDisconnectParams>
       method="wallet_disconnect"
       docsUrl="https://docs.xverse.app/sats-connect/connecting-to-the-wallet/disconnect-from-xverse-wallet"
       options={options}
