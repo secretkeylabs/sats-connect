@@ -28,10 +28,10 @@ jobs:
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
       # Authenticates via GitHub OIDC (trusted publishing), no npm token needed.
+      # Do not set registry-url on setup-node: it injects a placeholder NODE_AUTH_TOKEN which disables OIDC.
       - id: publish-prerelease
         if: github.event.release.prerelease
         run: npm publish --tag prerelease

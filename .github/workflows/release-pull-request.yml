@@ -47,7 +47,6 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          registry-url: https://registry.npmjs.org
 
       - id: git-commit
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
@@ -64,6 +63,7 @@ jobs:
           CURRENT_VERSION: ${{ steps.current-version.outputs.version }}
 
       # Authenticates via GitHub OIDC (trusted publishing), no npm token needed.
+      # Do not set registry-url on setup-node: it injects a placeholder NODE_AUTH_TOKEN which disables OIDC.
       - id: publish
         run: npm publish --tag pr
 
