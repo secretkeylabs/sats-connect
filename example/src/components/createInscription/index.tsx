@@ -27,7 +27,7 @@ export const CreateInscription = ({ network }: Props) => {
         onCancel: () => alert('Canceled'),
       });
     })().catch(console.error);
-  }, [content]);
+  }, [content, network]);
 
   return (
     <Card>

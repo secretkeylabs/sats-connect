@@ -47,6 +47,11 @@ export function CollapseDesktop({ children }: React.PropsWithChildren) {
             href: '/stacks-methods',
           },
           {
+            icon: 'starknet',
+            label: 'Starknet Methods',
+            href: '/starknet-methods',
+          },
+          {
             icon: 'spark',
             label: 'Spark Methods',
             href: '/spark-methods',

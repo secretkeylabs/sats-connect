@@ -1,14 +1,15 @@
-import { Address, BitcoinNetworkType } from '@sats-connect/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { PropsWithChildren, useCallback, useState } from 'react';
-import Wallet from 'sats-connect';
-import { useLocalStorage } from '../../hooks';
+import Wallet, {
+  Address,
+  BitcoinNetworkType,
+  RpcErrorCode,
+  type WalletRequestPermissionsParams,
+} from 'sats-connect';
 import { GlobalStateContext } from './context';
 export function GlobalStateProvider({ children }: PropsWithChildren) {
-  const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
-    'network',
-    BitcoinNetworkType.Mainnet,
-  );
+  const [network, setNetwork] = useState<BitcoinNetworkType | null>(null);
+  const [networkError, setNetworkError] = useState<string | null>(null);
   const [accountId, setAccountId] = useState<string | null>(null);
   const [btcAddressInfo, setBtcAddressInfo] = useState<Address[]>([]);
   const [stxAddressInfo, setStxAddressInfo] = useState<Address[]>([]);
@@ -20,8 +21,41 @@ export function GlobalStateProvider({ children }: PropsWithChildren) {
     setAccountId(null);
     setBtcAddressInfo([]);
     setStxAddressInfo([]);
+    setNetwork(null);
+    setNetworkError(null);
     queryClient.clear();
   }, [queryClient, setBtcAddressInfo, setStxAddressInfo, setAccountId]);
+  const syncNetwork = useCallback(async () => {
+    setNetwork(null);
+    setNetworkError(null);
+
+    let response = await Wallet.request('wallet_getNetwork', null);
+    if (
+      response.status === 'error' &&
+      response.error.code === (RpcErrorCode.ACCESS_DENIED as number)
+    ) {
+      const permissions: WalletRequestPermissionsParams = [
+        {
+          type: 'wallet',
+          resourceId: 'wallet',
+          actions: { readNetwork: true },
+        },
+      ];
+      const permissionResponse = await Wallet.request('wallet_requestPermissions', permissions);
+      if (permissionResponse.status === 'success') {
+        response = await Wallet.request('wallet_getNetwork', null);
+      }
+    }
+
+    if (response.status === 'error') {
+      console.error('Error getting wallet network.', response);
+      setNetworkError('Unable to read the wallet network. Network-dependent actions are disabled.');
+      return false;
+    }
+
+    setNetwork(response.result.bitcoin.name);
+    return true;
+  }, []);
   const disconnect = useCallback(() => {
     (async () => {
       await Wallet.disconnect();
@@ -35,6 +69,7 @@ export function GlobalStateProvider({ children }: PropsWithChildren) {
     <GlobalStateContext.Provider
       value={{
         network,
+        networkError,
         accountId,
         btcAddressInfo,
         stxAddressInfo,
@@ -43,7 +78,6 @@ export function GlobalStateProvider({ children }: PropsWithChildren) {
 
         isConnected,
 
-        setNetwork,
         setAccountId,
         setBtcAddressInfo,
         setStxAddressInfo,
@@ -51,6 +85,7 @@ export function GlobalStateProvider({ children }: PropsWithChildren) {
         setStarknetAddressInfo,
 
         clearAppData,
+        syncNetwork,
         disconnect,
       }}
     >
