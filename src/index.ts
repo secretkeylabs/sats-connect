@@ -1,10 +1,7 @@
 import {
   BaseAdapter,
   ListenerInfo,
-  Method,
-  RequestReturn,
   RpcErrorCode,
-  RpcRequestParams,
   SatsConnectAdapter,
   SupportedWallet,
   defaultAdapters,
@@ -13,6 +10,9 @@ import {
   removeDefaultProvider,
   setDefaultProvider,
   type AddListener,
+  type Method,
+  type RequestReturn,
+  type RpcRequestParams,
 } from '@sats-connect/core';
 import { makeDefaultConfig } from '@sats-connect/make-default-provider-config';
 import {
@@ -59,10 +59,10 @@ class Wallet {
     removeDefaultProvider();
   }
 
-  public async request<RequestMethod extends Method>(
-    method: RequestMethod,
-    params: RpcRequestParams<RequestMethod>
-  ): Promise<RequestReturn<RequestMethod>> {
+  public async request<M extends Method>(
+    method: M,
+    params: RpcRequestParams<M>
+  ): Promise<RequestReturn<M>> {
     loadSelector();
 
     const defaultProvider = getDefaultProvider();

@@ -9,10 +9,7 @@ import {
 import { MethodLayout } from '../../layouts/MethodLayout';
 import { useGlobalState } from '../GlobalStateProvider/use-global-state';
 
-type WalletConnectNetwork =
-  | BitcoinNetworkType.Mainnet
-  | BitcoinNetworkType.Testnet
-  | BitcoinNetworkType.Signet;
+type ConnectOptions = NonNullable<WalletConnectParams>;
 
 export const WalletConnect = () => {
   const { syncNetwork } = useGlobalState();
@@ -62,7 +59,7 @@ export const WalletConnect = () => {
         onChange={(e) =>
           setOptions((prev) => ({
             ...prev,
-            network: e.target.value as WalletConnectNetwork,
+            network: e.target.value as ConnectOptions['network'],
           }))
         }
       />

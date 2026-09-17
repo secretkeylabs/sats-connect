@@ -15,6 +15,8 @@ interface Recipient {
 export const SendBtc = ({ network }: Props) => {
   const [recipients, setRecipients] = useState<Recipient[]>([{ address: '', amount: '' }]);
   const [txnId, setTxnId] = useState('');
+  const [txHex, setTxHex] = useState<string | undefined>();
+  const [broadcast, setBroadcast] = useState(true);
 
   const addRecipient = () => {
     setRecipients([...recipients, { address: '', amount: '' }]);
@@ -40,6 +42,7 @@ export const SendBtc = ({ network }: Props) => {
           address: r.address,
           amount: +r.amount,
         })),
+        broadcast,
       });
 
       if (response.status === 'error') {
@@ -49,9 +52,10 @@ export const SendBtc = ({ network }: Props) => {
       }
 
       setTxnId(response.result.txid);
+      setTxHex(response.result.transaction);
       setRecipients([{ address: '', amount: '' }]);
     })().catch(console.error);
-  }, [recipients]);
+  }, [recipients, broadcast]);
 
   const explorerUrl = `${getMempoolEndpoint(network)}tx/${txnId}`;
 
@@ -99,18 +103,40 @@ export const SendBtc = ({ network }: Props) => {
               </Button>
             )}
           </div>
+          <div style={{ marginBottom: 16 }}>
+            <label>
+              <input
+                type="checkbox"
+                checked={broadcast}
+                onChange={(e) => setBroadcast(e.target.checked)}
+              />{' '}
+              Broadcast transaction (uncheck to sign only)
+            </label>
+          </div>
           <Button onClick={onClick} disabled={recipients.some((r) => !r.amount || !r.address)}>
-            Send
+            {broadcast ? 'Send' : 'Sign'}
           </Button>
         </>
       )}
       {txnId && (
         <Success>
-          Success! Click{' '}
-          <a href={explorerUrl} target="_blank" rel="noreferrer">
-            here
-          </a>{' '}
-          to see your transaction
+          {broadcast ? (
+            <>
+              Success! Click{' '}
+              <a href={explorerUrl} target="_blank" rel="noreferrer">
+                here
+              </a>{' '}
+              to see your transaction
+            </>
+          ) : (
+            <>Signed (not broadcast). txid: {txnId}</>
+          )}
+          {txHex && (
+            <div style={{ marginTop: 8, wordBreak: 'break-all' }}>
+              <div>Transaction hex:</div>
+              <code>{txHex}</code>
+            </div>
+          )}
         </Success>
       )}
     </Card>
