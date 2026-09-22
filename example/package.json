@@ -21,6 +21,7 @@
     "@mantine/hooks": "^8.2.1",
     "@noble/curves": "^2.0.1",
     "@noble/hashes": "^2.0.1",
+    "@sats-connect/core": "0.18.2-263ae91",
     "@scure/base": "^2.0.0",
     "@scure/btc-signer": "^2.4.1",
     "@stacks/common": "^7.0.2",

@@ -45,6 +45,7 @@ import {
   SparkTransfer,
   SparkTransferToken,
 } from './components/spark';
+import { GetAccounts as StacksGetAccounts } from './components/stacks/GetAccounts';
 import { SendSip10 } from './components/stacks/SendSip10';
 import { SendStx } from './components/stacks/SendStx';
 import { SignMessageStacks } from './components/stacks/signMessageStacks';
@@ -341,7 +342,8 @@ const StacksMethods = () => {
       {stxAddressInfo?.[0]?.publicKey ? (
         <SignTransaction network={network} publicKey={stxAddressInfo?.[0].publicKey} />
       ) : null}
-      <SignTransactions publicKey={stxAddressInfo[0].publicKey} />
+      <SignTransactions />
+      <StacksGetAccounts />
     </>
   );
 };
