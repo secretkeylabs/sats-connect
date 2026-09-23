@@ -12,6 +12,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import Wallet, { AddressPurpose, request, RpcErrorCode } from 'sats-connect';
+import { BuildAndSignBatchPsbt } from './components/bitcoin/BuildAndSignBatchPsbt';
 import { BuildAndSignPsbt } from './components/bitcoin/BuildAndSignPsbt';
 import { GetBtcBalance } from './components/bitcoin/GetBtcBalance';
 import { SignMessage } from './components/bitcoin/SignMessage';
@@ -298,6 +299,7 @@ const BitcoinMethods = () => {
       <SignMessage addresses={[...btcAddressInfo]} />
       <SignMultipleMessages addresses={[...btcAddressInfo]} />
       <BuildAndSignPsbt addresses={btcAddressInfo} network={network} />
+      <BuildAndSignBatchPsbt addresses={btcAddressInfo} network={network} />
       <SendBtc network={network} />
       <SendInscription network={network} />
       <CreateInscription network={network} />

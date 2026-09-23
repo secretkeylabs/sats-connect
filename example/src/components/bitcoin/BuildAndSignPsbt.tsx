@@ -4,30 +4,25 @@ import {
   Address as BitcoinAddress,
   NETWORK,
   OutScript,
-  TaprootControlBlock,
   TEST_NETWORK,
   Transaction,
 } from '@scure/btc-signer';
 import { useMemo, useRef, useState } from 'react';
-import {
-  Address,
-  BitcoinNetworkType,
-  decodeAddressPsbtData,
-  DecodedAddressPsbtData,
-  request,
-} from 'sats-connect';
+import { Address, BitcoinNetworkType, request } from 'sats-connect';
 import { Button, Card, Code, Input, NativeSelect } from '../../App.styles';
-import { getMempoolEndpoint } from '../../util';
+import {
+  DUST_LIMIT,
+  estimateSignedWeight,
+  feeForWeight,
+  fetchFeeRate,
+  fetchUtxos,
+  resolveAddressPsbtData,
+  type MempoolUtxo,
+} from './psbtBuilding';
 
 interface Props {
   addresses: Address[];
   network: BitcoinNetworkType;
-}
-
-interface MempoolUtxo {
-  txid: string;
-  vout: number;
-  value: number;
 }
 
 interface SignResult {
@@ -35,175 +30,15 @@ interface SignResult {
   txid?: string;
 }
 
-const DUST_LIMIT = 546n;
-
-const compactSizeLength = (value: number): number => {
-  if (value < 0xfd) return 1;
-  if (value <= 0xffff) return 3;
-  if (value <= 0xffffffff) return 5;
-  return 9;
-};
-
-const pushDataPrefixLength = (value: number): number => {
-  if (value <= 75) return 1;
-  if (value <= 0xff) return 2;
-  if (value <= 0xffff) return 3;
-  return 5;
-};
-
-type DecodedTapLeaf = Extract<
-  DecodedAddressPsbtData['unlockDefinition'],
-  { tapLeafScript: unknown }
->['tapLeafScript'][number];
-
-const estimateTapLeafWitness = (tapLeafScript: DecodedTapLeaf): number => {
-  const [controlBlock, scriptWithVersion] = tapLeafScript;
-  const script = scriptWithVersion.subarray(0, -1);
-  const decodedScript = OutScript.decode(script);
-  const controlBlockLength = TaprootControlBlock.encode(controlBlock).length;
-
-  let signatureCount: number;
-  let stackSignatureSlots: number;
-  if (decodedScript.type === 'tr_ms') {
-    signatureCount = decodedScript.m;
-    stackSignatureSlots = decodedScript.pubkeys.length;
-  } else if (decodedScript.type === 'tr_ns') {
-    signatureCount = decodedScript.pubkeys.length;
-    stackSignatureSlots = signatureCount;
-  } else if (decodedScript.type === 'pk') {
-    signatureCount = 1;
-    stackSignatureSlots = 1;
-  } else {
-    throw new Error(`Unsupported tapscript type: ${decodedScript.type}`);
-  }
-
-  return (
-    compactSizeLength(stackSignatureSlots + 2) +
-    signatureCount * 66 +
-    (stackSignatureSlots - signatureCount) +
-    compactSizeLength(script.length) +
-    script.length +
-    compactSizeLength(controlBlockLength) +
-    controlBlockLength
-  );
-};
-
-const estimateInputSizes = (
-  address: Address,
-  decoded: ReturnType<typeof decodeAddressPsbtData>,
-): { stripped: number; witness: number } => {
-  const definition = address.unlockDefinition;
-  if (!definition) throw new Error('The selected address has no unlock definition.');
-
-  let scriptSigLength = 0;
-  let witness: number;
-  switch (definition.type) {
-    case 'p2wpkh':
-      witness = 1 + 74 + 34;
-      break;
-    case 'p2sh-p2wpkh': {
-      if (!('redeemScript' in decoded.unlockDefinition)) {
-        throw new Error('The decoded redeem script is missing.');
-      }
-      const { redeemScript } = decoded.unlockDefinition;
-      scriptSigLength = pushDataPrefixLength(redeemScript.length) + redeemScript.length;
-      witness = 1 + 74 + 34;
-      break;
-    }
-    case 'p2tr-key-path':
-      witness = 1 + 66;
-      break;
-    case 'p2wsh': {
-      if (!('witnessScript' in decoded.unlockDefinition)) {
-        throw new Error('The decoded witness script is missing.');
-      }
-      const { witnessScript } = decoded.unlockDefinition;
-      const multisig = OutScript.decode(witnessScript);
-      if (multisig.type !== 'ms') throw new Error('Only multisig P2WSH scripts are supported.');
-      witness =
-        compactSizeLength(multisig.m + 2) +
-        1 +
-        multisig.m * 74 +
-        compactSizeLength(witnessScript.length) +
-        witnessScript.length;
-      break;
-    }
-    case 'p2tr-script-path': {
-      if (!('tapLeafScript' in decoded.unlockDefinition)) {
-        throw new Error('The decoded tap leaf script is missing.');
-      }
-      const leaves = decoded.unlockDefinition.tapLeafScript;
-      witness = Math.max(...leaves.map(estimateTapLeafWitness));
-      break;
-    }
-  }
-
-  return {
-    stripped: 32 + 4 + compactSizeLength(scriptSigLength) + scriptSigLength + 4,
-    witness,
-  };
-};
-
-const estimateSignedWeight = (
-  address: Address,
-  decoded: ReturnType<typeof decodeAddressPsbtData>,
-  inputCount: number,
-  outputScripts: Uint8Array[],
-): number => {
-  const input = estimateInputSizes(address, decoded);
-  const strippedSize =
-    4 +
-    compactSizeLength(inputCount) +
-    input.stripped * inputCount +
-    compactSizeLength(outputScripts.length) +
-    outputScripts.reduce(
-      (size, script) => size + 8 + compactSizeLength(script.length) + script.length,
-      0,
-    ) +
-    4;
-
-  return strippedSize * 4 + 2 + input.witness * inputCount;
-};
-
-const feeForWeight = (weight: number, feeRate: number): bigint =>
-  BigInt(Math.ceil((weight * feeRate) / 4));
-
-const parseUtxos = (value: unknown): MempoolUtxo[] => {
-  if (!Array.isArray(value)) throw new Error('The mempool UTXO response is malformed.');
-
-  return value.map((utxo: unknown) => {
-    if (!utxo || typeof utxo !== 'object') {
-      throw new Error('The mempool UTXO response is malformed.');
-    }
-    const candidate = utxo as Record<string, unknown>;
-    if (
-      typeof candidate.txid !== 'string' ||
-      !/^[0-9a-f]{64}$/i.test(candidate.txid) ||
-      !Number.isInteger(candidate.vout) ||
-      (candidate.vout as number) < 0 ||
-      !Number.isSafeInteger(candidate.value) ||
-      (candidate.value as number) <= 0
-    ) {
-      throw new Error('The mempool UTXO response is malformed.');
-    }
-    return {
-      txid: candidate.txid,
-      vout: candidate.vout as number,
-      value: candidate.value as number,
-    };
-  });
-};
-
-const fetchJson = async (url: string): Promise<unknown> => {
-  const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-  if (!response.ok) throw new Error(`Mempool request failed with HTTP ${response.status}.`);
-  return response.json();
-};
-
 export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
+  // Wallet-supplied metadata when present, locally derived for single-sig on older wallets.
   const usableAddresses = useMemo(
-    () => addresses.filter((address) => address.scriptPubKey && address.unlockDefinition),
-    [addresses],
+    () =>
+      addresses.flatMap((address) => {
+        const resolved = resolveAddressPsbtData(address, network);
+        return resolved ? [{ address, resolved }] : [];
+      }),
+    [addresses, network],
   );
   const [selectedAddress, setSelectedAddress] = useState(usableAddresses[0]?.address ?? '');
   const [recipient, setRecipient] = useState('');
@@ -216,7 +51,8 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
   const signingRef = useRef(false);
 
   const source =
-    usableAddresses.find((address) => address.address === selectedAddress) ?? usableAddresses[0];
+    usableAddresses.find((entry) => entry.address.address === selectedAddress) ??
+    usableAddresses[0];
 
   const buildAndSign = async () => {
     if (signingRef.current) return;
@@ -234,20 +70,11 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
 
       const bitcoinNetwork = network === BitcoinNetworkType.Mainnet ? NETWORK : TEST_NETWORK;
       const recipientScript = OutScript.encode(BitcoinAddress(bitcoinNetwork).decode(recipient));
-      const decoded = decodeAddressPsbtData(source);
-      const endpoint = getMempoolEndpoint(network);
-      const [utxoResponse, feeResponse] = await Promise.all([
-        fetchJson(`${endpoint}api/address/${source.address}/utxo`),
-        fetchJson(`${endpoint}api/v1/fees/recommended`),
+      const { decoded } = source.resolved;
+      const [utxos, recommendedFeeRate] = await Promise.all([
+        fetchUtxos(source.address.address, network),
+        fetchFeeRate(network),
       ]);
-      const utxos = parseUtxos(utxoResponse).sort((left, right) => right.value - left.value);
-      if (!feeResponse || typeof feeResponse !== 'object' || !('halfHourFee' in feeResponse)) {
-        throw new Error('The recommended fee response is malformed.');
-      }
-      const recommendedFeeRate = Number(feeResponse.halfHourFee);
-      if (!Number.isFinite(recommendedFeeRate) || recommendedFeeRate <= 0) {
-        throw new Error('The recommended fee response is malformed.');
-      }
       setFeeRate(recommendedFeeRate);
 
       const amountSats = BigInt(amount);
@@ -259,13 +86,13 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
         selected.push(utxo);
         selectedValue += BigInt(utxo.value);
         const noChangeFee = feeForWeight(
-          estimateSignedWeight(source, decoded, selected.length, [recipientScript]),
+          estimateSignedWeight(source.resolved, selected.length, [recipientScript]),
           recommendedFeeRate,
         );
         if (selectedValue < amountSats + noChangeFee) continue;
 
         const withChangeFee = feeForWeight(
-          estimateSignedWeight(source, decoded, selected.length, [
+          estimateSignedWeight(source.resolved, selected.length, [
             recipientScript,
             decoded.scriptPubKey,
           ]),
@@ -281,8 +108,7 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
       }
       const finalFee = feeForWeight(
         estimateSignedWeight(
-          source,
-          decoded,
+          source.resolved,
           selected.length,
           change > 0n ? [recipientScript, decoded.scriptPubKey] : [recipientScript],
         ),
@@ -308,7 +134,7 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
 
       const response = await request('signPsbt', {
         psbt: base64.encode(transaction.toPSBT(0)),
-        signInputs: { [source.address]: selected.map((_, index) => index) },
+        signInputs: { [source.address.address]: selected.map((_, index) => index) },
         broadcast,
       });
       if (response.status === 'error') throw new Error(response.error.message);
@@ -330,13 +156,13 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
       </p>
       <div>Source address</div>
       <NativeSelect
-        value={source?.address ?? ''}
+        value={source?.address.address ?? ''}
         onChange={(event) => setSelectedAddress(event.target.value)}
         disabled={!usableAddresses.length || isSigning}
       >
-        {usableAddresses.map((address) => (
+        {usableAddresses.map(({ address, resolved }) => (
           <option key={address.address} value={address.address}>
-            {address.purpose}: {address.address} ({address.unlockDefinition?.type})
+            {address.purpose}: {address.address} ({resolved.definitionType})
           </option>
         ))}
       </NativeSelect>
