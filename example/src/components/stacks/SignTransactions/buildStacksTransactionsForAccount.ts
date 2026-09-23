@@ -69,8 +69,16 @@ function getLastUsedNonce(transactions: StacksTransactionWire[]) {
   return lastTransaction.auth.spendingCondition.nonce + 1n;
 }
 
+/**
+ * The wallet's Stacks network. The builders default to mainnet, which stamps a mainnet version
+ * byte on the signer; for a vault on testnet the wallet then rejects the transaction because its
+ * signer address no longer matches the vault's.
+ */
+export type StacksNetworkName = 'mainnet' | 'testnet';
+
 export async function buildStacksTransactionsForAccount(
   account: StacksAccount,
+  network: StacksNetworkName,
   {
     isPoolAllowContractSelected,
     isPoolDelegateStacksSelected,
@@ -88,6 +96,7 @@ export async function buildStacksTransactionsForAccount(
       functionName: 'allow-contract-caller',
       functionArgs: [contractPrincipalCV(poolContractAddress, poolContractName), noneCV()],
       ...signer,
+      network,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);
@@ -107,6 +116,7 @@ export async function buildStacksTransactionsForAccount(
         noneCV(),
       ],
       ...signer,
+      network,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);
@@ -118,6 +128,7 @@ export async function buildStacksTransactionsForAccount(
       contractName: `hello-world-${now}`,
       codeBody: helloWorldContractBody,
       ...signer,
+      network,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);
@@ -128,6 +139,7 @@ export async function buildStacksTransactionsForAccount(
       recipient: 'SP1VYV2JBF1QPNDSKHBZRAWRC4KQXP8ZSSRNKPJE4', // acc 4
       amount: '100000', // 0.1 STX
       ...signer,
+      network,
       ...(getLastUsedNonce(transactions) && { nonce: getLastUsedNonce(transactions) }),
     });
     transactions.push(transaction);

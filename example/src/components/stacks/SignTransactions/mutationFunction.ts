@@ -21,7 +21,11 @@ export async function mutationFunction({ broadcast, ...builderArgs }: MutationFn
     throw new Error('No connected Stacks account.');
   }
 
-  const transactions = await buildStacksTransactionsForAccount(account, builderArgs);
+  const transactions = await buildStacksTransactionsForAccount(
+    account,
+    accountsRes.result.network.stacks.name,
+    builderArgs,
+  );
 
   const res = await request('stx_signTransactions', {
     transactions: transactions.map((t) => t.serialize()),

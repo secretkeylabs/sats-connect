@@ -31,7 +31,7 @@ const args = {
 
 describe('buildStacksTransactionsForAccount', () => {
   it('builds a single-sig transaction for a legacy account', async () => {
-    const [transaction] = await buildStacksTransactionsForAccount(legacyAccount, args);
+    const [transaction] = await buildStacksTransactionsForAccount(legacyAccount, 'mainnet', args);
 
     expect(transaction.auth.spendingCondition.hashMode).toBe(AddressHashMode.P2PKH);
 
@@ -39,8 +39,15 @@ describe('buildStacksTransactionsForAccount', () => {
     expect(roundTripped.auth.spendingCondition.hashMode).toBe(AddressHashMode.P2PKH);
   });
 
+  it('stamps the wallet network on the transaction so the signer matches a testnet vault', async () => {
+    const [transaction] = await buildStacksTransactionsForAccount(multisigAccount, 'testnet', args);
+
+    // 0x80 is the Stacks testnet transaction version byte.
+    expect(transaction.transactionVersion).toBe(0x80);
+  });
+
   it('builds a non-sequential multisig transaction for a vault account', async () => {
-    const [transaction] = await buildStacksTransactionsForAccount(multisigAccount, args);
+    const [transaction] = await buildStacksTransactionsForAccount(multisigAccount, 'mainnet', args);
 
     const { spendingCondition } = transaction.auth;
     expect(spendingCondition.hashMode).toBe(AddressHashMode.P2SHNonSequential);
@@ -55,7 +62,7 @@ describe('buildStacksTransactionsForAccount', () => {
   });
 
   it('builds one transaction per selected checkbox, chaining nonces', async () => {
-    const transactions = await buildStacksTransactionsForAccount(multisigAccount, {
+    const transactions = await buildStacksTransactionsForAccount(multisigAccount, 'mainnet', {
       isPoolAllowContractSelected: true,
       isPoolDelegateStacksSelected: false,
       isContractDeploySelected: false,

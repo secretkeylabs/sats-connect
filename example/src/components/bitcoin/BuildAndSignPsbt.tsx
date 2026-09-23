@@ -40,7 +40,7 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
       }),
     [addresses, network],
   );
-  const [selectedAddress, setSelectedAddress] = useState(usableAddresses[0]?.address ?? '');
+  const [selectedAddress, setSelectedAddress] = useState(usableAddresses[0]?.address.address ?? '');
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [broadcast, setBroadcast] = useState(false);
