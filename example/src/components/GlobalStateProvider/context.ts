@@ -1,8 +1,9 @@
-import { Address, BitcoinNetworkType } from '@sats-connect/core';
 import { createContext } from 'react';
+import { Address, BitcoinNetworkType } from 'sats-connect';
 
 export interface TGlobalStateContext {
-  network: BitcoinNetworkType;
+  network: BitcoinNetworkType | null;
+  networkError: string | null;
   accountId: string | null;
   btcAddressInfo: Address[];
   stxAddressInfo: Address[];
@@ -11,7 +12,6 @@ export interface TGlobalStateContext {
 
   isConnected: boolean;
 
-  setNetwork: (newValue: BitcoinNetworkType) => void;
   setAccountId: (id: string) => void;
   setBtcAddressInfo: (addresses: Address[]) => void;
   setStxAddressInfo: (addresses: Address[]) => void;
@@ -19,6 +19,7 @@ export interface TGlobalStateContext {
   setStarknetAddressInfo: (addresses: Address[]) => void;
 
   clearAppData: () => void;
+  syncNetwork: () => Promise<boolean>;
   disconnect: () => void;
 }
 

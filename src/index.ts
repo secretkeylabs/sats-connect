@@ -152,5 +152,6 @@ class Wallet {
 }
 
 export * from '@sats-connect/core';
+export * from './decodeAddressPsbtData';
 
 export default new Wallet();
