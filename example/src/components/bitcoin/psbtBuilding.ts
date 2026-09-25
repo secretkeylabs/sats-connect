@@ -256,17 +256,17 @@ export const parseUtxos = (value: unknown): MempoolUtxo[] => {
 
 export const fetchJson = async (url: string): Promise<unknown> => {
   const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-  if (!response.ok) throw new Error(`Mempool request failed with HTTP ${response.status}.`);
+  if (!response.ok) throw new Error(`Request to ${url} failed with HTTP ${response.status}.`);
   return response.json();
 };
 
-/** Mempool's recommended half-hour rate, in sat/vB. */
-export const fetchFeeRate = async (network: BitcoinNetworkType): Promise<number> => {
-  const response = await fetchJson(`${getMempoolEndpoint(network)}api/v1/fees/recommended`);
-  if (!response || typeof response !== 'object' || !('halfHourFee' in response)) {
+/** Xverse's recommended regular rate, in sat/vB. The endpoint is network-agnostic. */
+export const fetchFeeRate = async (): Promise<number> => {
+  const response = await fetchJson('https://api-3.xverse.app/v1/fees/btc');
+  if (!response || typeof response !== 'object' || !('regular' in response)) {
     throw new Error('The recommended fee response is malformed.');
   }
-  const feeRate = Number(response.halfHourFee);
+  const feeRate = Number(response.regular);
   if (!Number.isFinite(feeRate) || feeRate <= 0) {
     throw new Error('The recommended fee response is malformed.');
   }

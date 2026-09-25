@@ -129,7 +129,7 @@ export const BuildAndSignBatchPsbt = ({ addresses, network }: Props) => {
         throw new Error('PSBTs per address must be a positive whole number.');
       }
 
-      const recommendedFeeRate = await fetchFeeRate(network);
+      const recommendedFeeRate = await fetchFeeRate();
       setFeeRate(recommendedFeeRate);
 
       const utxosPerAddress = await Promise.all(

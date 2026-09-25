@@ -1,9 +1,10 @@
-import { Switch } from '@mantine/core';
+import { Checkbox, Stack, Switch } from '@mantine/core';
 import { base64 } from '@scure/base';
 import {
   Address as BitcoinAddress,
   NETWORK,
   OutScript,
+  SigHash,
   TEST_NETWORK,
   Transaction,
 } from '@scure/btc-signer';
@@ -44,6 +45,8 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [broadcast, setBroadcast] = useState(false);
+  const [anyoneCanPay, setAnyoneCanPay] = useState(false);
+  const [outputMode, setOutputMode] = useState<'ALL' | 'SINGLE' | 'NONE'>('ALL');
   const [isSigning, setIsSigning] = useState(false);
   const [feeRate, setFeeRate] = useState<number>();
   const [result, setResult] = useState<SignResult>();
@@ -73,7 +76,7 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
       const { decoded } = source.resolved;
       const [utxos, recommendedFeeRate] = await Promise.all([
         fetchUtxos(source.address.address, network),
-        fetchFeeRate(network),
+        fetchFeeRate(),
       ]);
       setFeeRate(recommendedFeeRate);
 
@@ -119,12 +122,20 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
       }
 
       const transaction = new Transaction({ PSBTVersion: 0 });
-      selected.forEach((utxo) => {
+      // Only the first input carries the custom sighash flags; the rest use the wallet default.
+      const firstInputSighash =
+        outputMode === 'ALL' && !anyoneCanPay
+          ? undefined
+          : SigHash[`${outputMode}${anyoneCanPay ? '_ANYONECANPAY' : ''}`];
+      selected.forEach((utxo, index) => {
         transaction.addInput({
           txid: utxo.txid,
           index: utxo.vout,
           witnessUtxo: { script: decoded.scriptPubKey, amount: BigInt(utxo.value) },
           ...decoded.unlockDefinition,
+          ...(index === 0 && firstInputSighash !== undefined
+            ? { sighashType: firstInputSighash }
+            : {}),
         });
       });
       transaction.addOutput({ script: recipientScript, amount: amountSats });
@@ -187,6 +198,27 @@ export const BuildAndSignPsbt = ({ addresses, network }: Props) => {
         disabled={isSigning}
         label={`Wallet broadcast: ${broadcast ? 'on' : 'off'}`}
       />
+      <div>First input sighash</div>
+      <Stack gap="xs">
+        <Checkbox
+          checked={anyoneCanPay}
+          onChange={(event) => setAnyoneCanPay(event.currentTarget.checked)}
+          disabled={isSigning}
+          label="ANYONECANPAY"
+        />
+        <Checkbox
+          checked={outputMode === 'SINGLE'}
+          onChange={(event) => setOutputMode(event.currentTarget.checked ? 'SINGLE' : 'ALL')}
+          disabled={isSigning}
+          label="SINGLE (exclusive with NONE)"
+        />
+        <Checkbox
+          checked={outputMode === 'NONE'}
+          onChange={(event) => setOutputMode(event.currentTarget.checked ? 'NONE' : 'ALL')}
+          disabled={isSigning}
+          label="NONE (exclusive with SINGLE)"
+        />
+      </Stack>
       <Button
         onClick={() => void buildAndSign()}
         disabled={!source || isSigning}
