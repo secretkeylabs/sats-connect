@@ -7,9 +7,11 @@ import {
   defaultAdapters,
   getDefaultProvider,
   getSupportedWallets,
+  listen as listenProvider,
   removeDefaultProvider,
   setDefaultProvider,
   type AddListener,
+  type Listen,
   type Method,
   type RequestReturn,
   type RpcRequestParams,
@@ -109,6 +111,23 @@ class Wallet {
     }
     return response;
   }
+
+  /** SIP-030 subscriptions never open selection/approval UI or change legacy listeners. */
+  public listen: Listen = (event, callback) => {
+    const providerId = this.providerId ?? getDefaultProvider();
+    if (!providerId) {
+      throw new Error('Select a wallet provider before registering SIP-030 listeners.');
+    }
+    this.providerId = providerId;
+
+    const Adapter = this.defaultAdapters[providerId];
+    const adapter = Adapter ? new Adapter() : undefined;
+    if (adapter?.listen) return adapter.listen(event, callback);
+
+    // Request-only/third-party adapters can still expose a native injected listener.
+    // Core fails explicitly if it is unavailable; never invoke stx_getAccounts here.
+    return listenProvider(event, callback, providerId);
+  };
 
   public addListener: AddListener = (...rawArgs) => {
     const listenerInfo: ListenerInfo = (() => {

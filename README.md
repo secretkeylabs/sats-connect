@@ -58,6 +58,10 @@ await request('sendTransfer', {...});
 await Wallet.disconnect();
 ```
 
+### SIP-030 network discovery and listeners
+
+The default `Wallet` object supports `Wallet.request('stx_getNetworks', null)` and synchronous `Wallet.listen(event, callback)` subscriptions for `stx_networkChange` and `stx_accountChange`. The named Core APIs are also re-exported. See [SIP-030 listener usage and rollout](SIP030_LISTENERS.md) for provider selection, cleanup, compatibility and Xverse's deliberate Gaia placeholder policy.
+
 ## 💻 Development
 ### Build the package
 ```bash
