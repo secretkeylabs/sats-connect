@@ -28,7 +28,8 @@ jobs:
       - run: npm ci
       # TODO: enable linting once ready
       # - run: npm run lint
-      # - run: npm test
+      - run: npm run check-types
+      - run: npm run test:listeners
 
   publish-beta:
     needs:
