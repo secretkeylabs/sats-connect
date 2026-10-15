@@ -1,6 +1,7 @@
-import type { Address } from '@sats-connect/core';
+import { type Address, unlockDefinitionSchema } from '@sats-connect/core';
 import { hex } from '@scure/base';
 import { TaprootControlBlock } from '@scure/btc-signer';
+import * as v from 'valibot';
 
 type AddressUnlockDefinition = NonNullable<Address['unlockDefinition']>;
 type TaprootControlBlockValue = ReturnType<typeof TaprootControlBlock.decode>;
@@ -35,51 +36,9 @@ const decodeHex = (value: unknown, field: string): Uint8Array => {
 };
 
 const parseUnlockDefinition = (value: unknown): AddressUnlockDefinition => {
-  if (!value || typeof value !== 'object' || !('type' in value)) {
-    throw malformed('unlockDefinition');
-  }
-
-  const definition = value as Record<string, unknown>;
-  switch (definition.type) {
-    case 'p2wpkh':
-      return { type: 'p2wpkh' };
-    case 'p2sh-p2wpkh':
-      decodeHex(definition.redeemScript, 'redeemScript');
-      return definition as AddressUnlockDefinition;
-    case 'p2tr-key-path':
-      if (decodeHex(definition.tapInternalKey, 'tapInternalKey').length !== 32) {
-        throw malformed('tapInternalKey');
-      }
-      return definition as AddressUnlockDefinition;
-    case 'p2wsh':
-      decodeHex(definition.witnessScript, 'witnessScript');
-      return definition as AddressUnlockDefinition;
-    case 'p2tr-script-path': {
-      if (!Array.isArray(definition.tapLeafScript) || definition.tapLeafScript.length === 0) {
-        throw malformed('tapLeafScript');
-      }
-
-      for (const leaf of definition.tapLeafScript) {
-        if (!leaf || typeof leaf !== 'object') throw malformed('tapLeafScript');
-        const { controlBlock, script } = leaf as Record<string, unknown>;
-        const controlBlockBytes = decodeHex(controlBlock, 'controlBlock');
-        const scriptBytes = decodeHex(script, 'script');
-        if (
-          controlBlockBytes.length < 33 ||
-          controlBlockBytes.length > 33 + 32 * 128 ||
-          (controlBlockBytes.length - 33) % 32 !== 0
-        ) {
-          throw malformed('controlBlock');
-        }
-        if (scriptBytes.at(-1) !== (controlBlockBytes[0] & 0xfe)) {
-          throw malformed('tapLeafScript');
-        }
-      }
-      return definition as AddressUnlockDefinition;
-    }
-    default:
-      throw malformed('unlockDefinition');
-  }
+  const result = v.safeParse(unlockDefinitionSchema, value);
+  if (!result.success) throw malformed('unlockDefinition', result.issues);
+  return result.output;
 };
 
 export const decodeAddressPsbtData = (
