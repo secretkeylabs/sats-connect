@@ -7,14 +7,22 @@ import {
   type WalletConnectParams,
 } from 'sats-connect';
 import { MethodLayout } from '../../layouts/MethodLayout';
+import { useGlobalState } from '../GlobalStateProvider/use-global-state';
 
 type ConnectOptions = NonNullable<WalletConnectParams>;
 
 export const WalletConnect = () => {
+  const { syncNetwork } = useGlobalState();
   const [response, setResponse] = useState<string | null>(null);
   const [options, setOptions] = useState<WalletConnectParams>({
     message: 'Optional message displayed on connection popup',
-    addresses: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+    addresses: [
+      AddressPurpose.Payment,
+      AddressPurpose.Ordinals,
+      AddressPurpose.Stacks,
+      AddressPurpose.Spark,
+      AddressPurpose.Starknet,
+    ],
     network: BitcoinNetworkType.Mainnet,
   });
 
@@ -31,6 +39,8 @@ export const WalletConnect = () => {
         console.error('wallet_connect error');
         return;
       }
+
+      await syncNetwork();
     };
     handler().catch(console.error);
   };
@@ -45,7 +55,7 @@ export const WalletConnect = () => {
     >
       <NativeSelect
         label={'network'}
-        data={Object.values(BitcoinNetworkType)}
+        data={[BitcoinNetworkType.Mainnet, BitcoinNetworkType.Testnet, BitcoinNetworkType.Signet]}
         onChange={(e) =>
           setOptions((prev) => ({
             ...prev,

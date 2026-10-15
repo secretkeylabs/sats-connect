@@ -11,13 +11,13 @@ interface Props {
 export const SignMessage = ({ addresses }: Props) => {
   const [message, setMessage] = useState('');
   const [address, setAddress] = useState(addresses[0]?.address);
-  const [protocol, setProtocol] = useState(MessageSigningProtocols.ECDSA);
+  const [protocol, setProtocol] = useState<MessageSigningProtocols>(MessageSigningProtocols.ECDSA);
 
   const onClick = async () => {
     const response = await request('signMessage', {
       message,
       address,
-      protocol: protocol ? (protocol as MessageSigningProtocols) : MessageSigningProtocols.ECDSA,
+      protocol: protocol || MessageSigningProtocols.ECDSA,
     });
     if (response.status === 'success') {
       alert(`Message signed successfully check console for details. `);
@@ -38,7 +38,7 @@ export const SignMessage = ({ addresses }: Props) => {
         }
         console.log(`verified: ${verified}`);
       }
-    } else if (response.error.code === RpcErrorCode.USER_REJECTION) {
+    } else if (response.error.code === (RpcErrorCode.USER_REJECTION as number)) {
       alert('User cancelled the request');
     } else {
       console.error(response.error);
@@ -71,7 +71,7 @@ export const SignMessage = ({ addresses }: Props) => {
             <option value={MessageSigningProtocols.BIP322}>{MessageSigningProtocols.BIP322}</option>
           </NativeSelect>
         </div>
-        <Button onClick={onClick} disabled={!message} style={{ marginTop: 15 }}>
+        <Button onClick={() => void onClick()} disabled={!message} style={{ marginTop: 15 }}>
           Sign Message
         </Button>
       </>

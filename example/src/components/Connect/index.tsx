@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import Wallet, { AddressPurpose } from 'sats-connect';
 import { Button, ConnectButtonsContainer, Container, Header, Logo } from '../../App.styles';
 import { useGlobalState } from '../GlobalStateProvider/use-global-state';
-import { NetworkSelector } from '../NetworkSelector';
 
 export function Connect() {
   const navigate = useNavigate();
@@ -16,6 +15,7 @@ export function Connect() {
     setSparkAddressInfo,
     setStarknetAddressInfo,
     setAccountId,
+    syncNetwork,
   } = useGlobalState();
 
   const handleConnect = useCallback(() => {
@@ -47,6 +47,7 @@ export function Connect() {
         res.result.addresses.filter((a) => a.purpose === AddressPurpose.Starknet),
       );
       setAccountId(res.result.id);
+      await syncNetwork();
 
       navigate('/wallet');
     })().catch(console.error);
@@ -56,6 +57,7 @@ export function Connect() {
     setSparkAddressInfo,
     setStarknetAddressInfo,
     setAccountId,
+    syncNetwork,
     navigate,
   ]);
 
@@ -97,10 +99,11 @@ export function Connect() {
         return;
       }
       setSparkAddressInfo(res4.result.addresses);
+      await syncNetwork();
 
       navigate('/wallet');
     })().catch(console.error);
-  }, [navigate, setBtcAddressInfo, setSparkAddressInfo, setStxAddressInfo]);
+  }, [navigate, setBtcAddressInfo, setSparkAddressInfo, setStxAddressInfo, syncNetwork]);
 
   const handleLegacyConnectWithGetAccounts = useCallback(() => {
     (async () => {
@@ -125,17 +128,24 @@ export function Connect() {
         setStarknetAddressInfo(
           response.result.filter((a) => a.purpose === AddressPurpose.Starknet),
         );
+        await syncNetwork();
       }
 
       navigate('/wallet');
     })().catch(console.error);
-  }, [navigate, setBtcAddressInfo, setSparkAddressInfo, setStarknetAddressInfo, setStxAddressInfo]);
+  }, [
+    navigate,
+    setBtcAddressInfo,
+    setSparkAddressInfo,
+    setStarknetAddressInfo,
+    setStxAddressInfo,
+    syncNetwork,
+  ]);
 
   return (
     <Container>
       <Header>
         <Logo src="/sats-connect.svg" alt="SatsConnect" />
-        <NetworkSelector />
         <p>Click the button to connect your wallet</p>
         <ConnectButtonsContainer>
           <Button onClick={handleConnect}>Connect</Button>

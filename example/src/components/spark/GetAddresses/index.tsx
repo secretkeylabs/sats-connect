@@ -1,5 +1,5 @@
-import { request, SparkGetAddressesResult } from '@sats-connect/core';
 import { useCallback, useState } from 'react';
+import { request, SparkGetAddressesResult } from 'sats-connect';
 import { Button, Card } from '../../../App.styles';
 
 export const SparkGetAddresses = () => {
