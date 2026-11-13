@@ -1,6 +1,6 @@
 {
   "name": "sats-connect",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "main": "dist/index.mjs",
   "files": [
     "dist"
@@ -24,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "@sats-connect/core": "0.19.0",
+    "@sats-connect/core": "0.20.0-e807f08",
     "@sats-connect/make-default-provider-config": "0.0.10",
     "@sats-connect/ui": "0.0.7",
     "@scure/base": "2.4.0",
