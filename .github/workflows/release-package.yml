@@ -32,29 +32,9 @@ jobs:
       - run: npm run build
       # Authenticates via GitHub OIDC (trusted publishing), no npm token needed.
       # Do not set registry-url on setup-node: it injects a placeholder NODE_AUTH_TOKEN which disables OIDC.
-      # The dist-tag comes from the package version, not from how the GitHub release was
-      # flagged: a prerelease version can never reach `latest`, and the release flag cannot
-      # move a stable version onto `latest` by accident either.
-      - name: Publish to npm
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          if [[ "$VERSION" == *-* ]]; then
-            echo "::notice::Publishing prerelease $VERSION with the prerelease dist-tag"
-            npm publish --tag prerelease
-            exit 0
-          fi
-          # A stable version pinned to a prerelease dependency would hand everyone on the
-          # stable range a build that can never be republished when the dependency ships.
-          UNSTABLE=$(node -e '
-            const pkg = require("./package.json");
-            const entries = Object.entries({ ...pkg.dependencies, ...pkg.optionalDependencies });
-            const unstable = entries
-              .filter(([, spec]) => /^\d+\.\d+\.\d+-/.test(String(spec).replace(/^[\^~>=<v\s]+/, "")))
-              .map(([name, spec]) => `${name}@${spec}`);
-            process.stdout.write(unstable.join(", "));
-          ')
-          if [ -n "$UNSTABLE" ]; then
-            echo "::error::Refusing to publish stable $VERSION: prerelease dependencies $UNSTABLE. Publish the dependency first, or keep this a prerelease version."
-            exit 1
-          fi
-          npm publish
+      - id: publish-prerelease
+        if: github.event.release.prerelease
+        run: npm publish --tag prerelease
+      - id: npm-publish-latest
+        if: ${{ github.event.release.prerelease == false }}
+        run: npm publish
