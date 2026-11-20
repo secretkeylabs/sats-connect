@@ -1,0 +1,28 @@
+name: 'Check AGENTS.md links'
+description: 'Checks that the root AGENTS.md links to every nested AGENTS.md file.'
+
+inputs:
+  working-directory:
+    description: 'Directory to check, relative to the workflow workspace.'
+    required: false
+    default: '.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      with:
+        bun-version: 1.4.0
+
+    - name: Install action dependencies
+      shell: bash
+      run: |
+        cd "${{ github.action_path }}"
+        bun install --frozen-lockfile --ignore-scripts
+
+    - name: Check AGENTS.md links
+      shell: bash
+      env:
+        AGENTS_CHECK_ROOT: ${{ inputs.working-directory }}
+      run: bun run "${{ github.action_path }}/check-agents.ts"
