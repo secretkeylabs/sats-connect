@@ -19,8 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # actions/checkout@v4
-      - name: Check AGENTS.md links
-        uses: secretkeylabs/github-actions/check-agents@main
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
         with:
           node-version: 24
@@ -72,11 +70,3 @@ jobs:
       - run: echo published version $VERSION
         env:
           VERSION: ${{ steps.published-version.outputs.version }}
-
-      - name: Add package pre-release info
-        uses: secretkeylabs/github-actions/add-package-pre-release-info-to-pr@main
-        with:
-          package-name: "sats-connect"
-          version: ${{ steps.published-version.outputs.version }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          pr-number: ${{ github.event.pull_request.number }}
