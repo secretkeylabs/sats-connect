@@ -70,11 +70,3 @@ jobs:
       - run: echo published version $VERSION
         env:
           VERSION: ${{ steps.published-version.outputs.version }}
-
-      - name: Add package pre-release info
-        uses: secretkeylabs/github-actions/add-package-pre-release-info-to-pr@main
-        with:
-          package-name: "sats-connect"
-          version: ${{ steps.published-version.outputs.version }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          pr-number: ${{ github.event.pull_request.number }}
