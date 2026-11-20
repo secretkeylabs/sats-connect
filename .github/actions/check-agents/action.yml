@@ -18,11 +18,11 @@ runs:
     - name: Install action dependencies
       shell: bash
       run: |
-        cd ${{ github.action_path }}
-        bun install --frozen-lockfile
+        cd "${{ github.action_path }}"
+        bun install --frozen-lockfile --ignore-scripts
 
     - name: Check AGENTS.md links
       shell: bash
       env:
         AGENTS_CHECK_ROOT: ${{ inputs.working-directory }}
-      run: bun run ${{ github.action_path }}/check-agents.ts
+      run: bun run "${{ github.action_path }}/check-agents.ts"
