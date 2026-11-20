@@ -50,11 +50,18 @@ function normalizeLinkTarget(target: string) {
   const withoutHash = normalized.split('#', 1)[0] ?? '';
   normalized = withoutHash.split('?', 1)[0] ?? '';
 
-  try {
-    normalized = decodeURI(normalized);
-  } catch {
-    // Keep the original target if it is not a valid URI.
-  }
+  normalized = normalized
+    .split('/')
+    .map((segment) => {
+      let decoded = segment;
+
+      try {
+        decoded = decodeURIComponent(segment);
+      } catch {}
+
+      return /[/\\]/.test(decoded) ? segment : decoded;
+    })
+    .join('/');
 
   normalized = toPosixPath(normalized).replace(/^\.\//, '');
 
@@ -101,7 +108,11 @@ function collectLinkTargets(markdown: string) {
       typeof node.identifier === 'string' &&
       typeof node.url === 'string'
     ) {
-      definitions.set(normalizeDefinitionIdentifier(node.identifier), node.url);
+      const identifier = normalizeDefinitionIdentifier(node.identifier);
+
+      if (!definitions.has(identifier)) {
+        definitions.set(identifier, node.url);
+      }
     }
 
     if (node.type === 'linkReference' && typeof node.identifier === 'string') {

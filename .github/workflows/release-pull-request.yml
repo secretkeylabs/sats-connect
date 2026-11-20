@@ -13,7 +13,7 @@ jobs:
       is-not-fork: ${{ steps.check.outputs.is_not_fork }}
     steps:
       - id: check
-        run: echo "is_not_fork=${{ github.event.pull_request.head.repo.full_name == github.repository }}" >> "$GITHUB_OUTPUT"
+        run: echo "is_not_fork=${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository }}" >> "$GITHUB_OUTPUT"
 
   test:
     runs-on: ubuntu-latest
