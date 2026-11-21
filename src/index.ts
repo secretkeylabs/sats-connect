@@ -86,28 +86,35 @@ class Wallet {
     }
     const adapter = this.defaultAdapters[this.providerId as string];
     walletOpen(this.providerId as string);
-    const response = adapter
-      ? await new adapter().request(method, params)
-      : await new BaseAdapter(this.providerId as string).request(method, params);
-    walletClose();
-    if (response?.status === 'error' && response.error?.code === RpcErrorCode.USER_REJECTION) {
-      if (!defaultProvider) {
-        this.providerId = undefined;
+    try {
+      let response: RequestReturn<M> | undefined;
+      try {
+        response = adapter
+          ? await new adapter().request(method, params)
+          : await new BaseAdapter(this.providerId as string).request(method, params);
+      } finally {
+        walletClose();
       }
-    } else {
-      setDefaultProvider(this.providerId as string);
+      if (response?.status === 'error' && response.error?.code === RpcErrorCode.USER_REJECTION) {
+        if (!defaultProvider) {
+          this.providerId = undefined;
+        }
+      } else {
+        setDefaultProvider(this.providerId as string);
+      }
+      if (!response) {
+        return {
+          status: 'error',
+          error: {
+            code: RpcErrorCode.INTERNAL_ERROR,
+            message: 'Wallet Error processing the request',
+          },
+        };
+      }
+      return response;
+    } finally {
+      close();
     }
-    close();
-    if (!response) {
-      return {
-        status: 'error',
-        error: {
-          code: RpcErrorCode.INTERNAL_ERROR,
-          message: 'Wallet Error processing the request',
-        },
-      };
-    }
-    return response;
   }
 
   public addListener: AddListener = (...rawArgs) => {
